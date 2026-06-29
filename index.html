@@ -1,0 +1,736 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kenzz 3PL</title>
+<script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js"></script>
+<style>
+:root {
+  --green: #00f159; --green2: #00b844; --purple: #7E00E1; --purple2: #5a00a3;
+  --dark: #1a0038; --white: #fff; --bg: #f4f6fb; --surface: #fff; --border: #e2e6f0;
+  --text: #1a1a2e; --muted: #6b7280; --red: #dc2626; --red-bg: #fff1f1;
+  --amber: #f59e0b; --amber-bg: #fffbeb; --header-h: 68px; --nav-h: 50px; --r: 10px;
+  --sh: 0 2px 16px rgba(126,0,225,.10);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;direction:rtl}
+body.ltr{direction:ltr}
+#top-header{background:linear-gradient(135deg,var(--purple) 0%,var(--purple2) 55%,#2d0066 100%);height:var(--header-h);display:flex;align-items:center;justify-content:space-between;padding:0 24px;position:sticky;top:0;z-index:300;box-shadow:0 4px 24px rgba(126,0,225,.4)}
+.hd-left{display:flex;align-items:center;gap:14px}
+.logo-box{background:#fff;border-radius:8px;height:46px;width:46px;display:flex;align-items:center;justify-content:center;font-weight:900;color:var(--purple);font-size:1.3rem}
+.hd-title{color:#fff;line-height:1.25}
+.hd-title strong{font-size:1.05rem;font-weight:800}
+.hd-title small{display:block;font-size:.68rem;opacity:.7;font-weight:400}
+.hd-right{display:flex;align-items:center;gap:10px}
+.btn-lang{background:rgba(255,255,255,.15);border:1.5px solid rgba(255,255,255,.3);color:#fff;font-size:.8rem;font-weight:700;padding:7px 16px;border-radius:20px;cursor:pointer;transition:background .2s}
+.btn-lang:hover{background:rgba(255,255,255,.28)}
+#tab-nav{background:#fff;height:var(--nav-h);display:flex;align-items:stretch;border-bottom:2.5px solid var(--border);position:sticky;top:var(--header-h);z-index:290;box-shadow:0 2px 8px rgba(0,0,0,.06);padding:0 24px;gap:4px;overflow-x:auto}
+.tab-btn{border:none;background:none;color:var(--muted);font-size:.85rem;font-weight:700;padding:0 20px;cursor:pointer;position:relative;white-space:nowrap;transition:color .2s;display:flex;align-items:center;gap:7px;flex-shrink:0}
+.tab-btn::after{content:'';position:absolute;bottom:-2px;left:0;right:0;height:3px;border-radius:3px 3px 0 0;background:var(--purple);transform:scaleX(0);transition:transform .22s}
+.tab-btn.active{color:var(--purple)}
+.tab-btn.active::after{transform:scaleX(1)}
+main{max-width:1500px;margin:0 auto;padding:22px 18px 60px}
+.btn-primary{background:linear-gradient(135deg,var(--purple),var(--purple2));color:#fff;border:none;padding:10px 26px;border-radius:8px;font-size:.9rem;font-weight:800;cursor:pointer;display:inline-flex;align-items:center;gap:8px;box-shadow:0 4px 16px rgba(126,0,225,.3);transition:transform .15s,box-shadow .15s}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 6px 22px rgba(126,0,225,.4)}
+.btn-save{background:linear-gradient(135deg,var(--green2),var(--green));color:#003015;border:none;padding:10px 22px;border-radius:8px;font-size:.9rem;font-weight:800;cursor:pointer;display:inline-flex;align-items:center;gap:8px;box-shadow:0 4px 14px rgba(0,184,68,.25);transition:transform .15s}
+.btn-save:hover{transform:translateY(-2px)}
+.btn-save:disabled{opacity:.38;cursor:not-allowed;transform:none}
+.btn-clear{background:transparent;border:1.5px solid var(--red);color:var(--red);padding:10px 18px;border-radius:8px;font-size:.86rem;font-weight:700;cursor:pointer;transition:background .15s;display:inline-flex;align-items:center;gap:6px}
+.btn-clear:hover{background:var(--red-bg)}
+.btn-export{background:transparent;border:1.5px solid var(--green2);color:var(--green2);padding:8px 16px;border-radius:7px;font-size:.83rem;font-weight:700;cursor:pointer;transition:background .15s;display:inline-flex;align-items:center;gap:6px}
+.btn-export:hover{background:#f0fdf4}
+.toast{display:none;background:#f0fdf4;border:1.5px solid var(--green2);color:#15803d;border-radius:8px;padding:11px 18px;font-size:.84rem;font-weight:700;gap:8px;align-items:center;justify-content:center}
+.toast.show{display:flex!important}
+.audit-upload-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin-bottom:20px}
+.auc{background:#fff;border-radius:var(--r);box-shadow:var(--sh);padding:18px 20px;display:flex;flex-direction:column;gap:10px}
+.auc.p{border-top:4px solid var(--purple)}
+.auc.g{border-top:4px solid var(--green2)}
+.auc.o{border-top:4px solid var(--amber)}
+.auc h3{font-size:.83rem;font-weight:800;display:flex;align-items:center;gap:6px}
+.auc.p h3{color:var(--purple)}
+.auc.g h3{color:var(--green2)}
+.auc.o h3{color:#b45309}
+.auc p.desc{font-size:.74rem;color:var(--muted);line-height:1.5}
+.afl{display:flex;align-items:center;justify-content:center;gap:8px;color:#fff;border:none;padding:9px 16px;border-radius:7px;font-size:.81rem;font-weight:700;cursor:pointer;transition:transform .15s;width:100%;text-align:center}
+.afl:hover{transform:translateY(-1px)}
+.afl.p{background:linear-gradient(135deg,var(--purple),var(--purple2))}
+.afl.g{background:linear-gradient(135deg,var(--green2),var(--green));color:#003015}
+.aust{font-size:.74rem;font-weight:600;color:var(--green2);min-height:18px;text-align:center;word-break:break-all}
+.process-row{text-align:center;margin-bottom:20px;display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:10px}
+.asum-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(195px,1fr));gap:13px;margin-bottom:18px}
+.asum-card{background:#fff;border-radius:var(--r);box-shadow:var(--sh);padding:16px 18px}
+.asum-card .albl{font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--muted)}
+.asum-card .aval{font-size:1.5rem;font-weight:900;margin:4px 0}
+.asum-card .asub{font-size:.71rem;color:var(--muted)}
+.asum-card.vp{border-top:4px solid var(--purple)}
+.asum-card.vp .aval{color:var(--purple)}
+.asum-card.vg{border-top:4px solid var(--green2)}
+.asum-card.vg .aval{color:var(--green2)}
+.asum-card.vr{border-top:4px solid var(--red)}
+.asum-card.vr .aval{color:var(--red)}
+.ctrl-bar{background:#fff;border-radius:var(--r);box-shadow:var(--sh);padding:14px 20px;margin-bottom:16px;display:flex;flex-wrap:wrap;gap:14px;align-items:flex-end}
+.ctrl-grp{display:flex;flex-direction:column;gap:4px}
+.ctrl-lbl{font-size:.7rem;font-weight:700;color:var(--purple);text-transform:uppercase;letter-spacing:.6px}
+.ctrl-sel{border:1.5px solid var(--border);border-radius:7px;padding:8px 12px;font-size:.86rem;color:var(--text);background:var(--bg);appearance:none;cursor:pointer;min-width:190px;transition:border-color .2s}
+.ctrl-sel:focus{outline:none;border-color:var(--purple)}
+.ctrl-search{border:1.5px solid var(--border);border-radius:7px;padding:8px 12px;font-size:.86rem;min-width:220px;transition:border-color .2s}
+.ctrl-search:focus{outline:none;border-color:var(--purple)}
+.oc-wrap{display:flex;align-items:center;gap:7px;font-size:.83rem;color:var(--text)}
+.oc-wrap input{width:16px;height:16px;accent-color:var(--red);cursor:pointer}
+.tbl-card{background:#fff;border-radius:var(--r);box-shadow:var(--sh);overflow:hidden;margin-bottom:16px}
+.card-hdr{background:linear-gradient(135deg,var(--purple),var(--purple2));color:#fff;padding:12px 18px;font-size:.88rem;font-weight:800;display:flex;align-items:center;gap:8px;justify-content:space-between}
+.card-hdr .dot{width:8px;height:8px;background:var(--green);border-radius:50%;flex-shrink:0}
+.tbl-scroll{overflow-x:auto;max-height:65vh;overflow-y:auto}
+.data-table{width:100%;border-collapse:collapse;font-size:.79rem}
+.data-table thead tr{background:var(--dark);color:#fff;position:sticky;top:0;z-index:20}
+.data-table thead th{padding:9px 12px;text-align:center;white-space:nowrap;font-weight:700;border-right:1px solid rgba(255,255,255,.1)}
+.data-table thead th.th-lft{text-align:right}
+.data-table thead th.th-ah{background:#7c3aed}
+.data-table thead th.th-ai{background:#1d4ed8}
+.data-table thead th.th-r{background:#0f766e}
+.data-table thead th.th-ins{background:#0f766e}
+.data-table thead th.th-diff{background:#b91c1c}
+.data-table tbody tr{border-bottom:1px solid var(--border)}
+.data-table tbody tr:hover{filter:brightness(.97)}
+.data-table tbody td{padding:7px 12px;white-space:nowrap;border-right:1px solid var(--border);text-align:center;font-variant-numeric:tabular-nums}
+.data-table tbody td.td-lft{text-align:right;font-weight:600}
+.data-table tbody td.td-ah{background:#f5f3ff;font-weight:700}
+.data-table tbody td.td-ai{background:#eff6ff;font-weight:700}
+.data-table tbody td.td-ins{background:#f0fdfa;font-weight:700}
+.data-table tbody td.td-diff{font-weight:800}
+.br-delivered{background:#f0fdf4}
+.br-rto{background:#eff6ff}
+.br-rtn{background:#fdf8ff}
+.br-cod{background:#fffbeb}
+.br-lost{background:var(--red-bg)}
+.br-lastmile{background:#fdf4ff}
+.br-over td{outline:2px solid #fca5a5;outline-offset:-1px}
+.br-over td.td-diff{background:#fee2e2!important;color:var(--red)!important}
+.fb-over{color:var(--red);font-weight:800}
+.fb-ok{color:var(--green2);font-weight:600}
+.cb-delivered{background:#dcfce7;color:#15803d;border-radius:4px;padding:2px 8px;font-size:.68rem;font-weight:700}
+.cb-rto{background:#dbeafe;color:#1e40af;border-radius:4px;padding:2px 8px;font-size:.68rem;font-weight:700}
+.cb-rtn{background:#ede9fe;color:#5b21b6;border-radius:4px;padding:2px 8px;font-size:.68rem;font-weight:700}
+.cb-cod{background:#fef9c3;color:#854d0e;border-radius:4px;padding:2px 8px;font-size:.68rem;font-weight:700}
+.cb-lost{background:#fee2e2;color:#b91c1c;border-radius:4px;padding:2px 8px;font-size:.68rem;font-weight:700}
+.cb-lastmile{background:#fae8ff;color:#7e22ce;border-radius:4px;padding:2px 8px;font-size:.68rem;font-weight:700}
+.cb-other{background:#f3f4f6;color:var(--muted);border-radius:4px;padding:2px 8px;font-size:.68rem;font-weight:700}
+.empty{text-align:center;padding:50px 20px;color:var(--muted)}
+.empty-icon{font-size:3rem;margin-bottom:12px}
+.empty h3{font-size:1.05rem;font-weight:700;margin-bottom:5px;color:var(--text)}
+.empty p{font-size:.83rem}
+#loading-overlay{display:none;position:fixed;inset:0;background:rgba(26,0,56,.72);z-index:999;align-items:center;justify-content:center;flex-direction:column;gap:14px;color:#fff;font-size:.95rem;font-weight:700}
+#loading-overlay.show{display:flex}
+.spinner{width:44px;height:44px;border:5px solid rgba(255,255,255,.2);border-top-color:var(--green);border-radius:50%;animation:spin .7s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.note-bar{background:var(--amber-bg);border-left:4px solid var(--amber);padding:9px 16px;font-size:.79rem;color:#78350f;border-radius:0 6px 6px 0;margin-bottom:16px}
+body.ltr .note-bar{border-left:none;border-right:4px solid var(--amber);border-radius:6px 0 0 6px}
+#login-screen{min-height:100vh;background:linear-gradient(135deg,#1a0038 0%,#2d0066 50%,#1a0038 100%);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px;position:relative}
+#login-lang{position:absolute;top:20px;right:20px;background:rgba(255,255,255,.12);border:1.5px solid rgba(255,255,255,.25);color:#fff;padding:7px 16px;border-radius:20px;cursor:pointer;font-size:.82rem;font-weight:700}
+.login-card{background:#fff;border-radius:20px;padding:44px 40px;max-width:420px;width:100%;box-shadow:0 24px 80px rgba(114,0,216,.45)}
+.login-card.shake{animation:shake .6s}
+@keyframes shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-8px)}40%{transform:translateX(8px)}60%{transform:translateX(-6px)}80%{transform:translateX(6px)}}
+.login-logo{width:80px;height:80px;border-radius:16px;margin:0 auto 14px;background:linear-gradient(135deg,var(--purple),var(--green2));display:flex;align-items:center;justify-content:center;color:#fff;font-weight:900;font-size:1.8rem}
+.login-card h1{font-size:1.6rem;font-weight:900;color:#7200D8;text-align:center}
+.login-card>div>p{color:#6b7280;font-size:.85rem;margin-top:6px;text-align:center}
+.login-fld label{display:block;font-size:.78rem;font-weight:700;color:#7200D8;text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px}
+.login-fld{position:relative}
+#login-pwd{width:100%;border:1.5px solid #e2e6f0;border-radius:10px;padding:12px 44px 12px 14px;font-size:1rem;outline:none;transition:border-color .2s;box-sizing:border-box}
+#login-pwd.err{border-color:#dc2626}
+#login-eye{position:absolute;bottom:10px;background:none;border:none;cursor:pointer;color:#9ca3af;font-size:1rem}
+html[dir=rtl] #login-eye{left:12px}
+html[dir=ltr] #login-eye{right:12px}
+#login-error{display:none;background:#fff1f1;border:1px solid #fca5a5;border-radius:8px;padding:8px 14px;color:#b91c1c;font-size:.83rem;font-weight:600;margin-top:14px}
+#login-error.show{display:block}
+#login-submit{background:linear-gradient(135deg,#7200D8,#5a00a3);color:#fff;border:none;border-radius:10px;padding:13px;font-size:1rem;font-weight:800;cursor:pointer;width:100%;margin-top:16px;box-shadow:0 4px 18px rgba(114,0,216,.35);transition:transform .15s}
+#login-submit:hover{transform:translateY(-2px)}
+.login-footer{text-align:center;margin-top:24px;color:#9ca3af;font-size:.72rem}
+.coming-soon{text-align:center;padding:80px 20px;color:var(--muted)}
+</style>
+</head>
+<body>
+
+<div id="login-screen">
+  <button id="login-lang" onclick="toggleLang()"></button>
+  <div class="login-card" id="login-card">
+    <div style="text-align:center;margin-bottom:28px">
+      <div class="login-logo">K</div>
+      <h1 id="login-title"></h1>
+      <p id="login-subtitle"></p>
+    </div>
+    <form id="login-form" onsubmit="return attemptLogin(event)">
+      <div class="login-fld">
+        <label id="login-pwd-label"></label>
+        <input type="password" id="login-pwd" autocomplete="off">
+        <button type="button" id="login-eye" onclick="toggleShowPwd()">👁️</button>
+      </div>
+      <div id="login-error"></div>
+      <button type="submit" id="login-submit"></button>
+    </form>
+    <p class="login-footer" id="login-footer"></p>
+  </div>
+</div>
+
+<div id="app" style="display:none">
+  <header id="top-header">
+    <div class="hd-left">
+      <div class="logo-box">K</div>
+      <div class="hd-title"><strong id="hd-title"></strong><small id="hd-sub"></small></div>
+    </div>
+    <div class="hd-right">
+      <button class="btn-lang" onclick="toggleLang()" id="hd-lang-btn"></button>
+      <button class="btn-lang" style="background:rgba(220,38,38,.2);border-color:rgba(220,38,38,.4)" onclick="logout()" id="hd-logout-btn"></button>
+    </div>
+  </header>
+
+  <nav id="tab-nav">
+    <button class="tab-btn active" data-tab="bosta" onclick="switchTab('bosta')"><span>📦</span><span id="tab-bosta-lbl"></span></button>
+    <button class="tab-btn" data-tab="aramex" onclick="switchTab('aramex')"><span>✈️</span><span id="tab-aramex-lbl"></span></button>
+    <button class="tab-btn" data-tab="mashreq" onclick="switchTab('mashreq')"><span>🔄</span>Aramex Mashreq</button>
+    <button class="tab-btn" data-tab="raya" onclick="switchTab('raya')"><span>🚚</span>Raya Review</button>
+    <button class="tab-btn" data-tab="analytics" onclick="switchTab('analytics')"><span>📈</span>Analytics</button>
+  </nav>
+
+  <main>
+    <div id="panel-bosta">
+      <div class="note-bar" id="bo-note"></div>
+
+      <div class="audit-upload-grid">
+        <div class="auc g">
+          <h3 id="bo-file-title"></h3><p class="desc" id="bo-file-desc"></p>
+          <button class="afl g" onclick="document.getElementById('bo-report-inp').click()" id="bo-report-btn"></button>
+          <input type="file" id="bo-report-inp" accept=".xlsx,.xls" style="display:none">
+          <div class="aust" id="bo-report-status"></div>
+        </div>
+        <div class="auc p">
+          <h3 id="bo-contract-title"></h3><p class="desc" id="bo-contract-desc"></p>
+          <button class="afl p" onclick="document.getElementById('bo-contract-inp').click()" id="bo-contract-btn"></button>
+          <input type="file" id="bo-contract-inp" accept=".xlsx,.xls" style="display:none">
+          <div class="aust" id="bo-contract-status"></div>
+        </div>
+        <div class="auc o">
+          <h3 id="bo-thresh-title"></h3><p class="desc" id="bo-thresh-desc"></p>
+          <input type="number" class="ctrl-sel" id="bo-thresh" value="0.5" step="0.1" style="margin-top:8px">
+        </div>
+      </div>
+
+      <div class="process-row">
+        <div style="display:flex;align-items:center;gap:8px;background:rgba(0,0,0,.04);border-radius:8px;padding:6px 12px">
+          <label id="bo-month-lbl" style="font-size:.75rem;color:var(--muted);white-space:nowrap"></label>
+          <input type="month" id="bo-month" style="background:transparent;border:none;color:var(--text);font-size:.8rem;outline:none;cursor:pointer">
+        </div>
+        <button class="btn-primary" onclick="processBosta()" id="bo-process-btn"></button>
+        <button class="btn-save" id="bo-save-btn" onclick="saveBosta()" disabled></button>
+        <button class="btn-clear" onclick="clearBosta()" id="bo-clear-btn"></button>
+        <div class="toast" id="bo-toast"></div>
+      </div>
+
+      <div id="bo-results" style="display:none">
+        <div class="asum-grid">
+          <div class="asum-card vp"><div class="albl" id="bo-kpi-shipments-lbl"></div><div class="aval" id="bo-kpi-shipments">0</div></div>
+          <div class="asum-card vg"><div class="albl" id="bo-kpi-invoice-lbl"></div><div class="aval" id="bo-kpi-invoice">0</div><div class="asub" id="bo-kpi-egp"></div></div>
+          <div class="asum-card vr"><div class="albl" id="bo-kpi-diff-lbl"></div><div class="aval" id="bo-kpi-diff">0</div><div class="asub" id="bo-kpi-diff-pct"></div></div>
+        </div>
+
+        <div class="ctrl-bar">
+          <div class="ctrl-grp">
+            <span class="ctrl-lbl" id="bo-type-lbl"></span>
+            <select class="ctrl-sel" id="bo-filter-type" onchange="renderBostaTable()"></select>
+          </div>
+          <div class="ctrl-grp">
+            <span class="ctrl-lbl" id="bo-search-lbl"></span>
+            <input class="ctrl-search" id="bo-search" placeholder="Tracking" oninput="renderBostaTable()">
+          </div>
+          <div class="oc-wrap">
+            <input type="checkbox" id="bo-over-only" onchange="renderBostaTable()">
+            <label for="bo-over-only" id="bo-over-only-lbl"></label>
+          </div>
+          <button class="btn-export" onclick="exportBosta()" id="bo-export-btn"></button>
+        </div>
+
+        <div class="tbl-card">
+          <div class="card-hdr">
+            <span><span class="dot"></span><span id="bo-results-title"></span></span>
+            <span id="bo-results-count" style="font-size:.8rem;opacity:.8"></span>
+          </div>
+          <div class="tbl-scroll">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>#</th><th class="th-lft">Tracking</th><th>Label</th><th>Pkg Size</th><th>Zone</th>
+                  <th class="th-ah">Kenzz Ship</th><th class="th-ai">Kenzz Pkg</th>
+                  <th class="th-ins">Insurance</th><th class="th-r">Price (BAV)</th>
+                  <th class="th-diff">Diff</th><th>Flag</th>
+                </tr>
+              </thead>
+              <tbody id="bo-table-body"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <div id="bo-empty" class="empty">
+        <div class="empty-icon">📦</div>
+        <h3 id="bo-empty-title"></h3>
+      </div>
+    </div>
+
+    <div id="panel-other" style="display:none">
+      <div class="coming-soon">
+        <div class="empty-icon">🚧</div>
+        <h3 id="other-soon-title"></h3>
+      </div>
+    </div>
+  </main>
+</div>
+
+<div id="loading-overlay"><div class="spinner"></div><div id="loading-msg"></div></div>
+
+<script>
+const AUTH = { PASSWORD: 'HKenzz2025.Com', SESSION_KEY: 'kenzz3pl_auth_v1' };
+const STORAGE_KEY = 'kenzz3pl_bosta_v1';
+
+const I18N = {
+  ar: {
+    hd:'محلل لوجستيات الشحن', hds:'تفاصيل تكاليف الشحن · الأرقام لا تشمل ضريبة القيمة المضافة',
+    lang:'🌐 English', logout:'خروج',
+    tBosta:'مراجعة بوسطة', tAramex:'مراجعة أرامكس',
+    note:'ℹ️ <strong>ملاحظة:</strong> جميع الأرقام لا تشمل ضريبة القيمة المضافة.',
+    loginTitle:'Kenzz 3PL', loginSubtitle:'أدخل كلمة المرور للوصول إلى النظام',
+    loginPwdLabel:'كلمة المرور', loginBtn:'دخول 🔐', loginError:'⚠️ كلمة المرور غير صحيحة، حاول مرة أخرى',
+    loginFooter:'محلل لوجستيات الشحن',
+    upload:'📂 رفع الملف', changeFile:'📂 تغيير الملف',
+    process:'⚡ معالجة وتحليل', saveResults:'💾 حفظ النتائج', clearData:'🗑️ مسح البيانات',
+    export:'⬇️ تصدير CSV', search:'بحث', all:'الكل',
+    overOnly:'عرض الفروقات فقط',
+    totalShipments:'إجمالي الشحنات', invoice:'إجمالي الفاتورة', differences:'فروقات', egp:'جنيه',
+    bo_file:'📦 تقرير بوسطة *', bo_fileDesc:'ملف الفاتورة الشهرية من بوسطة',
+    bo_contract:'📝 ملف العقد', bo_contractDesc:'جدول أسعار بوسطة (اختياري)',
+    bo_thresh:'⚙️ حد الفارق', bo_threshDesc:'الحد الأدنى لاعتبار الفارق (جنيه)',
+    bo_alertNoFile:'الرجاء رفع ملف التقرير',
+    bo_loadingMsg:'جارٍ معالجة بيانات بوسطة…',
+    bo_confirmClear:'مسح بيانات بوسطة؟',
+    bo_toast:'✅ تم حفظ بيانات بوسطة!',
+    bo_emptyTitle:'ارفع ملف تقرير بوسطة وابدأ المراجعة',
+    bo_resultsTitle:'نتائج مراجعة بوسطة',
+    bo_typeFilter:'النوع', bo_monthLbl:'شهر البيانات:',
+    errorPrefix:'خطأ: ', soonTitle:'هذا القسم قيد التطوير',
+  },
+  en: {
+    hd:'3PL Logistics Analyzer', hds:'Shipping Cost Breakdown · All figures exclude VAT',
+    lang:'🌐 العربية', logout:'Logout',
+    tBosta:'Bosta Audit', tAramex:'Aramex Audit',
+    note:'ℹ️ <strong>Note:</strong> All figures exclude VAT.',
+    loginTitle:'Kenzz 3PL', loginSubtitle:'Enter password to access the system',
+    loginPwdLabel:'Password', loginBtn:'Sign In 🔐', loginError:'⚠️ Incorrect password, please try again',
+    loginFooter:'Shipping Logistics Analyzer',
+    upload:'📂 Upload File', changeFile:'📂 Change File',
+    process:'⚡ Process & Analyze', saveResults:'💾 Save Results', clearData:'🗑️ Clear Data',
+    export:'⬇️ Export CSV', search:'Search', all:'All',
+    overOnly:'Show differences only',
+    totalShipments:'Total Shipments', invoice:'Total Invoice', differences:'Differences', egp:'EGP',
+    bo_file:'📦 Bosta Report *', bo_fileDesc:'Monthly invoice file from Bosta',
+    bo_contract:'📝 Contract File', bo_contractDesc:'Bosta rate table (optional)',
+    bo_thresh:'⚙️ Difference Threshold', bo_threshDesc:'Minimum difference to flag (EGP)',
+    bo_alertNoFile:'Please upload the report file',
+    bo_loadingMsg:'Processing Bosta data…',
+    bo_confirmClear:'Clear Bosta data?',
+    bo_toast:'✅ Bosta results saved!',
+    bo_emptyTitle:'Upload Bosta report to start audit',
+    bo_resultsTitle:'Bosta Audit Results',
+    bo_typeFilter:'Type', bo_monthLbl:'Data Month:',
+    errorPrefix:'Error: ', soonTitle:'This section is coming soon',
+  }
+};
+
+let lang = localStorage.getItem('kenzz3pl_lang') || 'ar';
+let showPwd = false;
+let bostaData = [];
+let reportFile = null, contractFile = null;
+
+/* ---------- helpers ---------- */
+function rv(v){ if(v===''||v==null) return 0; const n=parseFloat(v); return isNaN(n)?0:n; }
+function fm(v){
+  if(v===''||v==null) return '–';
+  const n=parseFloat(v);
+  if(isNaN(n)) return '–';
+  if(n===0) return '0';
+  return Math.abs(n)%1===0 ? n.toLocaleString('en-US') : n.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});
+}
+function exportCSV(headers, rows, filename){
+  const csv=[headers, ...rows].map(row=>row.map(v=>'"'+String(v===null?'':v).replace(/"/g,'""')+'"').join(',')).join('\n');
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(new Blob(['﻿'+csv],{type:'text/csv;charset=utf-8'}));
+  a.download=filename; a.click();
+}
+
+/* ---------- Bosta engine (ported from bostaEngine.js) ---------- */
+const BOSTA_SPECIAL = new Set(['Lost & Damaged','Free Orders','COD Charges']);
+const BOSTA_LABEL = {
+  'RTO':'RTO','SEND':'Delivered','FXF_SEND':'Delivered','CUSTOMER_RETURN_PICKUP':'RTN',
+  'COD Charges':'COD Fees','Lost & Damaged':'Lost & Damaged','Free Orders':'Last Mile CN',
+  'CASH_COLLECTION':'Delivered','EXCHANGE':'Delivered','SIGN_AND_RETURN':'RTN',
+};
+const SHIP_TYPES = new Set(['SEND','FXF_SEND','RTO','CASH_COLLECTION','CUSTOMER_RETURN_PICKUP','EXCHANGE','SIGN_AND_RETURN']);
+const PKG_SIZES = new Set(['Normal','Large','X-Large','White Bag','Light Bulky','Heavy Bulky']);
+
+function bostaRowCls(label){
+  switch(label){
+    case 'Delivered': return 'br-delivered';
+    case 'RTO': return 'br-rto';
+    case 'RTN': return 'br-rtn';
+    case 'COD Fees': return 'br-cod';
+    case 'Lost & Damaged': return 'br-lost';
+    case 'Last Mile CN': return 'br-lastmile';
+    default: return '';
+  }
+}
+function bostaBadgeCls(label){
+  switch(label){
+    case 'Delivered': return 'cb-delivered';
+    case 'RTO': return 'cb-rto';
+    case 'RTN': return 'cb-rtn';
+    case 'COD Fees': return 'cb-cod';
+    case 'Lost & Damaged': return 'cb-lost';
+    case 'Last Mile CN': return 'cb-lastmile';
+    default: return 'cb-other';
+  }
+}
+function parseBostaContract(raw){
+  const contract={zones:[],shipping:{},pkg:{}};
+  let shipHdrRow=-1, shipTypeCol=-1, shipZoneStart=-1, shipZones=[];
+  let pkgHdrRow=-1, pkgSizeCol=-1, pkgZoneStart=-1, pkgZones=[];
+  for(let r=0;r<raw.length;r++){
+    const row=raw[r]; if(!row) continue;
+    const typeIdx=row.findIndex(c=>String(c||'').trim()==='Type');
+    if(typeIdx!==-1 && shipHdrRow===-1){
+      const zones=row.slice(typeIdx+1).map(z=>String(z||'').trim()).filter(Boolean);
+      if(zones.length>=2){ shipHdrRow=r; shipTypeCol=typeIdx; shipZoneStart=typeIdx+1; shipZones=zones; }
+    }
+    if(shipHdrRow!==-1 && pkgHdrRow===-1 && r>shipHdrRow+2){
+      const rowStr=row.map(c=>String(c||'').trim());
+      const hasZoneNames=shipZones.some(z=>rowStr.includes(z));
+      const allText=rowStr.filter(Boolean).every(c=>isNaN(parseFloat(c)));
+      if(hasZoneNames && allText){
+        pkgHdrRow=r;
+        pkgSizeCol=rowStr.findIndex((c,i)=>c && !shipZones.includes(c));
+        pkgZoneStart=pkgSizeCol+1;
+        pkgZones=row.slice(pkgZoneStart).map(z=>String(z||'').trim()).filter(Boolean);
+      }
+    }
+  }
+  if(shipHdrRow===-1) return contract;
+  contract.zones=shipZones;
+  for(let r=shipHdrRow+1;r<raw.length;r++){
+    if(!raw[r]) continue;
+    const type=String(raw[r][shipTypeCol]||'').trim();
+    if(!type || !SHIP_TYPES.has(type)) continue;
+    contract.shipping[type]={};
+    shipZones.forEach((zone,zi)=>{ contract.shipping[type][zone]=rv(raw[r][shipZoneStart+zi]); });
+  }
+  if(pkgHdrRow!==-1){
+    for(let r=pkgHdrRow+1;r<raw.length;r++){
+      if(!raw[r]) continue;
+      const size=String(raw[r][pkgSizeCol]||'').trim();
+      if(!size || !PKG_SIZES.has(size)) continue;
+      contract.pkg[size]={};
+      pkgZones.forEach((zone,zi)=>{ contract.pkg[size][zone]=rv(raw[r][pkgZoneStart+zi]); });
+    }
+  }
+  return contract;
+}
+function shipFeeFromTable(t, zone){
+  const z=zone.trim();
+  if(t[z]!==undefined) return t[z];
+  const k=Object.keys(t).find(k=>
+    k.toLowerCase().replace(/[^a-z0-9]/g,'').includes(z.toLowerCase().replace(/[^a-z0-9]/g,'')) ||
+    z.toLowerCase().replace(/[^a-z0-9]/g,'').includes(k.toLowerCase().replace(/[^a-z0-9]/g,''))
+  );
+  return k!==undefined ? t[k] : 0;
+}
+function bostaShipFee(contract, type, zone){
+  if(!type || !zone) return 0;
+  let t=contract.shipping[type];
+  if(!t){
+    const k2=Object.keys(contract.shipping).find(k=>k.toLowerCase()===type.toLowerCase());
+    if(!k2) return 0;
+    t=contract.shipping[k2];
+  }
+  return shipFeeFromTable(t, zone);
+}
+function bostaPkgFee(contract, pkgSize, zone){
+  if(!pkgSize || pkgSize==='Normal') return 0;
+  const p=contract.pkg[pkgSize];
+  if(!p) return 0;
+  const z=zone.trim();
+  if(p[z]!==undefined) return p[z];
+  const k=Object.keys(p).find(k=>
+    k.toLowerCase().replace(/[^a-z0-9]/g,'').includes(z.toLowerCase().replace(/[^a-z0-9]/g,'')) ||
+    z.toLowerCase().replace(/[^a-z0-9]/g,'').includes(k.toLowerCase().replace(/[^a-z0-9]/g,''))
+  );
+  return k!==undefined ? p[k] : 0;
+}
+function processBostaData({rawRows, contract, thresh}){
+  return rawRows.map((row, idx)=>{
+    const tracking = String(row['Tracking Number'] || row['tracking number'] || row['Tracking'] || '').trim();
+    const pkgSize  = String(row['Pkg Size'] || row['pkg size'] || '').trim();
+    const type     = String(row['Type'] || row['type'] || '').trim();
+    const state    = String(row['State'] || row['state'] || '').trim();
+    const zone     = String(row['Zone'] || row['zone'] || '').trim();
+    const insurFee = rv(row['Insurance Fees'] ?? row['insurance fees']);
+    const priceBAV = rv(row['Price Before VAT'] ?? row['price before vat']);
+    const commentRaw = String(row['Comments'] || row['comments'] || type).trim();
+
+    const breakdownLabel = BOSTA_LABEL[commentRaw] || BOSTA_LABEL[type] || commentRaw;
+    if(commentRaw==='COD Charges') return null;
+
+    let kShip1 = BOSTA_SPECIAL.has(commentRaw) ? priceBAV : bostaShipFee(contract, type, zone);
+    let kShip2 = BOSTA_SPECIAL.has(commentRaw) ? 0 : bostaPkgFee(contract, pkgSize, zone);
+    let diff = BOSTA_SPECIAL.has(commentRaw) ? 0 : priceBAV - kShip1 - kShip2 - insurFee;
+    diff = Math.round(diff*100)/100;
+    const isOver = Math.abs(diff) > thresh;
+
+    return { idx: idx+1, tracking, type, pkgSize, zone, state, commentRaw, breakdownLabel,
+      insurFee, priceBAV, kShip1, kShip2, insurance: insurFee, diff, isOver, thresh };
+  }).filter(Boolean);
+}
+
+/* ---------- i18n / chrome ---------- */
+function T(k){ return (I18N[lang]||{})[k] ?? k; }
+function applyI18n(){
+  document.documentElement.lang = lang;
+  document.documentElement.dir = lang==='ar' ? 'rtl' : 'ltr';
+  document.body.classList.toggle('ltr', lang==='en');
+
+  document.getElementById('login-lang').textContent = T('lang');
+  document.getElementById('login-title').textContent = T('loginTitle');
+  document.getElementById('login-subtitle').textContent = T('loginSubtitle');
+  document.getElementById('login-pwd-label').textContent = T('loginPwdLabel');
+  document.getElementById('login-submit').textContent = T('loginBtn');
+  document.getElementById('login-error').textContent = T('loginError');
+  document.getElementById('login-footer').textContent = T('loginFooter');
+
+  document.getElementById('hd-title').textContent = T('hd');
+  document.getElementById('hd-sub').textContent = T('hds');
+  document.getElementById('hd-lang-btn').textContent = T('lang');
+  document.getElementById('hd-logout-btn').textContent = '🔒 ' + T('logout');
+
+  document.getElementById('tab-bosta-lbl').textContent = T('tBosta');
+  document.getElementById('tab-aramex-lbl').textContent = T('tAramex');
+
+  document.getElementById('bo-note').innerHTML = T('note');
+  document.getElementById('bo-file-title').textContent = T('bo_file');
+  document.getElementById('bo-file-desc').textContent = T('bo_fileDesc');
+  document.getElementById('bo-report-btn').textContent = reportFile ? T('changeFile') : T('upload');
+  document.getElementById('bo-contract-title').textContent = T('bo_contract');
+  document.getElementById('bo-contract-desc').textContent = T('bo_contractDesc');
+  document.getElementById('bo-contract-btn').textContent = contractFile ? T('changeFile') : T('upload');
+  document.getElementById('bo-thresh-title').textContent = T('bo_thresh');
+  document.getElementById('bo-thresh-desc').textContent = T('bo_threshDesc');
+  document.getElementById('bo-month-lbl').textContent = T('bo_monthLbl');
+  document.getElementById('bo-process-btn').textContent = T('process');
+  document.getElementById('bo-save-btn').textContent = T('saveResults');
+  document.getElementById('bo-clear-btn').textContent = T('clearData');
+  document.getElementById('bo-toast').textContent = T('bo_toast');
+  document.getElementById('bo-kpi-shipments-lbl').textContent = T('totalShipments');
+  document.getElementById('bo-kpi-invoice-lbl').textContent = T('invoice');
+  document.getElementById('bo-kpi-egp').textContent = T('egp');
+  document.getElementById('bo-kpi-diff-lbl').textContent = T('differences');
+  document.getElementById('bo-type-lbl').textContent = T('bo_typeFilter');
+  document.getElementById('bo-search-lbl').textContent = T('search');
+  document.getElementById('bo-over-only-lbl').textContent = T('overOnly');
+  document.getElementById('bo-export-btn').textContent = T('export');
+  document.getElementById('bo-results-title').textContent = T('bo_resultsTitle');
+  document.getElementById('bo-empty-title').textContent = T('bo_emptyTitle');
+  document.getElementById('other-soon-title').textContent = T('soonTitle');
+
+  const LABELS = ['ALL','Delivered','RTO','RTN','COD Fees','Lost & Damaged','Last Mile CN'];
+  const sel = document.getElementById('bo-filter-type');
+  const prevVal = sel.value || 'ALL';
+  sel.innerHTML = LABELS.map(l=>`<option value="${l}">${l==='ALL'?T('all'):l}</option>`).join('');
+  sel.value = prevVal;
+}
+function toggleLang(){
+  lang = lang==='ar' ? 'en' : 'ar';
+  localStorage.setItem('kenzz3pl_lang', lang);
+  applyI18n();
+  if(bostaData.length) renderBostaTable();
+}
+
+/* ---------- auth ---------- */
+function toggleShowPwd(){
+  showPwd = !showPwd;
+  const inp = document.getElementById('login-pwd');
+  inp.type = showPwd ? 'text' : 'password';
+  document.getElementById('login-eye').textContent = showPwd ? '🙈' : '👁️';
+}
+function attemptLogin(e){
+  e.preventDefault();
+  const pwd = document.getElementById('login-pwd').value;
+  if(pwd === AUTH.PASSWORD){
+    sessionStorage.setItem(AUTH.SESSION_KEY, '1');
+    showApp();
+  } else {
+    const card = document.getElementById('login-card');
+    document.getElementById('login-pwd').classList.add('err');
+    document.getElementById('login-error').classList.add('show');
+    document.getElementById('login-pwd').value = '';
+    card.classList.add('shake');
+    setTimeout(()=>card.classList.remove('shake'), 600);
+  }
+  return false;
+}
+function logout(){
+  sessionStorage.removeItem(AUTH.SESSION_KEY);
+  document.getElementById('app').style.display = 'none';
+  document.getElementById('login-screen').style.display = 'flex';
+}
+function showApp(){
+  document.getElementById('login-screen').style.display = 'none';
+  document.getElementById('app').style.display = 'block';
+}
+
+/* ---------- tabs ---------- */
+function switchTab(name){
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.toggle('active', b.dataset.tab===name));
+  document.getElementById('panel-bosta').style.display = name==='bosta' ? 'block' : 'none';
+  document.getElementById('panel-other').style.display = name==='bosta' ? 'none' : 'block';
+}
+
+/* ---------- Bosta page logic ---------- */
+function showLoading(msg){ document.getElementById('loading-msg').textContent = msg; document.getElementById('loading-overlay').classList.add('show'); }
+function hideLoading(){ document.getElementById('loading-overlay').classList.remove('show'); }
+function showToast(){ const t=document.getElementById('bo-toast'); t.classList.add('show'); setTimeout(()=>t.classList.remove('show'), 3000); }
+
+document.getElementById('bo-report-inp').addEventListener('change', e=>{
+  if(e.target.files[0]){ reportFile = e.target.files[0]; document.getElementById('bo-report-status').textContent = '✅ ' + reportFile.name; applyI18n(); }
+  e.target.value = '';
+});
+document.getElementById('bo-contract-inp').addEventListener('change', e=>{
+  if(e.target.files[0]){ contractFile = e.target.files[0]; document.getElementById('bo-contract-status').textContent = '✅ ' + contractFile.name; applyI18n(); }
+  e.target.value = '';
+});
+
+function readBuf(f){
+  return new Promise((res,rej)=>{
+    const fr = new FileReader();
+    fr.onload = e => res(e.target.result);
+    fr.onerror = rej;
+    fr.readAsArrayBuffer(f);
+  });
+}
+
+async function processBosta(){
+  if(!reportFile){ alert(T('bo_alertNoFile')); return; }
+  showLoading(T('bo_loadingMsg'));
+  await new Promise(r=>setTimeout(r,30));
+  try{
+    const rwb = XLSX.read(await readBuf(reportFile), {type:'array'});
+    const rawRows = XLSX.utils.sheet_to_json(rwb.Sheets[rwb.SheetNames[0]], {defval:''});
+    let contract = {zones:[], shipping:{}, pkg:{}};
+    if(contractFile){
+      const cwb = XLSX.read(await readBuf(contractFile), {type:'array'});
+      contract = parseBostaContract(XLSX.utils.sheet_to_json(cwb.Sheets[cwb.SheetNames[0]], {header:1, defval:''}));
+    }
+    const thresh = parseFloat(document.getElementById('bo-thresh').value) || 0;
+    const result = processBostaData({rawRows, contract, thresh});
+    const uploadMonth = document.getElementById('bo-month').value;
+    const fmMo = iso => { if(!iso) return ''; const [y,m]=iso.split('-'); return ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][+m-1]+"'"+y.slice(2); };
+    bostaData = uploadMonth ? result.map(r=>({...r, uploadMonth: fmMo(uploadMonth)})) : result;
+    document.getElementById('bo-save-btn').disabled = !bostaData.length;
+    renderBosta();
+  }catch(err){
+    alert(T('errorPrefix') + err.message);
+  }finally{
+    hideLoading();
+  }
+}
+
+function renderBosta(){
+  const hasData = bostaData.length > 0;
+  document.getElementById('bo-results').style.display = hasData ? 'block' : 'none';
+  document.getElementById('bo-empty').style.display = hasData ? 'none' : 'block';
+  if(!hasData) return;
+
+  const totalBilled = bostaData.reduce((s,r)=>s+r.priceBAV, 0);
+  const overCount = bostaData.filter(r=>r.isOver).length;
+  document.getElementById('bo-kpi-shipments').textContent = fm(bostaData.length);
+  document.getElementById('bo-kpi-invoice').textContent = fm(totalBilled);
+  document.getElementById('bo-kpi-diff').textContent = fm(overCount);
+  document.getElementById('bo-kpi-diff-pct').textContent = ((overCount/bostaData.length)*100).toFixed(1) + '%';
+
+  renderBostaTable();
+}
+
+function getFilteredBosta(){
+  let d = bostaData;
+  const filter = document.getElementById('bo-filter-type').value || 'ALL';
+  const overOnly = document.getElementById('bo-over-only').checked;
+  const search = document.getElementById('bo-search').value.trim().toLowerCase();
+  if(filter !== 'ALL') d = d.filter(r=>r.breakdownLabel===filter);
+  if(overOnly) d = d.filter(r=>r.isOver);
+  if(search) d = d.filter(r=>String(r.tracking||'').toLowerCase().includes(search));
+  return d;
+}
+
+function renderBostaTable(){
+  if(!bostaData.length) return;
+  const filtered = getFilteredBosta();
+  document.getElementById('bo-results-count').textContent = filtered.length + ' / ' + bostaData.length;
+  const tbody = document.getElementById('bo-table-body');
+  tbody.innerHTML = filtered.map(r => `
+    <tr class="${bostaRowCls(r.breakdownLabel)}${r.isOver?' br-over':''}">
+      <td>${r.idx}</td>
+      <td class="td-lft" style="font-family:monospace;font-size:.76rem">${r.tracking}</td>
+      <td><span class="${bostaBadgeCls(r.breakdownLabel)}">${r.breakdownLabel}</span></td>
+      <td>${r.pkgSize}</td><td>${r.zone}</td>
+      <td class="td-ah">${fm(r.kShip1)}</td>
+      <td class="td-ai">${fm(r.kShip2)}</td>
+      <td class="td-ins">${fm(r.insurance)}</td>
+      <td class="td-r">${fm(r.priceBAV)}</td>
+      <td class="td-diff ${r.isOver?'fb-over':'fb-ok'}">${fm(r.diff)}</td>
+      <td><span class="${r.isOver?'fb-over':'fb-ok'}">${r.isOver?'▲ Over':'✓'}</span></td>
+    </tr>
+  `).join('');
+}
+
+function exportBosta(){
+  const filtered = getFilteredBosta();
+  const headers = ['#','Tracking','Type','Label','Pkg Size','Zone','Kenzz Ship','Kenzz Pkg','Insurance','Price BAV','Diff'];
+  exportCSV(headers, filtered.map(r=>[r.idx,r.tracking,r.type,r.breakdownLabel,r.pkgSize,r.zone,r.kShip1,r.kShip2,r.insurance,r.priceBAV,r.diff]), 'bosta_audit.csv');
+}
+
+function saveBosta(){
+  try{
+    localStorage.setItem(STORAGE_KEY, JSON.stringify({data: bostaData, saved: new Date().toISOString()}));
+    showToast();
+  }catch(e){ alert('Save failed.'); }
+}
+function clearBosta(){
+  if(!confirm(T('bo_confirmClear'))) return;
+  localStorage.removeItem(STORAGE_KEY);
+  bostaData = [];
+  document.getElementById('bo-save-btn').disabled = true;
+  renderBosta();
+}
+
+function loadPersisted(){
+  try{
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if(raw){
+      const parsed = JSON.parse(raw);
+      if(parsed?.data?.length){ bostaData = parsed.data; document.getElementById('bo-save-btn').disabled = false; }
+    }
+  }catch(e){}
+}
+
+/* ---------- init ---------- */
+applyI18n();
+loadPersisted();
+if(bostaData.length) renderBosta();
+if(sessionStorage.getItem(AUTH.SESSION_KEY) === '1'){ showApp(); }
+</script>
+</body>
+</html>
