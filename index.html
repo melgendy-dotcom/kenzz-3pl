@@ -2909,7 +2909,7 @@ function _getDb(){
   }catch(e){ console.warn('Firebase init:',e); }
   return _db;
 }
-const CLOUD_CHUNK = 250; // rows per Firestore doc (~60KB each, well under 1MB limit)
+const CLOUD_CHUNK = 500; // rows per Firestore doc (~125KB each, well under 1MB limit)
 
 async function cloudSave(key, value){
   const db = _getDb(); if(!db) throw new Error('Firebase not ready');
@@ -2919,14 +2919,15 @@ async function cloudSave(key, value){
     await db.collection('kenzz3pl').doc(key).set({ data: value, chunkCount: 0, updatedAt: new Date().toISOString() });
     return;
   }
-  // Split into chunks and save sequentially (reliable, avoids overwhelming Firestore)
+  // Split into chunks
   const chunks = [];
   for(let i = 0; i < dataArr.length; i += CLOUD_CHUNK) chunks.push(dataArr.slice(i, i + CLOUD_CHUNK));
   const meta = { ...parsed, data: null, chunkCount: chunks.length, updatedAt: new Date().toISOString() };
-  await db.collection('kenzz3pl').doc(key).set(meta);
-  for(let i = 0; i < chunks.length; i++){
-    await db.collection('kenzz3pl_c').doc(`${key}_${i}`).set({ d: JSON.stringify(chunks[i]) });
-  }
+  // Save meta + all chunks in parallel (fast, Firestore handles concurrent writes fine)
+  await Promise.all([
+    db.collection('kenzz3pl').doc(key).set(meta),
+    ...chunks.map((chunk, i) => db.collection('kenzz3pl_c').doc(`${key}_${i}`).set({ d: JSON.stringify(chunk) }))
+  ]);
 }
 
 async function cloudDelete(key){
