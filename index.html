@@ -2909,53 +2909,41 @@ function _getDb(){
   }catch(e){ console.warn('Firebase init:',e); }
   return _db;
 }
-const CLOUD_CHUNK = 500; // rows per Firestore doc (~125KB each, well under 1MB limit)
+// Gzip compress JSON string → base64 (97% smaller, fits in one Firestore doc)
+async function _gz(str){
+  const stream = new Response(str).body.pipeThrough(new CompressionStream('gzip'));
+  const buf = await new Response(stream).arrayBuffer();
+  const bytes = new Uint8Array(buf);
+  let b64 = '';
+  for(let i=0;i<bytes.length;i+=9000) b64 += btoa(String.fromCharCode(...bytes.subarray(i,i+9000)));
+  return b64;
+}
+async function _ungz(b64){
+  const binary = atob(b64);
+  const bytes = new Uint8Array(binary.length);
+  for(let i=0;i<binary.length;i++) bytes[i] = binary.charCodeAt(i);
+  const stream = new Response(bytes).body.pipeThrough(new DecompressionStream('gzip'));
+  return await new Response(stream).text();
+}
 
 async function cloudSave(key, value){
   const db = _getDb(); if(!db) throw new Error('Firebase not ready');
-  let parsed; try{ parsed = JSON.parse(value); }catch(e){ parsed = {data: value}; }
-  const dataArr = Array.isArray(parsed.data) ? parsed.data : null;
-  if(!dataArr || dataArr.length <= CLOUD_CHUNK){
-    await db.collection('kenzz3pl').doc(key).set({ data: value, chunkCount: 0, updatedAt: new Date().toISOString() });
-    return;
-  }
-  // Split into chunks
-  const chunks = [];
-  for(let i = 0; i < dataArr.length; i += CLOUD_CHUNK) chunks.push(dataArr.slice(i, i + CLOUD_CHUNK));
-  const meta = { ...parsed, data: null, chunkCount: chunks.length, updatedAt: new Date().toISOString() };
-  // Save meta + all chunks in parallel (fast, Firestore handles concurrent writes fine)
-  await Promise.all([
-    db.collection('kenzz3pl').doc(key).set(meta),
-    ...chunks.map((chunk, i) => db.collection('kenzz3pl_c').doc(`${key}_${i}`).set({ d: JSON.stringify(chunk) }))
-  ]);
+  const gz = await _gz(value);
+  await db.collection('kenzz3pl').doc(key).set({ gz, updatedAt: new Date().toISOString() });
 }
 
 async function cloudDelete(key){
   const db = _getDb(); if(!db) return;
-  try{
-    const meta = await db.collection('kenzz3pl').doc(key).get();
-    const count = meta.exists ? (meta.data().chunkCount || 0) : 0;
-    const dels = [db.collection('kenzz3pl').doc(key).delete()];
-    for(let i = 0; i < count; i++) dels.push(db.collection('kenzz3pl_c').doc(`${key}_${i}`).delete());
-    await Promise.all(dels);
-  }catch(e){ console.warn('cloudDelete failed:',e); }
+  db.collection('kenzz3pl').doc(key).delete().catch(e=>console.warn('cloudDelete:',e));
 }
 
 async function cloudLoadOne(db, key){
   const snap = await db.collection('kenzz3pl').doc(key).get();
   if(!snap.exists) return null;
-  const meta = snap.data();
-  const chunkCount = meta.chunkCount || 0;
-  if(chunkCount === 0) return meta.data ? JSON.parse(meta.data) : null;
-  // Reassemble chunks into data array
-  const allRows = [];
-  for(let i = 0; i < chunkCount; i++){
-    const cs = await db.collection('kenzz3pl_c').doc(`${key}_${i}`).get();
-    if(cs.exists) allRows.push(...JSON.parse(cs.data().d));
-  }
-  const result = { ...meta, data: allRows };
-  delete result.chunkCount;
-  return result;
+  const d = snap.data();
+  if(d.gz) return JSON.parse(await _ungz(d.gz));
+  if(d.data) return JSON.parse(d.data); // legacy uncompressed
+  return null;
 }
 
 async function cloudLoadAll(){
