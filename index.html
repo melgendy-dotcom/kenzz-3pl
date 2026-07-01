@@ -1302,11 +1302,19 @@ function exportBosta(){
   exportCSV(headers, filtered.map(r=>[r.idx,r.tracking,r.type,r.breakdownLabel,r.pkgSize,r.zone,r.kShip1,r.kShip2,r.insurance,r.priceBAV,r.diff]), 'bosta_audit.csv');
 }
 
-function saveBosta(){
-  const v = JSON.stringify({data: bostaData, saved: new Date().toISOString()});
-  try{ localStorage.setItem(STORAGE_KEY, v); }catch(e){ console.warn('localStorage full, using cloud only'); }
-  cloudSave('bosta', v);
-  showToast();
+async function saveBosta(){
+  const btn = document.getElementById('bo-save-btn');
+  const origText = btn.innerHTML;
+  btn.disabled = true; btn.innerHTML = '⏳ Saving...';
+  try{
+    await cloudSave('bosta', JSON.stringify({data: bostaData, saved: new Date().toISOString()}));
+    showToast();
+  }catch(e){
+    console.error('saveBosta failed:',e);
+    alert('Cloud save failed: ' + e.message);
+  }finally{
+    btn.innerHTML = origText; btn.disabled = false;
+  }
 }
 function clearBosta(){
   if(!confirm(T('bo_confirmClear'))) return;
@@ -1650,11 +1658,19 @@ function exportAramex(){
   const rows = filtered.map(r => [r.idx, r.awb, r.city, r.statusRaw, r.originZone, r.destZone, r.weight, r.baseCharge, r.kenzzBase, r.annualIncrease, r.fuelCharges, r.codFees, r.otherCharge, r.diffBase, r.diffOther, r.flagBase?'Base Over':r.flagOther?'Other Over':'OK']);
   exportCSV(headers, rows, 'aramex_audit.csv');
 }
-function saveAramex(){
-  const v = JSON.stringify({data: auditData, cfg: getAramexCfg(), saved: new Date().toISOString()});
-  try{ localStorage.setItem(ARAMEX_STORAGE_KEY, v); }catch(e){ console.warn('localStorage full, using cloud only'); }
-  cloudSave('aramex', v);
-  const t=document.getElementById('ar-toast'); t.classList.add('show'); setTimeout(()=>t.classList.remove('show'), 3200);
+async function saveAramex(){
+  const btn = document.getElementById('ar-save-btn');
+  const origText = btn.innerHTML;
+  btn.disabled = true; btn.innerHTML = '⏳ Saving...';
+  try{
+    await cloudSave('aramex', JSON.stringify({data: auditData, cfg: getAramexCfg(), saved: new Date().toISOString()}));
+    const t=document.getElementById('ar-toast'); t.classList.add('show'); setTimeout(()=>t.classList.remove('show'), 3200);
+  }catch(e){
+    console.error('saveAramex failed:',e);
+    alert('Cloud save failed: ' + e.message);
+  }finally{
+    btn.innerHTML = origText; btn.disabled = false;
+  }
 }
 function clearAramex(){
   if(!confirm(T('ar_confirmClear'))) return;
@@ -1931,11 +1947,19 @@ function exportMashreq(){
   const headers = ['#','AWB','Month','Status','Size','Dest Zone','Orig Zone','Actual Charge','Actual PU','Actual Ins','Actual COD','Calc LM','Calc PU','Calc Ins','Calc COD','Total Billed','Total Calc','Diff'];
   exportCSV(headers, filtered.map(r=>[r.idx,r.awb,r.month,r.status,r.size,r.destZone,r.origZone,r.actualCharge,r.actualPickup,r.actualIns,r.actualCODFees,r.calcLM,r.calcPickup,r.calcIns,r.calcCOD,r.totalBilled,r.totalCalc,r.diff]), 'mashreq_audit.csv');
 }
-function saveMashreq(){
-  const v = JSON.stringify({data: mqData, saved: new Date().toISOString()});
-  try{ localStorage.setItem(MQ_STORAGE_KEY, v); }catch(e){ console.warn('localStorage full, using cloud only'); }
-  cloudSave('mashreq', v);
-  const t=document.getElementById('mq-toast'); t.classList.add('show'); setTimeout(()=>t.classList.remove('show'), 3000);
+async function saveMashreq(){
+  const btn = document.getElementById('mq-save-btn');
+  const origText = btn.innerHTML;
+  btn.disabled = true; btn.innerHTML = '⏳ Saving...';
+  try{
+    await cloudSave('mashreq', JSON.stringify({data: mqData, saved: new Date().toISOString()}));
+    const t=document.getElementById('mq-toast'); t.classList.add('show'); setTimeout(()=>t.classList.remove('show'), 3000);
+  }catch(e){
+    console.error('saveMashreq failed:',e);
+    alert('Cloud save failed: ' + e.message);
+  }finally{
+    btn.innerHTML = origText; btn.disabled = false;
+  }
 }
 function clearMashreq(){
   if(!confirm(T('mq_confirmClear'))) return;
@@ -2153,11 +2177,19 @@ function exportRayaPage(){
   const headers = ['#','AWB','Status','Zone','Tier','Category','Total Billed','Contract Price','Diff'];
   exportCSV(headers, filtered.map(r=>[r.idx,r.awb,r.status,r.zone,r.tier,r.category,r.totalBilled,r.contractPrice,r.diff]), 'raya_audit.csv');
 }
-function saveRayaPage(){
-  const v = JSON.stringify({data: rayaData, saved: new Date().toISOString()});
-  try{ localStorage.setItem(RAYA_STORAGE_KEY, v); }catch(e){ console.warn('localStorage full, using cloud only'); }
-  cloudSave('raya', v);
-  const t=document.getElementById('ra-toast'); t.classList.add('show'); setTimeout(()=>t.classList.remove('show'), 3000);
+async function saveRayaPage(){
+  const btn = document.getElementById('ra-save-btn');
+  const origText = btn.innerHTML;
+  btn.disabled = true; btn.innerHTML = '⏳ Saving...';
+  try{
+    await cloudSave('raya', JSON.stringify({data: rayaData, saved: new Date().toISOString()}));
+    const t=document.getElementById('ra-toast'); t.classList.add('show'); setTimeout(()=>t.classList.remove('show'), 3000);
+  }catch(e){
+    console.error('saveRaya failed:',e);
+    alert('Cloud save failed: ' + e.message);
+  }finally{
+    btn.innerHTML = origText; btn.disabled = false;
+  }
 }
 function clearRayaPage(){
   if(!confirm(T('ra_confirmClear'))) return;
@@ -2406,7 +2438,7 @@ let bdFile  = null;
   try{ const s=localStorage.getItem(BD_STORAGE); if(s) bdStore=JSON.parse(s); }catch(e){}
 })();
 
-function bdSave(){ try{ const v=JSON.stringify(bdStore); localStorage.setItem(BD_STORAGE,v); cloudSave('breakdown',v); }catch(e){} }
+function bdSave(){ cloudSave('breakdown', JSON.stringify(bdStore)).catch(e=>console.warn('bdSave failed:',e)); }
 
 function bdShowToast(msg){ const t=document.getElementById('bd-toast'); t.textContent=msg; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),3200); }
 
@@ -2877,38 +2909,24 @@ function _getDb(){
   }catch(e){ console.warn('Firebase init:',e); }
   return _db;
 }
-const CLOUD_CHUNK = 300; // rows per Firestore document (~60KB each, well under 1MB limit)
+const CLOUD_CHUNK = 250; // rows per Firestore doc (~60KB each, well under 1MB limit)
 
 async function cloudSave(key, value){
-  const db = _getDb(); if(!db) return;
-  try{
-    let parsed; try{ parsed = JSON.parse(value); }catch(e){ parsed = value; }
-    const dataArr = Array.isArray(parsed.data) ? parsed.data : (Array.isArray(parsed) ? parsed : null);
-    if(!dataArr || dataArr.length <= CLOUD_CHUNK){
-      // Small enough for single doc
-      await db.collection('kenzz3pl').doc(key).set({ data: value, chunkCount: 0, updatedAt: new Date().toISOString() });
-      return;
-    }
-    // Split into chunks
-    const chunks = [];
-    for(let i = 0; i < dataArr.length; i += CLOUD_CHUNK) chunks.push(dataArr.slice(i, i + CLOUD_CHUNK));
-    const meta = { ...parsed, data: null, chunkCount: chunks.length, totalRows: dataArr.length, updatedAt: new Date().toISOString() };
-    // Delete old chunks first (in case count decreased)
-    const oldMeta = await db.collection('kenzz3pl').doc(key).get();
-    const oldCount = oldMeta.exists ? (oldMeta.data().chunkCount || 0) : 0;
-    const deletes = [];
-    for(let i = chunks.length; i < oldCount; i++) deletes.push(db.collection('kenzz3pl_c').doc(`${key}_${i}`).delete());
-    if(deletes.length) await Promise.all(deletes);
-    // Save chunks in batches of 400 ops
-    const ops = [db.collection('kenzz3pl').doc(key).set(meta)];
-    chunks.forEach((chunk, i) => ops.push(db.collection('kenzz3pl_c').doc(`${key}_${i}`).set({ d: JSON.stringify(chunk) })));
-    // Firestore batch limit is 500; split if needed
-    for(let i = 0; i < ops.length; i += 400){
-      const batch = db.batch();
-      ops.slice(i, i+400).forEach(op => { /* op is already a promise */ });
-      await Promise.all(ops.slice(i, i+400));
-    }
-  }catch(e){ console.warn('cloudSave failed:',e); }
+  const db = _getDb(); if(!db) throw new Error('Firebase not ready');
+  let parsed; try{ parsed = JSON.parse(value); }catch(e){ parsed = {data: value}; }
+  const dataArr = Array.isArray(parsed.data) ? parsed.data : null;
+  if(!dataArr || dataArr.length <= CLOUD_CHUNK){
+    await db.collection('kenzz3pl').doc(key).set({ data: value, chunkCount: 0, updatedAt: new Date().toISOString() });
+    return;
+  }
+  // Split into chunks and save sequentially (reliable, avoids overwhelming Firestore)
+  const chunks = [];
+  for(let i = 0; i < dataArr.length; i += CLOUD_CHUNK) chunks.push(dataArr.slice(i, i + CLOUD_CHUNK));
+  const meta = { ...parsed, data: null, chunkCount: chunks.length, updatedAt: new Date().toISOString() };
+  await db.collection('kenzz3pl').doc(key).set(meta);
+  for(let i = 0; i < chunks.length; i++){
+    await db.collection('kenzz3pl_c').doc(`${key}_${i}`).set({ d: JSON.stringify(chunks[i]) });
+  }
 }
 
 async function cloudDelete(key){
@@ -2923,47 +2941,60 @@ async function cloudDelete(key){
 }
 
 async function cloudLoadOne(db, key){
-  const meta = await db.collection('kenzz3pl').doc(key).get();
-  if(!meta.exists) return null;
-  const metaData = meta.data();
-  const chunkCount = metaData.chunkCount || 0;
-  if(chunkCount === 0){
-    return metaData.data || null;
-  }
-  // Reassemble from chunks
-  const chunkDocs = await Promise.all(
-    Array.from({length: chunkCount}, (_,i) => db.collection('kenzz3pl_c').doc(`${key}_${i}`).get())
-  );
+  const snap = await db.collection('kenzz3pl').doc(key).get();
+  if(!snap.exists) return null;
+  const meta = snap.data();
+  const chunkCount = meta.chunkCount || 0;
+  if(chunkCount === 0) return meta.data ? JSON.parse(meta.data) : null;
+  // Reassemble chunks into data array
   const allRows = [];
-  chunkDocs.forEach(snap => { if(snap.exists) allRows.push(...JSON.parse(snap.data().d)); });
-  const result = { ...metaData, data: allRows, chunkCount: undefined, totalRows: undefined };
-  delete result.chunkCount; delete result.totalRows;
-  return JSON.stringify(result);
+  for(let i = 0; i < chunkCount; i++){
+    const cs = await db.collection('kenzz3pl_c').doc(`${key}_${i}`).get();
+    if(cs.exists) allRows.push(...JSON.parse(cs.data().d));
+  }
+  const result = { ...meta, data: allRows };
+  delete result.chunkCount;
+  return result;
 }
 
 async function cloudLoadAll(){
   const db = _getDb(); if(!db) return;
-  const keys = ['bosta','aramex','mashreq','raya','breakdown'];
-  const storageMap = {
-    bosta: STORAGE_KEY, aramex: ARAMEX_STORAGE_KEY,
-    mashreq: MQ_STORAGE_KEY, raya: RAYA_STORAGE_KEY, breakdown: BD_STORAGE
-  };
   try{
-    const vals = await Promise.all(keys.map(k => cloudLoadOne(db, k)));
-    let reloaded = false;
-    vals.forEach((cloudVal, i)=>{
-      if(!cloudVal) return;
-      try{ localStorage.setItem(storageMap[keys[i]], cloudVal); }catch(e){}
-      reloaded = true;
-    });
-    if(reloaded){
-      loadPersisted(); loadPersistedAramex(); loadPersistedMashreq(); loadPersistedRaya();
-      try{ const s=localStorage.getItem(BD_STORAGE); if(s) bdStore=JSON.parse(s); }catch(e){}
-      if(bostaData.length) renderBosta();
-      if(auditData.length) renderAramex();
-      if(mqData.length) renderMashreq();
-      if(rayaData.length) renderRayaPage();
-      if(bdStore && document.getElementById('panel-breakdown').style.display!=='none') renderBreakdown();
+    // Load all carriers in parallel
+    const [bSnap, aSnap, mSnap, rSnap, bdSnap] = await Promise.all([
+      cloudLoadOne(db,'bosta'), cloudLoadOne(db,'aramex'),
+      cloudLoadOne(db,'mashreq'), cloudLoadOne(db,'raya'), cloudLoadOne(db,'breakdown')
+    ]);
+
+    if(bSnap?.data?.length){
+      bostaData = bSnap.data;
+      document.getElementById('bo-save-btn').disabled = false;
+      renderBosta();
+    }
+    if(aSnap?.data?.length){
+      auditData = aSnap.data;
+      document.getElementById('ar-save-btn').disabled = false;
+      if(aSnap.cfg){
+        document.getElementById('ar-cfg-codthresh').value = aSnap.cfg.COD_THRESH;
+        document.getElementById('ar-cfg-codpct').value    = aSnap.cfg.COD_PCT;
+        document.getElementById('ar-cfg-annualpct').value = aSnap.cfg.ANNUAL_PCT;
+        document.getElementById('ar-cfg-fuelpct').value   = aSnap.cfg.FUEL_PCT;
+        document.getElementById('ar-cfg-overthresh').value= aSnap.cfg.OVER_THRESH;
+      }
+      renderAramex();
+    }
+    if(mSnap?.data?.length){
+      mqData = mSnap.data;
+      document.getElementById('mq-save-btn').disabled = false;
+      renderMashreq();
+    }
+    if(rSnap?.data?.length){
+      rayaData = rSnap.data;
+      document.getElementById('ra-save-btn').disabled = false;
+      renderRayaPage();
+    }
+    if(bdSnap){
+      try{ bdStore = typeof bdSnap === 'string' ? JSON.parse(bdSnap) : bdSnap; }catch(e){}
     }
   }catch(e){ console.warn('cloudLoadAll failed:',e); }
 }
