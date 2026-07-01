@@ -5,6 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Kenzz 3PL</title>
 <script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
 <style>
 :root {
   --green: #00f159; --green2: #00b844; --purple: #7E00E1; --purple2: #5a00a3;
@@ -1297,12 +1299,10 @@ function exportBosta(){
 }
 
 function saveBosta(){
-  try{
-    const v = JSON.stringify({data: bostaData, saved: new Date().toISOString()});
-    localStorage.setItem(STORAGE_KEY, v);
-    cloudSave('bosta', v);
-    showToast();
-  }catch(e){ alert('Save failed.'); }
+  const v = JSON.stringify({data: bostaData, saved: new Date().toISOString()});
+  try{ localStorage.setItem(STORAGE_KEY, v); }catch(e){ console.warn('localStorage full, using cloud only'); }
+  cloudSave('bosta', v);
+  showToast();
 }
 function clearBosta(){
   if(!confirm(T('bo_confirmClear'))) return;
@@ -1647,12 +1647,10 @@ function exportAramex(){
   exportCSV(headers, rows, 'aramex_audit.csv');
 }
 function saveAramex(){
-  try{
-    const v = JSON.stringify({data: auditData, cfg: getAramexCfg(), saved: new Date().toISOString()});
-    localStorage.setItem(ARAMEX_STORAGE_KEY, v);
-    cloudSave('aramex', v);
-    const t=document.getElementById('ar-toast'); t.classList.add('show'); setTimeout(()=>t.classList.remove('show'), 3200);
-  }catch(e){ alert('Save failed.'); }
+  const v = JSON.stringify({data: auditData, cfg: getAramexCfg(), saved: new Date().toISOString()});
+  try{ localStorage.setItem(ARAMEX_STORAGE_KEY, v); }catch(e){ console.warn('localStorage full, using cloud only'); }
+  cloudSave('aramex', v);
+  const t=document.getElementById('ar-toast'); t.classList.add('show'); setTimeout(()=>t.classList.remove('show'), 3200);
 }
 function clearAramex(){
   if(!confirm(T('ar_confirmClear'))) return;
@@ -1930,11 +1928,10 @@ function exportMashreq(){
   exportCSV(headers, filtered.map(r=>[r.idx,r.awb,r.month,r.status,r.size,r.destZone,r.origZone,r.actualCharge,r.actualPickup,r.actualIns,r.actualCODFees,r.calcLM,r.calcPickup,r.calcIns,r.calcCOD,r.totalBilled,r.totalCalc,r.diff]), 'mashreq_audit.csv');
 }
 function saveMashreq(){
-  try{ const v = JSON.stringify({data: mqData, saved: new Date().toISOString()});
-    localStorage.setItem(MQ_STORAGE_KEY, v);
-    cloudSave('mashreq', v);
-    const t=document.getElementById('mq-toast'); t.classList.add('show'); setTimeout(()=>t.classList.remove('show'), 3000);
-  }catch(e){ alert('Save failed.'); }
+  const v = JSON.stringify({data: mqData, saved: new Date().toISOString()});
+  try{ localStorage.setItem(MQ_STORAGE_KEY, v); }catch(e){ console.warn('localStorage full, using cloud only'); }
+  cloudSave('mashreq', v);
+  const t=document.getElementById('mq-toast'); t.classList.add('show'); setTimeout(()=>t.classList.remove('show'), 3000);
 }
 function clearMashreq(){
   if(!confirm(T('mq_confirmClear'))) return;
@@ -2935,9 +2932,7 @@ if(auditData.length) renderAramex();
 if(mqData.length) renderMashreq();
 if(rayaData.length) renderRayaPage();
 if(sessionStorage.getItem(AUTH.SESSION_KEY) === '1'){ showApp(); }
-window.addEventListener('load', cloudLoadAll);
+if(sessionStorage.getItem(AUTH.SESSION_KEY) === '1'){ cloudLoadAll(); }
 </script>
-<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
 </body>
 </html>
