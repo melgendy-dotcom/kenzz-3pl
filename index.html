@@ -83,6 +83,13 @@ main{max-width:1500px;margin:0 auto;padding:22px 18px 60px}
 .card-hdr{background:linear-gradient(135deg,var(--purple),var(--purple2));color:#fff;padding:12px 18px;font-size:.88rem;font-weight:800;display:flex;align-items:center;gap:8px;justify-content:space-between}
 .card-hdr .dot{width:8px;height:8px;background:var(--green);border-radius:50%;flex-shrink:0}
 .tbl-scroll{overflow-x:auto;max-height:65vh;overflow-y:auto}
+.chips-wrap{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.chip{display:inline-flex;align-items:center;gap:5px;background:#f3f4f6;border:1px solid var(--border);border-radius:20px;padding:4px 12px;font-size:.72rem;font-weight:700;color:var(--muted)}
+.chip-g{background:#dcfce7;border-color:#86efac;color:#15803d}
+.chip-lbl{font-size:.65rem;opacity:.7;margin-right:2px}
+.bd-table{width:100%;border-collapse:collapse}
+.bd-table th,.bd-table td{padding:5px 10px;font-size:.75rem;border-bottom:1px solid var(--border)}
+.bd-table thead th{position:sticky;top:0;z-index:1}
 .data-table{width:100%;border-collapse:collapse;font-size:.79rem}
 .data-table thead tr{background:var(--dark);color:#fff;position:sticky;top:0;z-index:20}
 .data-table thead th{padding:9px 12px;text-align:center;white-space:nowrap;font-weight:700;border-right:1px solid rgba(255,255,255,.1)}
@@ -117,6 +124,58 @@ main{max-width:1500px;margin:0 auto;padding:22px 18px 60px}
 .cb-lost{background:#fee2e2;color:#b91c1c;border-radius:4px;padding:2px 8px;font-size:.68rem;font-weight:700}
 .cb-lastmile{background:#fae8ff;color:#7e22ce;border-radius:4px;padding:2px 8px;font-size:.68rem;font-weight:700}
 .cb-other{background:#f3f4f6;color:var(--muted);border-radius:4px;padding:2px 8px;font-size:.68rem;font-weight:700}
+.cfg-card{background:#fff;border-radius:var(--r);box-shadow:var(--sh);margin-bottom:18px;overflow:hidden;border:1.5px solid var(--border)}
+.cfg-hdr{background:linear-gradient(135deg,var(--dark),#2d0066);color:#fff;padding:13px 20px;font-size:.86rem;font-weight:800;display:flex;justify-content:space-between;align-items:center;cursor:pointer;user-select:none}
+.cfg-hdr:hover{filter:brightness(1.1)}
+.cfg-body{padding:18px 20px;display:none}
+.cfg-body.open{display:block}
+.cfg-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:14px}
+.cfg-field{display:flex;flex-direction:column;gap:5px}
+.cfg-field label{font-size:.75rem;font-weight:700;color:var(--purple);letter-spacing:.4px}
+.cfg-field input{border:1.5px solid var(--border);border-radius:7px;padding:8px 12px;font-size:.9rem;font-variant-numeric:tabular-nums;transition:border-color .2s}
+.cfg-field input:focus{outline:none;border-color:var(--purple)}
+.cfg-field small{font-size:.7rem;color:var(--muted)}
+.asum-card.vo{border-top:4px solid var(--amber)}
+.asum-card.vo .aval{color:#b45309}
+.asum-card.vb{border-top:4px solid #6366f1}
+.asum-card.vb .aval{color:#4f46e5}
+.data-table thead th.th-lm{background:#0369a1}
+.data-table thead th.th-pu{background:#7c3aed}
+.data-table thead th.th-cod{background:#b45309}
+.data-table tbody td.td-lm{background:#eff6ff}
+.data-table tbody td.td-pu{background:#f5f3ff}
+.data-table tbody td.td-cod{background:#fffbeb}
+.flag-base td{background:#fdf4ff!important}
+.flag-base td.td-ah{background:#ede9fe!important;color:#7c3aed}
+.flag-other td{background:#eff6ff!important}
+.flag-other td.td-ai{background:#dbeafe!important;color:#1d4ed8}
+.flag-both td{background:#fff5f5!important}
+.flag-both td.td-ah,.flag-both td.td-ai{background:#fee2e2!important;color:var(--red)}
+.flag-pending td{background:#fffbeb!important}
+.fb-pend{color:var(--amber);font-weight:700}
+.sz-badge{display:inline-block;border-radius:4px;padding:2px 8px;font-size:.72rem;font-weight:800}
+.sz-s{background:#dbeafe;color:#1e40af}
+.sz-m{background:#dcfce7;color:#15803d}
+.sz-l{background:#fef9c3;color:#854d0e}
+.sz-xl{background:#fae8ff;color:#7e22ce}
+.mq-over td.td-diff{color:var(--red)!important;background:#fee2e2!important}
+.mq-ok td.td-diff{color:var(--green2)!important}
+.raya-cat-l{background:#fef9c3;color:#854d0e;border-radius:4px;padding:2px 8px;font-size:.71rem;font-weight:800}
+.raya-cat-m{background:#dcfce7;color:#15803d;border-radius:4px;padding:2px 8px;font-size:.71rem;font-weight:800}
+.raya-cat-s{background:#dbeafe;color:#1e40af;border-radius:4px;padding:2px 8px;font-size:.71rem;font-weight:800}
+.raya-tier{background:#ede9fe;color:#5b21b6;border-radius:4px;padding:2px 7px;font-size:.7rem;font-weight:700}
+.raya-over{background:#fff5f5}
+.raya-over td.td-raya-diff{color:var(--red)!important;background:#fee2e2!important}
+.raya-ok td.td-raya-diff{color:var(--green2)!important}
+.raya-ret{background:#fdf4ff}
+.data-table thead th.th-raya-dl{background:#0369a1}
+.data-table thead th.th-raya-pu{background:#7c3aed}
+.data-table thead th.th-raya-diff{background:#b91c1c}
+.data-table thead th.th-raya-k{background:#0f766e}
+.data-table tbody td.td-raya-dl{background:#eff6ff}
+.data-table tbody td.td-raya-pu{background:#f5f3ff}
+.data-table tbody td.td-raya-k{background:#f0fdfa;color:#0f766e;font-weight:700}
+.data-table tbody td.td-raya-diff{font-weight:800}
 .empty{text-align:center;padding:50px 20px;color:var(--muted)}
 .empty-icon{font-size:3rem;margin-bottom:12px}
 .empty h3{font-size:1.05rem;font-weight:700;margin-bottom:5px;color:var(--text)}
@@ -147,7 +206,17 @@ html[dir=ltr] #login-eye{right:12px}
 #login-submit{background:linear-gradient(135deg,#7200D8,#5a00a3);color:#fff;border:none;border-radius:10px;padding:13px;font-size:1rem;font-weight:800;cursor:pointer;width:100%;margin-top:16px;box-shadow:0 4px 18px rgba(114,0,216,.35);transition:transform .15s}
 #login-submit:hover{transform:translateY(-2px)}
 .login-footer{text-align:center;margin-top:24px;color:#9ca3af;font-size:.72rem}
-.coming-soon{text-align:center;padding:80px 20px;color:var(--muted)}
+.coming-soon{text-align:center;padding:80px 20px;color:var(--muted);flex-direction:column;align-items:center;justify-content:center}
+.an-section{border:1px solid var(--border);border-radius:10px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,.06)}
+.an-hdr{padding:10px 16px;color:#fff;font-weight:700;font-size:.85rem;display:flex;align-items:center;gap:8px}
+.an-hdr .dot{width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,.6);flex-shrink:0}
+.an-body{padding:16px;background:#fff}
+.an-kpi-row{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:4px}
+.an-kpi{flex:1;min-width:130px;background:var(--bg);border-radius:8px;padding:12px 14px;border-top:3px solid var(--purple)}
+.an-kpi-lbl{font-size:.7rem;color:var(--muted);font-weight:600;margin-bottom:4px;text-transform:uppercase;letter-spacing:.04em}
+.an-kpi-val{font-size:1.25rem;font-weight:700;line-height:1.2}
+.an-kpi-sub{font-size:.7rem;color:var(--muted);margin-top:3px}
+.sbar-title{font-size:.75rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin-bottom:8px}
 </style>
 </head>
 <body>
@@ -191,6 +260,7 @@ html[dir=ltr] #login-eye{right:12px}
     <button class="tab-btn" data-tab="mashreq" onclick="switchTab('mashreq')"><span>🔄</span>Aramex Mashreq</button>
     <button class="tab-btn" data-tab="raya" onclick="switchTab('raya')"><span>🚚</span>Raya Review</button>
     <button class="tab-btn" data-tab="analytics" onclick="switchTab('analytics')"><span>📈</span>Analytics</button>
+    <button class="tab-btn" data-tab="breakdown" onclick="switchTab('breakdown')"><span>📊</span>Data Breakdown</button>
   </nav>
 
   <main>
@@ -277,11 +347,371 @@ html[dir=ltr] #login-eye{right:12px}
       </div>
     </div>
 
-    <div id="panel-other" style="display:none">
-      <div class="coming-soon">
-        <div class="empty-icon">🚧</div>
-        <h3 id="other-soon-title"></h3>
+    <div id="panel-aramex" style="display:none">
+      <div class="note-bar" id="ar-note"></div>
+
+      <div class="audit-upload-grid">
+        <div class="auc p">
+          <h3 id="ar-file-title"></h3><p class="desc" id="ar-file-desc"></p>
+          <button class="afl p" onclick="document.getElementById('ar-file-inp').click()" id="ar-file-btn"></button>
+          <input type="file" id="ar-file-inp" accept=".xlsx,.xls,.csv" style="display:none">
+          <div class="aust" id="ar-file-status"></div>
+        </div>
+        <div class="auc g">
+          <h3 id="ar-odoo-title"></h3><p class="desc" id="ar-odoo-desc"></p>
+          <button class="afl g" onclick="document.getElementById('ar-odoo-inp').click()" id="ar-odoo-btn"></button>
+          <input type="file" id="ar-odoo-inp" accept=".xlsx,.xls,.csv" style="display:none">
+          <div class="aust" id="ar-odoo-status"></div>
+        </div>
+        <div class="auc o">
+          <h3 id="ar-zones-title"></h3><p class="desc" id="ar-zones-desc"></p>
+          <button class="afl o" onclick="document.getElementById('ar-zones-inp').click()" id="ar-zones-btn" style="background:linear-gradient(135deg,#d97706,var(--amber))"></button>
+          <input type="file" id="ar-zones-inp" accept=".xlsx,.xls,.csv" style="display:none">
+          <div class="aust" id="ar-zones-status"></div>
+        </div>
+        <div class="auc r">
+          <h3 id="ar-status-title" style="color:var(--red)"></h3><p class="desc" id="ar-status-desc"></p>
+          <button class="afl r" onclick="document.getElementById('ar-status-inp').click()" id="ar-status-btn" style="background:linear-gradient(135deg,#b91c1c,var(--red))"></button>
+          <input type="file" id="ar-status-inp" accept=".xlsx,.xls,.csv" style="display:none">
+          <div class="aust" id="ar-status-status"></div>
+        </div>
       </div>
+
+      <div class="cfg-card">
+        <div class="cfg-hdr" onclick="document.getElementById('ar-cfg-body').classList.toggle('open'); document.getElementById('ar-cfg-arrow').textContent = document.getElementById('ar-cfg-body').classList.contains('open') ? '▲' : '▼'">
+          <span id="ar-cfg-title"></span><span id="ar-cfg-arrow">▼</span>
+        </div>
+        <div class="cfg-body" id="ar-cfg-body">
+          <div class="cfg-grid">
+            <div class="cfg-field"><label id="ar-codthresh-lbl"></label><input type="number" id="ar-cfg-codthresh" value="6000" step="0.001"><small id="ar-codthresh-hint"></small></div>
+            <div class="cfg-field"><label id="ar-codpct-lbl"></label><input type="number" id="ar-cfg-codpct" value="0.005" step="0.001"><small id="ar-codpct-hint"></small></div>
+            <div class="cfg-field"><label id="ar-annualpct-lbl"></label><input type="number" id="ar-cfg-annualpct" value="0.125" step="0.001"><small id="ar-annualpct-hint"></small></div>
+            <div class="cfg-field"><label id="ar-fuelpct-lbl"></label><input type="number" id="ar-cfg-fuelpct" value="0.38" step="0.001"><small id="ar-fuelpct-hint"></small></div>
+            <div class="cfg-field"><label id="ar-overthresh-lbl"></label><input type="number" id="ar-cfg-overthresh" value="1" step="0.001"><small id="ar-overthresh-hint"></small></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="process-row">
+        <div style="display:flex;align-items:center;gap:8px;background:rgba(0,0,0,.04);border-radius:8px;padding:6px 12px">
+          <label id="ar-month-lbl" style="font-size:.75rem;color:var(--muted);white-space:nowrap"></label>
+          <input type="month" id="ar-month" style="background:transparent;border:none;color:var(--text);font-size:.8rem;outline:none;cursor:pointer">
+        </div>
+        <button class="btn-primary" onclick="processAramex()" id="ar-process-btn"></button>
+        <button class="btn-save" id="ar-save-btn" onclick="saveAramex()" disabled></button>
+        <button class="btn-clear" onclick="clearAramex()" id="ar-clear-btn"></button>
+        <div class="toast" id="ar-toast"></div>
+      </div>
+
+      <div id="ar-results" style="display:none">
+        <div class="asum-grid">
+          <div class="asum-card vp"><div class="albl" id="ar-kpi-total-lbl"></div><div class="aval" id="ar-kpi-total">0</div></div>
+          <div class="asum-card vg"><div class="albl" id="ar-kpi-del-lbl"></div><div class="aval" id="ar-kpi-del">0</div><div class="asub" id="ar-kpi-del-pct"></div></div>
+          <div class="asum-card vr"><div class="albl" id="ar-kpi-ret-lbl"></div><div class="aval" id="ar-kpi-ret">0</div><div class="asub" id="ar-kpi-ret-pct"></div></div>
+          <div class="asum-card vo"><div class="albl" id="ar-kpi-flagbase-lbl"></div><div class="aval" id="ar-kpi-flagbase">0</div></div>
+          <div class="asum-card vr"><div class="albl" id="ar-kpi-flagother-lbl"></div><div class="aval" id="ar-kpi-flagother">0</div></div>
+          <div class="asum-card vb"><div class="albl" id="ar-kpi-difftot-lbl"></div><div class="aval" id="ar-kpi-difftot">0</div><div class="asub" id="ar-kpi-egp"></div></div>
+        </div>
+
+        <div class="ctrl-bar">
+          <div class="ctrl-grp">
+            <span class="ctrl-lbl" id="ar-status-filter-lbl"></span>
+            <select class="ctrl-sel" id="ar-filter-status" onchange="renderAramexTable()">
+              <option value="ALL" id="ar-opt-all"></option>
+              <option value="DELIVERED" id="ar-opt-del"></option>
+              <option value="RETURNED" id="ar-opt-ret"></option>
+              <option value="PENDING" id="ar-opt-pend"></option>
+            </select>
+          </div>
+          <div class="ctrl-grp">
+            <span class="ctrl-lbl" id="ar-search-lbl"></span>
+            <input class="ctrl-search" id="ar-search" placeholder="AWB / City" oninput="renderAramexTable()">
+          </div>
+          <div class="oc-wrap">
+            <input type="checkbox" id="ar-over-only" onchange="renderAramexTable()">
+            <label for="ar-over-only" id="ar-over-only-lbl"></label>
+          </div>
+          <button class="btn-export" onclick="exportAramex()" id="ar-export-btn"></button>
+        </div>
+
+        <div class="tbl-card">
+          <div class="card-hdr">
+            <span><span class="dot"></span><span id="ar-results-title"></span></span>
+            <span id="ar-results-count" style="font-size:.8rem;opacity:.8"></span>
+          </div>
+          <div class="tbl-scroll">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>#</th><th class="th-lft">AWB</th><th>City</th><th>Status</th>
+                  <th>Zone O</th><th>Zone D</th><th>Weight</th>
+                  <th class="th-ah">Base Charged</th><th class="th-ai">Kenzz Base</th>
+                  <th class="th-r">Annual</th><th class="th-lm">Fuel</th>
+                  <th class="th-cod">COD Fees</th><th class="th-ins">Other Charged</th>
+                  <th class="th-diff">Diff Base</th><th class="th-diff">Diff Other</th><th>Flag</th>
+                </tr>
+              </thead>
+              <tbody id="ar-table-body"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <div id="ar-empty" class="empty">
+        <div class="empty-icon">📋</div>
+        <h3 id="ar-empty-title"></h3>
+        <p id="ar-empty-desc"></p>
+      </div>
+    </div>
+
+    <div id="panel-mashreq" style="display:none">
+      <div class="note-bar" id="mq-note"></div>
+
+      <div class="audit-upload-grid">
+        <div class="auc p">
+          <h3 id="mq-file-title"></h3><p class="desc" id="mq-file-desc"></p>
+          <button class="afl p" onclick="document.getElementById('mq-file-inp').click()" id="mq-file-btn"></button>
+          <input type="file" id="mq-file-inp" accept=".xlsx,.xls" style="display:none">
+          <div class="aust" id="mq-file-status"></div>
+        </div>
+        <div class="auc g">
+          <h3 id="mq-rates-title"></h3><p class="desc" id="mq-rates-desc"></p>
+          <button class="afl g" onclick="document.getElementById('mq-rates-inp').click()" id="mq-rates-btn"></button>
+          <input type="file" id="mq-rates-inp" accept=".xlsx,.xls" style="display:none">
+          <div class="aust" id="mq-rates-status"></div>
+        </div>
+        <div class="auc o">
+          <h3 id="mq-second-title"></h3><p class="desc" id="mq-second-desc"></p>
+          <button class="afl o" onclick="document.getElementById('mq-second-inp').click()" id="mq-second-btn" style="background:linear-gradient(135deg,#d97706,var(--amber))"></button>
+          <input type="file" id="mq-second-inp" accept=".xlsx,.xls" style="display:none">
+          <div class="aust" id="mq-second-status"></div>
+        </div>
+        <div class="auc r">
+          <h3 id="mq-settings-title" style="color:var(--red)"></h3><p class="desc" id="mq-settings-desc"></p>
+          <div style="display:flex;flex-direction:column;gap:6px;margin-top:6px">
+            <div style="display:flex;gap:6px;align-items:center;font-size:.78rem">
+              <span style="width:70px;color:var(--purple);font-weight:700" id="mq-inspct-lbl"></span>
+              <input type="number" id="mq-cfg-inspct" value="0.005" step="0.001" style="border:1.5px solid var(--border);border-radius:6px;padding:4px 8px;width:90px;font-size:.82rem">
+            </div>
+            <div style="display:flex;gap:6px;align-items:center;font-size:.78rem">
+              <span style="width:70px;color:var(--purple);font-weight:700" id="mq-codpct-lbl"></span>
+              <input type="number" id="mq-cfg-codpct" value="0.0125" step="0.001" style="border:1.5px solid var(--border);border-radius:6px;padding:4px 8px;width:90px;font-size:.82rem">
+            </div>
+            <div style="display:flex;gap:6px;align-items:center;font-size:.78rem">
+              <span style="width:70px;color:var(--purple);font-weight:700" id="mq-thresh-lbl"></span>
+              <input type="number" id="mq-cfg-thresh" value="0.5" step="0.001" style="border:1.5px solid var(--border);border-radius:6px;padding:4px 8px;width:90px;font-size:.82rem">
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="process-row">
+        <button class="btn-primary" onclick="processMashreq()" id="mq-process-btn"></button>
+        <button class="btn-save" id="mq-save-btn" onclick="saveMashreq()" disabled></button>
+        <button class="btn-clear" onclick="clearMashreq()" id="mq-clear-btn"></button>
+        <div class="toast" id="mq-toast"></div>
+      </div>
+
+      <div id="mq-results" style="display:none">
+        <div class="asum-grid">
+          <div class="asum-card vp"><div class="albl" id="mq-kpi-total-lbl"></div><div class="aval" id="mq-kpi-total">0</div></div>
+          <div class="asum-card vg"><div class="albl" id="mq-kpi-invoice-lbl"></div><div class="aval" id="mq-kpi-invoice">0</div><div class="asub" id="mq-kpi-egp1"></div></div>
+          <div class="asum-card vo"><div class="albl" id="mq-kpi-calc-lbl"></div><div class="aval" id="mq-kpi-calc">0</div><div class="asub" id="mq-kpi-egp2"></div></div>
+          <div class="asum-card vr"><div class="albl" id="mq-kpi-diff-lbl"></div><div class="aval" id="mq-kpi-diff">0</div><div class="asub" id="mq-kpi-diff-pct"></div></div>
+        </div>
+
+        <div class="ctrl-bar">
+          <div class="ctrl-grp">
+            <span class="ctrl-lbl" id="mq-status-lbl"></span>
+            <select class="ctrl-sel" id="mq-filter-status" onchange="renderMashreqTable()">
+              <option value="ALL" id="mq-opt-all"></option>
+              <option value="Delivered" id="mq-opt-del"></option>
+              <option value="Returned" id="mq-opt-ret"></option>
+              <option value="Cancel on floor">Cancel on Floor</option>
+            </select>
+          </div>
+          <div class="ctrl-grp">
+            <span class="ctrl-lbl" id="mq-size-lbl"></span>
+            <select class="ctrl-sel" id="mq-filter-size" onchange="renderMashreqTable()">
+              <option value="ALL" id="mq-opt-allsizes"></option>
+              <option value="Small">Small</option><option value="Medium">Medium</option><option value="Large">Large</option>
+            </select>
+          </div>
+          <div class="ctrl-grp">
+            <span class="ctrl-lbl" id="mq-search-lbl"></span>
+            <input class="ctrl-search" id="mq-search" placeholder="AWB / City" oninput="renderMashreqTable()">
+          </div>
+          <div class="oc-wrap">
+            <input type="checkbox" id="mq-over-only" onchange="renderMashreqTable()">
+            <label for="mq-over-only" id="mq-over-only-lbl"></label>
+          </div>
+          <button class="btn-export" onclick="exportMashreq()" id="mq-export-btn"></button>
+        </div>
+
+        <div class="tbl-card">
+          <div class="card-hdr">
+            <span><span class="dot"></span><span id="mq-results-title"></span></span>
+            <span id="mq-results-count" style="font-size:.8rem;opacity:.8"></span>
+          </div>
+          <div class="tbl-scroll">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>#</th><th class="th-lft">AWB</th><th>Month</th><th>Status</th><th>Size</th>
+                  <th>D.Zone</th><th>O.Zone</th>
+                  <th class="th-ah">Act. LM</th><th class="th-ai">Act. PU</th>
+                  <th class="th-ins">Act. Ins</th><th class="th-cod">Act. COD</th>
+                  <th class="th-lm">Calc LM</th><th class="th-pu">Calc PU</th>
+                  <th class="th-r">Calc Ins</th><th class="th-r">Calc COD</th>
+                  <th class="th-diff">Billed</th><th class="th-diff">Kenzz</th><th class="th-diff">Diff</th>
+                </tr>
+              </thead>
+              <tbody id="mq-table-body"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <div id="mq-empty" class="empty">
+        <div class="empty-icon">🔄</div>
+        <h3 id="mq-empty-title"></h3>
+      </div>
+    </div>
+
+    <div id="panel-raya" style="display:none">
+      <div class="note-bar" id="ra-note"></div>
+
+      <div class="audit-upload-grid">
+        <div class="auc p">
+          <h3 id="ra-file-title"></h3><p class="desc" id="ra-file-desc"></p>
+          <button class="afl p" onclick="document.getElementById('ra-file-inp').click()" id="ra-file-btn"></button>
+          <input type="file" id="ra-file-inp" accept=".xlsx,.xls" style="display:none">
+          <div class="aust" id="ra-file-status"></div>
+        </div>
+        <div class="auc g">
+          <h3 id="ra-contract-title"></h3><p class="desc" id="ra-contract-desc"></p>
+          <button class="afl g" onclick="document.getElementById('ra-contract-inp').click()" id="ra-contract-btn"></button>
+          <input type="file" id="ra-contract-inp" accept=".xlsx,.xls" style="display:none">
+          <div class="aust" id="ra-contract-status"></div>
+        </div>
+        <div class="auc o">
+          <h3 id="ra-thresh-title"></h3><p class="desc" id="ra-thresh-desc"></p>
+          <input type="number" class="ctrl-sel" id="ra-thresh" value="1" step="0.5" style="margin-top:8px">
+        </div>
+      </div>
+
+      <div class="process-row">
+        <button class="btn-primary" onclick="processRayaPage()" id="ra-process-btn"></button>
+        <button class="btn-save" id="ra-save-btn" onclick="saveRayaPage()" disabled></button>
+        <button class="btn-clear" onclick="clearRayaPage()" id="ra-clear-btn"></button>
+        <div class="toast" id="ra-toast"></div>
+      </div>
+
+      <div id="ra-results" style="display:none">
+        <div class="asum-grid">
+          <div class="asum-card vp"><div class="albl" id="ra-kpi-total-lbl"></div><div class="aval" id="ra-kpi-total">0</div></div>
+          <div class="asum-card vg"><div class="albl" id="ra-kpi-invoice-lbl"></div><div class="aval" id="ra-kpi-invoice">0</div><div class="asub" id="ra-kpi-egp1"></div></div>
+          <div class="asum-card vo"><div class="albl" id="ra-kpi-calc-lbl"></div><div class="aval" id="ra-kpi-calc">0</div><div class="asub" id="ra-kpi-egp2"></div></div>
+          <div class="asum-card vr"><div class="albl" id="ra-kpi-diff-lbl"></div><div class="aval" id="ra-kpi-diff">0</div></div>
+        </div>
+
+        <div class="ctrl-bar">
+          <div class="ctrl-grp">
+            <span class="ctrl-lbl" id="ra-status-lbl"></span>
+            <select class="ctrl-sel" id="ra-filter-status" onchange="renderRayaTable()">
+              <option value="ALL" id="ra-opt-all"></option>
+              <option value="Delivered" id="ra-opt-del"></option>
+              <option value="Returned" id="ra-opt-ret"></option>
+              <option value="Cancel on floor">Cancel on Floor</option>
+            </select>
+          </div>
+          <div class="ctrl-grp">
+            <span class="ctrl-lbl" id="ra-cat-lbl"></span>
+            <select class="ctrl-sel" id="ra-filter-cat" onchange="renderRayaTable()">
+              <option value="ALL" id="ra-opt-allcat"></option>
+              <option value="Small">Small</option><option value="Medium">Medium</option><option value="Large">Large</option>
+            </select>
+          </div>
+          <div class="ctrl-grp">
+            <span class="ctrl-lbl" id="ra-search-lbl"></span>
+            <input class="ctrl-search" id="ra-search" placeholder="AWB / City" oninput="renderRayaTable()">
+          </div>
+          <div class="oc-wrap">
+            <input type="checkbox" id="ra-over-only" onchange="renderRayaTable()">
+            <label for="ra-over-only" id="ra-over-only-lbl"></label>
+          </div>
+          <button class="btn-export" onclick="exportRayaPage()" id="ra-export-btn"></button>
+        </div>
+
+        <div class="tbl-card">
+          <div class="card-hdr">
+            <span><span class="dot"></span><span id="ra-results-title"></span></span>
+            <span id="ra-results-count" style="font-size:.8rem;opacity:.8"></span>
+          </div>
+          <div class="tbl-scroll">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>#</th><th class="th-lft">AWB</th><th>Status</th><th>Tier</th><th>Category</th>
+                  <th class="th-raya-dl">DL Cost</th><th class="th-raya-pu">Pickup</th>
+                  <th class="th-ins">Insurance</th><th class="th-cod">COD</th><th>Extra</th>
+                  <th class="th-raya-k">Contract</th>
+                  <th style="background:#374151">Billed</th>
+                  <th class="th-raya-diff">Diff</th>
+                </tr>
+              </thead>
+              <tbody id="ra-table-body"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <div id="ra-empty" class="empty">
+        <div class="empty-icon">🚚</div>
+        <h3 id="ra-empty-title"></h3>
+      </div>
+    </div>
+
+    <div id="panel-breakdown" style="display:none">
+      <div class="note-bar" id="bd-note"></div>
+      <div class="audit-upload-grid" style="margin-bottom:16px">
+        <div class="auc p">
+          <h3 id="bd-file-title"></h3><p class="desc" id="bd-file-desc"></p>
+          <button class="afl p" onclick="document.getElementById('bd-file-inp').click()" id="bd-file-btn">📂</button>
+          <input type="file" id="bd-file-inp" accept=".xlsx,.xls" style="display:none">
+          <div class="aust" id="bd-file-status" style="display:none"></div>
+          <button class="btn-save" style="margin-top:8px;width:100%" id="bd-load-btn" onclick="bdHandleLoadFile()" disabled></button>
+        </div>
+        <div class="auc g">
+          <h3 id="bd-add-title"></h3><p class="desc" id="bd-add-desc"></p>
+          <input type="text" id="bd-month-inp" placeholder="e.g. Jan-2025" style="border:1.5px solid var(--border);border-radius:7px;padding:8px 12px;font-size:.85rem;width:100%;margin-bottom:8px;box-sizing:border-box">
+          <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:8px" id="bd-sources-wrap">
+            <label style="display:flex;gap:5px;align-items:center;font-size:.78rem;cursor:pointer"><input type="checkbox" id="bd-src-bosta" checked>Bosta</label>
+            <label style="display:flex;gap:5px;align-items:center;font-size:.78rem;cursor:pointer"><input type="checkbox" id="bd-src-aramex" checked>Aramex</label>
+            <label style="display:flex;gap:5px;align-items:center;font-size:.78rem;cursor:pointer"><input type="checkbox" id="bd-src-raya" checked>Raya</label>
+            <label style="display:flex;gap:5px;align-items:center;font-size:.78rem;cursor:pointer"><input type="checkbox" id="bd-src-mashreq" checked>Mashreq</label>
+          </div>
+          <button class="afl g" id="bd-add-btn" onclick="bdHandleAddMonth()"></button>
+        </div>
+        <div class="auc r">
+          <h3 id="bd-clear-title"></h3><p class="desc" id="bd-clear-desc"></p>
+          <button class="btn-clear" style="margin-top:8px;width:100%" id="bd-clear-btn" onclick="bdHandleClear()"></button>
+        </div>
+      </div>
+      <div class="process-row" style="margin-bottom:8px">
+        <button class="btn-save" id="bd-save-btn" onclick="bdHandleSave()">💾 Save Data</button>
+      </div>
+      <div id="bd-toast" class="toast"></div>
+      <div id="bd-content"></div>
+    </div>
+
+    <div id="panel-analytics" style="display:none">
+      <div id="an-empty" class="coming-soon" style="display:none">
+        <div class="empty-icon">📈</div>
+        <h3 id="an-empty-title"></h3>
+        <p id="an-empty-desc" style="color:var(--muted);font-size:.85rem;margin-top:6px"></p>
+      </div>
+      <div id="an-content"></div>
     </div>
   </main>
 </div>
@@ -289,7 +719,7 @@ html[dir=ltr] #login-eye{right:12px}
 <div id="loading-overlay"><div class="spinner"></div><div id="loading-msg"></div></div>
 
 <script>
-const AUTH = { PASSWORD: 'HKenzz2025.Com', SESSION_KEY: 'kenzz3pl_auth_v1' };
+const AUTH = { PASSWORD: 'Mohamed@@2026', SESSION_KEY: 'kenzz3pl_auth_v1' };
 const STORAGE_KEY = 'kenzz3pl_bosta_v1';
 
 const I18N = {
@@ -317,6 +747,80 @@ const I18N = {
     bo_resultsTitle:'نتائج مراجعة بوسطة',
     bo_typeFilter:'النوع', bo_monthLbl:'شهر البيانات:',
     errorPrefix:'خطأ: ', soonTitle:'هذا القسم قيد التطوير',
+    allStatuses:'جميع الحالات', delivered:'تم التسليم', returned:'مُعادة', pending:'معلقة',
+    ar_file:'📋 ملف أرامكس *', ar_fileDesc:'الملف الشهري من بوابة أرامكس (Excel)',
+    ar_odoo:'🏦 ملف Odoo', ar_odooDesc:'لتحديد طريقة الدفع وقيمة COD',
+    ar_zones:'🗺️ ملف المناطق', ar_zonesDesc:'ملف مناطق المدن (اختياري)',
+    ar_status:'📡 ملف الحالات', ar_statusDesc:'ملف تتبع الشحنات (اختياري)',
+    ar_cfgTitle:'⚙️ إعدادات حساب التكلفة',
+    ar_codThresh:'حد COD (جنيه)', ar_codThreshHint:'الحد الأدنى لتطبيق عمولة COD',
+    ar_codPct:'نسبة COD', ar_codPctHint:'مثال: 0.005 = 0.5%',
+    ar_annualPct:'الزيادة السنوية', ar_annualPctHint:'مثال: 0.125 = 12.5%',
+    ar_fuelPct:'رسوم الوقود', ar_fuelPctHint:'مثال: 0.38 = 38%',
+    ar_overThresh:'حد الفارق (جنيه)', ar_overThreshHint:'الحد الأدنى لاعتبار الفارق',
+    ar_alertNoFile:'الرجاء رفع ملف أرامكس أولاً',
+    ar_loadingMsg:'جارٍ معالجة بيانات أرامكس…',
+    ar_confirmClear:'هل تريد مسح نتائج المراجعة المحفوظة؟',
+    ar_toast:'✅ تم حفظ نتائج المراجعة!',
+    ar_emptyTitle:'ارفع ملفات أرامكس وابدأ المراجعة',
+    ar_emptyDesc:'ارفع ملف أرامكس وOdoo على الأقل ثم اضغط "معالجة"',
+    ar_resultsTitle:'نتائج مراجعة أرامكس',
+    ar_kpiDiffTot:'إجمالي الفارق', ar_kpiFlagBase:'Base فروقات', ar_kpiFlagOther:'Other فروقات',
+    ar_statusFilter:'الحالة', ar_monthLbl:'شهر البيانات:',
+    allSizes:'جميع الأحجام', kenzzCalc:'إجمالي Kenzz',
+    mq_file:'📋 تقرير Aramex Mashreq *', mq_fileDesc:'ملف التقرير الشهري',
+    mq_rates:'📝 ملف الأسعار', mq_ratesDesc:'جدول أسعار Last Mile & Pickup',
+    mq_second:'2️⃣ ملف المحاولة الثانية', mq_secondDesc:'تقرير المحاولات الثانية (اختياري)',
+    mq_settings:'⚙️ الإعدادات', mq_settingsDesc:'نسب التأمين والـ COD وحد الفارق',
+    mq_insPct:'تأمين %', mq_codPct:'COD %', mq_thresh:'حد الفارق',
+    mq_alertNoFile:'الرجاء رفع ملف التقرير',
+    mq_loadingMsg:'جارٍ معالجة Mashreq…',
+    mq_confirmClear:'مسح بيانات Mashreq؟',
+    mq_toast:'✅ تم حفظ بيانات Mashreq!',
+    mq_emptyTitle:'ارفع ملف تقرير Mashreq وابدأ المراجعة',
+    mq_resultsTitle:'نتائج Aramex Mashreq',
+    mq_sizeFilter:'الحجم',
+    ra_file:'🚚 تقرير Raya *', ra_fileDesc:'ملف التقرير الشهري من Raya',
+    ra_contract:'📝 ملف العقد', ra_contractDesc:'جدول أسعار Raya حسب الـ Tier',
+    ra_thresh:'⚙️ حد الفارق', ra_threshDesc:'الحد الأدنى للفارق المقبول (جنيه)',
+    ra_alertNoFile:'الرجاء رفع ملف التقرير',
+    ra_loadingMsg:'جارٍ معالجة Raya…',
+    ra_confirmClear:'مسح بيانات Raya؟',
+    ra_toast:'✅ تم حفظ بيانات Raya!',
+    ra_emptyTitle:'ارفع ملف تقرير Raya وابدأ المراجعة',
+    ra_resultsTitle:'نتائج Raya Review',
+    ra_catFilter:'الفئة',
+    bd_fileTitle:'📂 ملف التفاصيل', bd_fileDesc:'ملف Excel بتفاصيل تكاليف الناقلين',
+    bd_addTitle:'➕ إضافة شهر', bd_addDesc:'أضف بيانات الشهر الحالي من ملفات المراجعة المحملة',
+    bd_clearTitle:'🗑️ مسح البيانات', bd_clearDesc:'مسح جميع بيانات التفاصيل المحفوظة',
+    bd_loadBtn:'⬆️ تحميل الملف', bd_addBtn:'➕ إضافة الشهر',
+    bd_clearBtn:'🗑️ مسح الكل', bd_carrier:'الناقل',
+    bd_monthPlaceholder:'مثال: يناير-2025',
+    bd_alertNoFile:'الرجاء رفع ملف التفاصيل',
+    bd_alertNoMonth:'الرجاء إدخال اسم الشهر',
+    bd_alertNoData:'لا توجد بيانات مراجعة محملة',
+    bd_loadingFile:'جارٍ تحميل ملف التفاصيل…',
+    bd_loadingMonth:'جارٍ إضافة بيانات الشهر…',
+    bd_confirmClear:'مسح جميع بيانات التفاصيل؟',
+    bd_successFile:'✅ تم تحميل ملف التفاصيل بنجاح',
+    bd_emptyTitle:'لا توجد بيانات تفاصيل بعد',
+    bd_emptyDesc:'قم بتحميل ملف التفاصيل أو أضف شهراً من بيانات المراجعة',
+    an_grand:'📊 ملخص شامل لجميع الناقلين',
+    an_fromCarriers:'ناقل',
+    an_distribution:'توزيع الشحنات حسب الناقل',
+    an_statusDist:'توزيع الحالات',
+    an_costComp:'مقارنة التكلفة',
+    an_actualInvoice:'الفاتورة الفعلية',
+    an_byLabel:'توزيع حسب النوع',
+    an_emptyTitle:'لا توجد بيانات بعد',
+    an_emptyDesc:'قم بمعالجة بيانات أي ناقل لعرض التحليلات هنا',
+    an_sec1:'القسم 1 — نظرة عامة ومعدلات النجاح',
+    an_sec4:'القسم 4 — تأثير المنطقة والحجم على التكلفة',
+    an_metric:'المقياس', an_notes:'ملاحظات',
+    an_cancelFloor:'ملغاة على الأرض', an_cancelRate:'معدل الإلغاء',
+    an_delRate:'معدل التسليم', an_retRate:'معدل الإعادة',
+    an_revDel:'إجمالي الإيراد — تسليم', an_costRet:'إجمالي التكلفة — إعادة',
+    an_chgCan:'إجمالي تكلفة الملغاة', an_retPct:'% الإعادة من الفاتورة',
   },
   en: {
     hd:'3PL Logistics Analyzer', hds:'Shipping Cost Breakdown · All figures exclude VAT',
@@ -342,6 +846,80 @@ const I18N = {
     bo_resultsTitle:'Bosta Audit Results',
     bo_typeFilter:'Type', bo_monthLbl:'Data Month:',
     errorPrefix:'Error: ', soonTitle:'This section is coming soon',
+    allStatuses:'All Statuses', delivered:'Delivered', returned:'Returned', pending:'Pending',
+    ar_file:'📋 Aramex File *', ar_fileDesc:'Monthly file from Aramex portal (Excel)',
+    ar_odoo:'🏦 Odoo File', ar_odooDesc:'For payment type and COD value',
+    ar_zones:'🗺️ Zones File', ar_zonesDesc:'City zones mapping file (optional)',
+    ar_status:'📡 Status File', ar_statusDesc:'Shipment tracking status file (optional)',
+    ar_cfgTitle:'⚙️ Cost Calculation Settings',
+    ar_codThresh:'COD Threshold (EGP)', ar_codThreshHint:'Minimum for COD fee to apply',
+    ar_codPct:'COD Rate', ar_codPctHint:'e.g. 0.005 = 0.5%',
+    ar_annualPct:'Annual Increase', ar_annualPctHint:'e.g. 0.125 = 12.5%',
+    ar_fuelPct:'Fuel Surcharge', ar_fuelPctHint:'e.g. 0.38 = 38%',
+    ar_overThresh:'Diff. Threshold (EGP)', ar_overThreshHint:'Minimum gap to flag',
+    ar_alertNoFile:'Please upload the Aramex file first',
+    ar_loadingMsg:'Processing Aramex data…',
+    ar_confirmClear:'Clear saved audit results?',
+    ar_toast:'✅ Audit results saved!',
+    ar_emptyTitle:'Upload Aramex files to start the audit',
+    ar_emptyDesc:'Upload at least the Aramex file then click Process',
+    ar_resultsTitle:'Aramex Audit Results',
+    ar_kpiDiffTot:'Total Difference', ar_kpiFlagBase:'Base Flags', ar_kpiFlagOther:'Other Flags',
+    ar_statusFilter:'Status', ar_monthLbl:'Data Month:',
+    allSizes:'All Sizes', kenzzCalc:'Kenzz Total',
+    mq_file:'📋 Aramex Mashreq Report *', mq_fileDesc:'Monthly report file',
+    mq_rates:'📝 Rates File', mq_ratesDesc:'Last Mile & Pickup rate table',
+    mq_second:'2️⃣ Second Attempt File', mq_secondDesc:'Second attempt report (optional)',
+    mq_settings:'⚙️ Settings', mq_settingsDesc:'Insurance, COD rates and threshold',
+    mq_insPct:'Insurance %', mq_codPct:'COD %', mq_thresh:'Diff. Threshold',
+    mq_alertNoFile:'Please upload the report file',
+    mq_loadingMsg:'Processing Mashreq data…',
+    mq_confirmClear:'Clear Mashreq data?',
+    mq_toast:'✅ Mashreq results saved!',
+    mq_emptyTitle:'Upload Mashreq report to start audit',
+    mq_resultsTitle:'Aramex Mashreq Results',
+    mq_sizeFilter:'Size',
+    ra_file:'🚚 Raya Report *', ra_fileDesc:'Monthly report file from Raya',
+    ra_contract:'📝 Contract File', ra_contractDesc:'Raya rates by Tier',
+    ra_thresh:'⚙️ Difference Threshold', ra_threshDesc:'Acceptable difference threshold (EGP)',
+    ra_alertNoFile:'Please upload the report file',
+    ra_loadingMsg:'Processing Raya data…',
+    ra_confirmClear:'Clear Raya data?',
+    ra_toast:'✅ Raya results saved!',
+    ra_emptyTitle:'Upload Raya report to start audit',
+    ra_resultsTitle:'Raya Review Results',
+    ra_catFilter:'Category',
+    bd_fileTitle:'📂 Breakdown File', bd_fileDesc:'Excel file with carrier cost breakdown data',
+    bd_addTitle:'➕ Add Month', bd_addDesc:'Add current month data from loaded audit files',
+    bd_clearTitle:'🗑️ Clear Data', bd_clearDesc:'Clear all saved breakdown data',
+    bd_loadBtn:'⬆️ Load File', bd_addBtn:'➕ Add Month',
+    bd_clearBtn:'🗑️ Clear All', bd_carrier:'Carrier',
+    bd_monthPlaceholder:'e.g. Jan-2025',
+    bd_alertNoFile:'Please upload the breakdown file',
+    bd_alertNoMonth:'Please enter a month name',
+    bd_alertNoData:'No audit data loaded yet',
+    bd_loadingFile:'Loading breakdown file…',
+    bd_loadingMonth:'Adding month data…',
+    bd_confirmClear:'Clear all breakdown data?',
+    bd_successFile:'✅ Breakdown file loaded successfully',
+    bd_emptyTitle:'No breakdown data yet',
+    bd_emptyDesc:'Load a breakdown file or add a month from audit data',
+    an_grand:'📊 Grand Summary — All Carriers',
+    an_fromCarriers:'carrier(s)',
+    an_distribution:'Shipment Distribution by Carrier',
+    an_statusDist:'Status Distribution',
+    an_costComp:'Cost Comparison',
+    an_actualInvoice:'Actual Invoice',
+    an_byLabel:'Distribution by Label',
+    an_emptyTitle:'No data yet',
+    an_emptyDesc:'Process any carrier data to view analytics here',
+    an_sec1:'SECTION 1 — OVERVIEW & SUCCESS METRICS',
+    an_sec4:'SECTION 4 — DESTINATION ZONE & SIZE IMPACT ON CHARGE',
+    an_metric:'METRIC', an_notes:'NOTES',
+    an_cancelFloor:'Cancelled on Floor', an_cancelRate:'Cancel Rate',
+    an_delRate:'Delivery Success Rate', an_retRate:'Return Rate',
+    an_revDel:'Total Revenue — Delivered', an_costRet:'Total Cost — Returned',
+    an_chgCan:'Total Charge — Cancelled', an_retPct:'% of Returned from Invoice',
   }
 };
 
@@ -556,7 +1134,14 @@ function toggleLang(){
   lang = lang==='ar' ? 'en' : 'ar';
   localStorage.setItem('kenzz3pl_lang', lang);
   applyI18n();
+  applyI18nAramex();
+  applyI18nMashreq();
+  applyI18nRaya();
+  applyI18nBreakdown();
   if(bostaData.length) renderBostaTable();
+  if(auditData.length) renderAramexTable();
+  if(mqData.length) renderMashreqTable();
+  if(rayaData.length) renderRayaTable();
 }
 
 /* ---------- auth ---------- */
@@ -596,7 +1181,13 @@ function showApp(){
 function switchTab(name){
   document.querySelectorAll('.tab-btn').forEach(b=>b.classList.toggle('active', b.dataset.tab===name));
   document.getElementById('panel-bosta').style.display = name==='bosta' ? 'block' : 'none';
-  document.getElementById('panel-other').style.display = name==='bosta' ? 'none' : 'block';
+  document.getElementById('panel-aramex').style.display = name==='aramex' ? 'block' : 'none';
+  document.getElementById('panel-mashreq').style.display = name==='mashreq' ? 'block' : 'none';
+  document.getElementById('panel-raya').style.display = name==='raya' ? 'block' : 'none';
+  document.getElementById('panel-breakdown').style.display = name==='breakdown' ? 'block' : 'none';
+  document.getElementById('panel-analytics').style.display = name==='analytics' ? 'block' : 'none';
+  if(name==='analytics') renderAnalytics();
+  if(name==='breakdown') renderBreakdown();
 }
 
 /* ---------- Bosta page logic ---------- */
@@ -726,10 +1317,1503 @@ function loadPersisted(){
   }catch(e){}
 }
 
+/* ---------- Aramex engine (ported from aramexEngine.js) ---------- */
+const ARAMEX_STORAGE_KEY = 'kenzz3pl_aramex_v1';
+const STATUS_DELIVERED = new Set(['paid','delivered','successfully delivered','collected','delivery completed','shipment delivered','delivered to customer']);
+const STATUS_RETURNED = new Set(['returned','returned to shipper','rts','refused','cancelled','return','rejected','undelivered','return to shipper','could not deliver']);
+
+function normAWB(v){
+  if(v===null||v===undefined||v==='') return '';
+  const n=parseFloat(String(v).trim());
+  return (!isNaN(n)&&n>0) ? String(Math.round(n)) : String(v).trim();
+}
+function findKey(row, candidates){
+  const keys=Object.keys(row);
+  for(const c of candidates){
+    const f=keys.find(k=>k.trim().toLowerCase()===c.toLowerCase() || k.trim().toLowerCase().includes(c.toLowerCase()));
+    if(f!==undefined) return f;
+  }
+  return null;
+}
+function g(row, ...cands){ const k=findKey(row,cands); return k!=null ? row[k] : ''; }
+
+function classifyStatus(st){
+  if(!st) return 'PENDING';
+  const s=st.toLowerCase().trim();
+  if(s==='out for delivery'||s.includes('out for')||s.includes('in transit')||s.includes('in warehouse')||s.includes('misrouted')||s.includes('processing')) return 'PENDING';
+  if(STATUS_DELIVERED.has(s)||s==='paid'||s==='delivered'||s.includes('collected')||s.includes('successfully delivered')||s.includes('delivery completed')) return 'DELIVERED';
+  if(STATUS_RETURNED.has(s)||s.includes('return')||s.includes('cancel')||s.includes('refus')||s.includes('reject')||s.includes('rts')) return 'RETURNED';
+  return 'PENDING';
+}
+function getCost(w,c5,c10,c15,c20,ca){
+  if(w<=5) return c5;
+  if(w<=10) return c10;
+  if(w<=15) return c15;
+  if(w<=20) return c20;
+  if(w>25) return c20+(5*ca)+((w-25)*ca);
+  return c20+((w-20)*ca);
+}
+function calcShipping(zone, weight){
+  const z=parseInt(String(zone||'').replace(/[^0-9]/g,''))||1;
+  switch(z){
+    case 1: return getCost(weight,47,57,67,77,4);
+    case 2: return getCost(weight,52,62,72,82,4);
+    case 3: return getCost(weight,57,67,77,87,4);
+    case 4: return getCost(weight,67,77,87,97,5);
+    case 5: return getCost(weight,77,87,97,107,5);
+    case 6: return getCost(weight,97,107,117,127,5);
+    default: return 0;
+  }
+}
+function lookupZone(loc, zoneMap){
+  if(!loc) return '';
+  const l=String(loc).trim().toLowerCase();
+  if(zoneMap[l]) return zoneMap[l];
+  const keys=Object.keys(zoneMap);
+  const found=keys.find(k=>l.startsWith(k)||k.startsWith(l)||l.includes(k)||k.includes(l));
+  return found ? zoneMap[found] : '';
+}
+function parseZoneFile(raw){
+  const zoneMap={}; let start=0;
+  for(let r=0;r<Math.min(raw.length,5);r++){
+    if(raw[r].some(c=>String(c).toLowerCase().includes('city'))){ start=r+1; break; }
+  }
+  for(let r=start;r<raw.length;r++){
+    const city=String(raw[r][0]||'').trim();
+    const zone=String(raw[r][1]||'').trim();
+    if(city&&zone) zoneMap[city.toLowerCase()]=zone;
+  }
+  return zoneMap;
+}
+function parseOdooFile(raw){
+  const odooPayMap={}, odooTypeMap={};
+  let pivotAWBcol=-1, pivotValCol=-1, pivotStart=-1;
+  for(let r=0;r<Math.min(raw.length,20);r++){
+    for(let c=0;c<raw[r].length;c++){
+      if(String(raw[r][c]).trim()==='Row Labels'){ pivotAWBcol=c; pivotValCol=c+1; pivotStart=r+1; break; }
+    }
+    if(pivotStart!==-1) break;
+  }
+  if(pivotStart!==-1){
+    for(let r=pivotStart;r<raw.length;r++){
+      const awb=normAWB(raw[r][pivotAWBcol]);
+      const val=raw[r][pivotValCol];
+      if(awb&&awb!==''&&!isNaN(Number(awb))) odooPayMap[awb]=rv(val);
+    }
+  }
+  let sCol=18, zCol=25;
+  for(let r=0;r<Math.min(raw.length,5);r++){
+    const rowLow=raw[r].map(c=>String(c||'').trim().toLowerCase());
+    const si=rowLow.findIndex(c=>c==='3pl tracking no.'||c==='3pl tracking no'||c.includes('tracking no'));
+    const zi=rowLow.findIndex(c=>c==='payment type'||c.includes('payment type'));
+    if(si!==-1){ sCol=si; if(zi!==-1) zCol=zi; break; }
+  }
+  for(let r=1;r<raw.length;r++){
+    const awb=normAWB(raw[r][sCol]);
+    const pt=String(raw[r][zCol]||'').trim();
+    if(awb&&awb!=='') odooTypeMap[awb]=pt;
+  }
+  return { odooPayMap, odooTypeMap };
+}
+function parseStatusFile(wb, XLSXref){
+  const statusMap={};
+  const AWB_CANDS=['airway bill no','airway bill no.','awb','3pl tracking no','3pl tracking no.','tracking no','waybill','shipment number'];
+  const STS_CANDS=['status','shipment status','delivery status','state'];
+  for(const sheetName of wb.SheetNames){
+    const ws=wb.Sheets[sheetName];
+    const raw=XLSXref.utils.sheet_to_json(ws,{header:1,defval:''});
+    let hdrRow=-1, awbCol=-1, stCol=-1;
+    for(let r=0;r<Math.min(raw.length,10);r++){
+      const low=raw[r].map(c=>String(c||'').trim().toLowerCase());
+      const ai=low.findIndex(c=>AWB_CANDS.some(x=>c===x||c===x.replace(/\./g,'')));
+      const si=low.findIndex(c=>STS_CANDS.some(x=>c===x));
+      if(ai!==-1&&si!==-1){ hdrRow=r; awbCol=ai; stCol=si; break; }
+      if(ai!==-1&&si===-1){
+        const candidate=ai+1;
+        if(candidate<raw[r].length){ hdrRow=r; awbCol=ai; stCol=candidate; break; }
+      }
+    }
+    if(hdrRow===-1) continue;
+    let loaded=0;
+    for(let r=hdrRow+1;r<raw.length;r++){
+      const awb=normAWB(raw[r][awbCol]);
+      const st=String(raw[r][stCol]||'').trim();
+      if(awb&&awb!==''&&st!==''){ statusMap[awb]=st; loaded++; }
+    }
+    if(loaded>0) break;
+  }
+  return statusMap;
+}
+function processAudit({aramexRows, odooPayMap, odooTypeMap, zoneMap, statusMap, CFG}){
+  return aramexRows.map((row, idx)=>{
+    const awb = normAWB(g(row,'Airway Bill No.','airway bill','awb','waybill'));
+    const city = String(g(row,'Consignee City','city')||'').trim();
+    const origLoc = String(g(row,'Origin Location','origin location','origin')||'').trim();
+    const destLoc = String(g(row,'Destination Location','destination location','destination')||'').trim();
+    const weight = rv(g(row,'Chargeable Weight','chargeable weight','weight'));
+    const baseCharge = rv(g(row,'Base Charge','base charge'));
+    const otherCharge = rv(g(row,'Other Charge','other charge'));
+    const totalAmtR = rv(g(row,'Total Amount','total amount'));
+
+    let originZone = String(g(row,'Origin Zone','origin zone')||'').trim();
+    let destZone = String(g(row,'Destination Zone','destination zone')||'').trim();
+    if(Object.keys(zoneMap).length>0){
+      const oz=lookupZone(origLoc,zoneMap); if(oz) originZone=oz;
+      const dz=lookupZone(destLoc,zoneMap); if(dz) destZone=dz;
+    }
+    if(!destZone && Object.keys(zoneMap).length>0) destZone=lookupZone(city,zoneMap);
+
+    let paymentValue = rv(g(row,'Payment Value','payment value'));
+    if(awb && odooPayMap[awb]!==undefined) paymentValue=odooPayMap[awb];
+
+    let paymentType = awb ? (odooTypeMap[awb]||'') : '';
+    if(!paymentType) paymentType=String(g(row,'comment','payment type','payment method')||'').trim();
+
+    let statusRaw = (awb && statusMap[awb]) ? statusMap[awb] : '';
+    if(!statusRaw){
+      const colVal=String(g(row,'Status','shipment status','delivery status')||'').trim();
+      if(colVal && !colVal.startsWith('=')) statusRaw=colVal;
+    }
+    const statusBucket = classifyStatus(statusRaw);
+
+    const test1=calcShipping(originZone,weight);
+    const test2=calcShipping(destZone,weight);
+    const kenzzBase=Math.min(Math.max(test1,test2),baseCharge);
+    const annualIncrease=kenzzBase*CFG.ANNUAL_PCT;
+
+    const isCOD = paymentType.toLowerCase().trim()==='cash on delivery';
+    const statusForCOD = statusRaw.toLowerCase().trim();
+    const isCODCollected = statusForCOD==='paid';
+    const codFees = (isCOD && isCODCollected && paymentValue>=CFG.COD_THRESH) ? (paymentValue-CFG.COD_THRESH)*CFG.COD_PCT : 0;
+
+    const fuelCharges=(kenzzBase+codFees+annualIncrease)*CFG.FUEL_PCT;
+    const diffBase=baseCharge-kenzzBase;
+    const diffOther=otherCharge-codFees-fuelCharges-annualIncrease;
+    const colRResult=diffBase+diffOther;
+
+    const flagBase=diffBase>CFG.OVER_THRESH;
+    const flagOther=diffOther<-CFG.OVER_THRESH;
+    const isPending=statusBucket==='PENDING';
+
+    return { idx:idx+1, awb, city, origLoc, destLoc, weight, originZone, destZone,
+      paymentType, statusRaw, statusBucket, paymentValue, baseCharge, otherCharge, totalAmtR,
+      kenzzBase, annualIncrease, codFees, fuelCharges, diffBase, diffOther, colRResult,
+      flagBase, flagOther, isPending };
+  });
+}
+
+/* ---------- Aramex page wiring ---------- */
+let auditData = [];
+let aramexFile=null, odooFile=null, zoneFile=null, statusFile=null;
+
+document.getElementById('ar-file-inp').addEventListener('change', e=>{ if(e.target.files[0]){ aramexFile=e.target.files[0]; document.getElementById('ar-file-status').textContent='✅ '+aramexFile.name; applyI18nAramex(); } e.target.value=''; });
+document.getElementById('ar-odoo-inp').addEventListener('change', e=>{ if(e.target.files[0]){ odooFile=e.target.files[0]; document.getElementById('ar-odoo-status').textContent='✅ '+odooFile.name; applyI18nAramex(); } e.target.value=''; });
+document.getElementById('ar-zones-inp').addEventListener('change', e=>{ if(e.target.files[0]){ zoneFile=e.target.files[0]; document.getElementById('ar-zones-status').textContent='✅ '+zoneFile.name; applyI18nAramex(); } e.target.value=''; });
+document.getElementById('ar-status-inp').addEventListener('change', e=>{ if(e.target.files[0]){ statusFile=e.target.files[0]; document.getElementById('ar-status-status').textContent='✅ '+statusFile.name; applyI18nAramex(); } e.target.value=''; });
+
+function getAramexCfg(){
+  return {
+    COD_THRESH: parseFloat(document.getElementById('ar-cfg-codthresh').value)||0,
+    COD_PCT: parseFloat(document.getElementById('ar-cfg-codpct').value)||0,
+    ANNUAL_PCT: parseFloat(document.getElementById('ar-cfg-annualpct').value)||0,
+    FUEL_PCT: parseFloat(document.getElementById('ar-cfg-fuelpct').value)||0,
+    OVER_THRESH: parseFloat(document.getElementById('ar-cfg-overthresh').value)||0,
+  };
+}
+
+async function processAramex(){
+  if(!aramexFile){ alert(T('ar_alertNoFile')); return; }
+  showLoading(T('ar_loadingMsg'));
+  await new Promise(r=>setTimeout(r,30));
+  try{
+    const awb_wb = XLSX.read(await readBuf(aramexFile), {type:'array'});
+    const aramexRows = XLSX.utils.sheet_to_json(awb_wb.Sheets[awb_wb.SheetNames[0]], {defval:''});
+
+    let odooPayMap={}, odooTypeMap={};
+    if(odooFile){
+      const owb = XLSX.read(await readBuf(odooFile), {type:'array'});
+      const raw = XLSX.utils.sheet_to_json(owb.Sheets[owb.SheetNames[0]], {header:1, defval:''});
+      ({ odooPayMap, odooTypeMap } = parseOdooFile(raw));
+    }
+    let zoneMap={};
+    if(zoneFile){
+      const zwb = XLSX.read(await readBuf(zoneFile), {type:'array'});
+      zoneMap = parseZoneFile(XLSX.utils.sheet_to_json(zwb.Sheets[zwb.SheetNames[0]], {header:1, defval:''}));
+    }
+    let statusMap={};
+    if(statusFile){
+      const swb = XLSX.read(await readBuf(statusFile), {type:'array'});
+      statusMap = parseStatusFile(swb, XLSX);
+    }
+    const CFG = getAramexCfg();
+    const result = processAudit({ aramexRows, odooPayMap, odooTypeMap, zoneMap, statusMap, CFG });
+    const uploadMonth = document.getElementById('ar-month').value;
+    const fmMo = iso => { if(!iso) return ''; const [y,m]=iso.split('-'); return ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][+m-1]+"'"+y.slice(2); };
+    auditData = uploadMonth ? result.map(r=>({...r, uploadMonth: fmMo(uploadMonth)})) : result;
+    document.getElementById('ar-save-btn').disabled = !auditData.length;
+    renderAramex();
+  }catch(err){
+    alert(T('errorPrefix') + err.message);
+  }finally{
+    hideLoading();
+  }
+}
+
+function renderAramex(){
+  const hasData = auditData.length > 0;
+  document.getElementById('ar-results').style.display = hasData ? 'block' : 'none';
+  document.getElementById('ar-empty').style.display = hasData ? 'none' : 'block';
+  if(!hasData) return;
+
+  const total = auditData.length;
+  const del = auditData.filter(r=>r.statusBucket==='DELIVERED').length;
+  const ret = auditData.filter(r=>r.statusBucket==='RETURNED').length;
+  const flagBase = auditData.filter(r=>r.flagBase).length;
+  const flagOther = auditData.filter(r=>r.flagOther).length;
+  const diffTot = auditData.reduce((s,r)=>s+r.colRResult, 0);
+
+  document.getElementById('ar-kpi-total').textContent = fm(total);
+  document.getElementById('ar-kpi-del').textContent = fm(del);
+  document.getElementById('ar-kpi-del-pct').textContent = ((del/total)*100).toFixed(1)+'%';
+  document.getElementById('ar-kpi-ret').textContent = fm(ret);
+  document.getElementById('ar-kpi-ret-pct').textContent = ((ret/total)*100).toFixed(1)+'%';
+  document.getElementById('ar-kpi-flagbase').textContent = fm(flagBase);
+  document.getElementById('ar-kpi-flagother').textContent = fm(flagOther);
+  const diffEl = document.getElementById('ar-kpi-difftot');
+  diffEl.textContent = fm(diffTot);
+  diffEl.style.color = diffTot>0 ? 'var(--red)' : 'var(--green2)';
+
+  renderAramexTable();
+}
+
+function getFilteredAramex(){
+  let d = auditData;
+  const filter = document.getElementById('ar-filter-status').value || 'ALL';
+  const overOnly = document.getElementById('ar-over-only').checked;
+  const search = document.getElementById('ar-search').value.trim().toLowerCase();
+  if(filter==='DELIVERED') d=d.filter(r=>r.statusBucket==='DELIVERED');
+  else if(filter==='RETURNED') d=d.filter(r=>r.statusBucket==='RETURNED');
+  else if(filter==='PENDING') d=d.filter(r=>r.statusBucket==='PENDING');
+  if(overOnly) d=d.filter(r=>r.flagBase||r.flagOther);
+  if(search) d=d.filter(r=>String(r.awb||'').toLowerCase().includes(search) || String(r.city||'').toLowerCase().includes(search));
+  return d;
+}
+function aramexRowCls(r){
+  return (r.flagBase&&r.flagOther) ? 'flag-both' : r.flagBase ? 'flag-base' : r.flagOther ? 'flag-other' : r.isPending ? 'flag-pending' : '';
+}
+function aramexStLabel(b){ return b==='DELIVERED'?T('delivered'):b==='RETURNED'?T('returned'):T('pending'); }
+function aramexStStyle(b){
+  if(b==='DELIVERED') return 'background:#dcfce7;color:#15803d';
+  if(b==='RETURNED') return 'background:#fee2e2;color:#b91c1c';
+  return 'background:#fef3c7;color:#92400e';
+}
+function renderAramexTable(){
+  if(!auditData.length) return;
+  const filtered = getFilteredAramex();
+  document.getElementById('ar-results-count').textContent = filtered.length + ' / ' + auditData.length;
+  const tbody = document.getElementById('ar-table-body');
+  tbody.innerHTML = filtered.map(r => {
+    const flagTxt = (r.flagBase&&r.flagOther) ? 'Both' : r.flagBase ? 'Base↑' : r.flagOther ? 'Other↓' : r.isPending ? 'Pend' : '✓';
+    const flagCls = (r.flagBase||r.flagOther) ? 'fb-over' : r.isPending ? 'fb-pend' : 'fb-ok';
+    return `
+    <tr class="${aramexRowCls(r)}">
+      <td>${r.idx}</td>
+      <td class="td-lft" style="font-family:monospace;font-size:.76rem">${r.awb}</td>
+      <td>${r.city}</td>
+      <td><span style="${aramexStStyle(r.statusBucket)};border-radius:4px;padding:2px 8px;font-size:.68rem;font-weight:700;white-space:nowrap">${aramexStLabel(r.statusBucket)}</span></td>
+      <td>${r.originZone}</td><td>${r.destZone}</td><td>${fm(r.weight)}</td>
+      <td class="td-ah">${fm(r.baseCharge)}</td>
+      <td class="td-ai">${fm(r.kenzzBase)}</td>
+      <td class="td-r">${fm(r.annualIncrease)}</td>
+      <td class="td-lm">${fm(r.fuelCharges)}</td>
+      <td class="td-cod">${fm(r.codFees)}</td>
+      <td class="td-ins">${fm(r.otherCharge)}</td>
+      <td class="td-diff ${r.diffBase>1?'fb-over':'fb-ok'}">${fm(r.diffBase)}</td>
+      <td class="td-diff ${r.diffOther<-1?'fb-over':'fb-ok'}">${fm(r.diffOther)}</td>
+      <td><span class="${flagCls}">${flagTxt}</span></td>
+    </tr>`;
+  }).join('');
+}
+function exportAramex(){
+  const filtered = getFilteredAramex();
+  const headers = ['#','AWB','City','Status','Zone O','Zone D','Weight','Base Charged','Kenzz Base','Annual','Fuel','COD Fees','Other Charged','Diff Base','Diff Other','Flag'];
+  const rows = filtered.map(r => [r.idx, r.awb, r.city, r.statusRaw, r.originZone, r.destZone, r.weight, r.baseCharge, r.kenzzBase, r.annualIncrease, r.fuelCharges, r.codFees, r.otherCharge, r.diffBase, r.diffOther, r.flagBase?'Base Over':r.flagOther?'Other Over':'OK']);
+  exportCSV(headers, rows, 'aramex_audit.csv');
+}
+function saveAramex(){
+  try{
+    localStorage.setItem(ARAMEX_STORAGE_KEY, JSON.stringify({data: auditData, cfg: getAramexCfg(), saved: new Date().toISOString()}));
+    const t=document.getElementById('ar-toast'); t.classList.add('show'); setTimeout(()=>t.classList.remove('show'), 3200);
+  }catch(e){ alert('Save failed.'); }
+}
+function clearAramex(){
+  if(!confirm(T('ar_confirmClear'))) return;
+  localStorage.removeItem(ARAMEX_STORAGE_KEY);
+  auditData = [];
+  document.getElementById('ar-save-btn').disabled = true;
+  renderAramex();
+}
+function loadPersistedAramex(){
+  try{
+    const raw = localStorage.getItem(ARAMEX_STORAGE_KEY);
+    if(raw){
+      const parsed = JSON.parse(raw);
+      if(parsed?.data?.length){
+        auditData = parsed.data;
+        document.getElementById('ar-save-btn').disabled = false;
+        if(parsed.cfg){
+          document.getElementById('ar-cfg-codthresh').value = parsed.cfg.COD_THRESH;
+          document.getElementById('ar-cfg-codpct').value = parsed.cfg.COD_PCT;
+          document.getElementById('ar-cfg-annualpct').value = parsed.cfg.ANNUAL_PCT;
+          document.getElementById('ar-cfg-fuelpct').value = parsed.cfg.FUEL_PCT;
+          document.getElementById('ar-cfg-overthresh').value = parsed.cfg.OVER_THRESH;
+        }
+      }
+    }
+  }catch(e){}
+}
+
+function applyI18nAramex(){
+  document.getElementById('ar-note').innerHTML = T('note');
+  document.getElementById('ar-file-title').textContent = T('ar_file');
+  document.getElementById('ar-file-desc').textContent = T('ar_fileDesc');
+  document.getElementById('ar-file-btn').textContent = aramexFile ? T('changeFile') : T('upload');
+  document.getElementById('ar-odoo-title').textContent = T('ar_odoo');
+  document.getElementById('ar-odoo-desc').textContent = T('ar_odooDesc');
+  document.getElementById('ar-odoo-btn').textContent = odooFile ? T('changeFile') : T('upload');
+  document.getElementById('ar-zones-title').textContent = T('ar_zones');
+  document.getElementById('ar-zones-desc').textContent = T('ar_zonesDesc');
+  document.getElementById('ar-zones-btn').textContent = zoneFile ? T('changeFile') : T('upload');
+  document.getElementById('ar-status-title').textContent = T('ar_status');
+  document.getElementById('ar-status-desc').textContent = T('ar_statusDesc');
+  document.getElementById('ar-status-btn').textContent = statusFile ? T('changeFile') : T('upload');
+  document.getElementById('ar-cfg-title').textContent = T('ar_cfgTitle');
+  document.getElementById('ar-codthresh-lbl').textContent = T('ar_codThresh');
+  document.getElementById('ar-codthresh-hint').textContent = T('ar_codThreshHint');
+  document.getElementById('ar-codpct-lbl').textContent = T('ar_codPct');
+  document.getElementById('ar-codpct-hint').textContent = T('ar_codPctHint');
+  document.getElementById('ar-annualpct-lbl').textContent = T('ar_annualPct');
+  document.getElementById('ar-annualpct-hint').textContent = T('ar_annualPctHint');
+  document.getElementById('ar-fuelpct-lbl').textContent = T('ar_fuelPct');
+  document.getElementById('ar-fuelpct-hint').textContent = T('ar_fuelPctHint');
+  document.getElementById('ar-overthresh-lbl').textContent = T('ar_overThresh');
+  document.getElementById('ar-overthresh-hint').textContent = T('ar_overThreshHint');
+  document.getElementById('ar-month-lbl').textContent = T('ar_monthLbl');
+  document.getElementById('ar-process-btn').textContent = T('process');
+  document.getElementById('ar-save-btn').textContent = T('saveResults');
+  document.getElementById('ar-clear-btn').textContent = T('clearData');
+  document.getElementById('ar-toast').textContent = T('ar_toast');
+  document.getElementById('ar-kpi-total-lbl').textContent = T('totalShipments');
+  document.getElementById('ar-kpi-del-lbl').textContent = T('delivered');
+  document.getElementById('ar-kpi-ret-lbl').textContent = T('returned');
+  document.getElementById('ar-kpi-flagbase-lbl').textContent = T('ar_kpiFlagBase');
+  document.getElementById('ar-kpi-flagother-lbl').textContent = T('ar_kpiFlagOther');
+  document.getElementById('ar-kpi-difftot-lbl').textContent = T('ar_kpiDiffTot');
+  document.getElementById('ar-kpi-egp').textContent = T('egp');
+  document.getElementById('ar-status-filter-lbl').textContent = T('ar_statusFilter');
+  document.getElementById('ar-opt-all').textContent = T('allStatuses');
+  document.getElementById('ar-opt-del').textContent = T('delivered');
+  document.getElementById('ar-opt-ret').textContent = T('returned');
+  document.getElementById('ar-opt-pend').textContent = T('pending');
+  document.getElementById('ar-search-lbl').textContent = T('search');
+  document.getElementById('ar-over-only-lbl').textContent = T('overOnly');
+  document.getElementById('ar-export-btn').textContent = T('export');
+  document.getElementById('ar-results-title').textContent = T('ar_resultsTitle');
+  document.getElementById('ar-empty-title').textContent = T('ar_emptyTitle');
+  document.getElementById('ar-empty-desc').textContent = T('ar_emptyDesc');
+}
+
+/* ---------- Mashreq engine (ported from mashreqEngine.js) ---------- */
+const MQ_STORAGE_KEY = 'kenzz3pl_mq_v1';
+let mqData = [];
+let mqReportFile=null, mqRatesFile=null, mqSecondFile=null;
+
+function parseMQRates(raw){
+  const rates = { zones:[1,2,3,4], lastmile:{}, pickup:{} };
+  const SIZES = ['Small','Medium','Large'];
+  let lmHdrRow = -1;
+  for(let r=0;r<raw.length;r++){
+    if(!raw[r]) continue;
+    const row = raw[r].map(c => c!==null&&c!==undefined ? String(c).trim() : '');
+    const hasSize = row.some(c=>c.toLowerCase().includes('size'));
+    const hasNums = row.filter(c=>['1','2','3','4'].includes(c)).length >= 2;
+    if(hasSize && hasNums){
+      const zoneCols = [];
+      row.forEach((c,i)=>{ if(['1','2','3','4'].includes(c)) zoneCols.push({zone:parseInt(c), col:i}); });
+      const sizeCol = row.findIndex(c=>c.toLowerCase().includes('size'));
+      if(lmHdrRow===-1){
+        lmHdrRow = r;
+        for(let r2=r+1; r2<Math.min(r+6, raw.length); r2++){
+          if(!raw[r2]) continue;
+          const sz = String(raw[r2][sizeCol]||'').trim();
+          if(SIZES.includes(sz)){
+            rates.lastmile[sz] = {};
+            zoneCols.forEach(({zone,col})=>{ rates.lastmile[sz][zone] = parseFloat(raw[r2][col])||0; });
+          }
+        }
+      } else if(r > lmHdrRow+2){
+        for(let r2=r+1; r2<Math.min(r+6, raw.length); r2++){
+          if(!raw[r2]) continue;
+          const sz = String(raw[r2][sizeCol]||'').trim();
+          if(SIZES.includes(sz)){
+            rates.pickup[sz] = {};
+            zoneCols.forEach(({zone,col})=>{ rates.pickup[sz][zone] = parseFloat(raw[r2][col])||0; });
+          }
+        }
+        break;
+      }
+    }
+  }
+  return rates;
+}
+function mqCol(row, ...names){
+  for(const n of names){
+    const k = Object.keys(row).find(k => k.trim().toLowerCase()===n.toLowerCase() || k.trim().toLowerCase().replace(/[^a-z0-9]/g,'')===n.toLowerCase().replace(/[^a-z0-9]/g,''));
+    if(k!==undefined) return row[k];
+  }
+  return null;
+}
+function mqSize(row){
+  const keys = Object.keys(row);
+  for(const k of keys){
+    const kn = k.trim().toUpperCase();
+    if((kn==='XL'||kn==='L') && row[k]) return 'Large';
+    if(kn==='M' && row[k]) return 'Medium';
+  }
+  return 'Small';
+}
+function processMQ({rawReport, raw2nd, rates, INS_PCT, COD_PCT, THRESH}){
+  const secondMap = {};
+  (raw2nd||[]).forEach(row=>{
+    const awb = String(mqCol(row,'AWB')||'').trim();
+    const chg = parseFloat(mqCol(row,'Charge')||0)||0;
+    if(awb) secondMap[normAWB(awb)] = chg;
+  });
+  return rawReport.map((row, idx)=>{
+    const awb = normAWB(mqCol(row,'AWB'));
+    const goodsVal = parseFloat(mqCol(row,'Goods Value','GoodsValue')||0)||0;
+    const month = String(mqCol(row,'Month')||'').trim();
+    const status = String(mqCol(row,'Status','State')||'').trim();
+    const destCity = String(mqCol(row,'DestCity','Dest City','destination city')||'').trim();
+    const origCity = String(mqCol(row,'OriginCity','Origin City')||'').trim();
+    const destZone = parseInt(mqCol(row,'DestCityZone','Dest Zone','destination zone')||1)||1;
+    const origZone = parseInt(mqCol(row,'OriginCityZone','Origin Zone','pickup zone')||1)||1;
+    const codValue = parseFloat(mqCol(row,'CODValue','COD Value')||0)||0;
+
+    const actualCharge = parseFloat(mqCol(row,'Charge')||0)||0;
+    const actualIns = parseFloat(mqCol(row,'insurance','Insurance')||0)||0;
+    const actualCODFees = parseFloat(mqCol(row,'COD Fees','CODFees')||0)||0;
+    const actualPickup = parseFloat(mqCol(row,'Pickup Fees','PickupFees')||0)||0;
+
+    const size = mqSize(row);
+    const isDelivered = status.toLowerCase()==='delivered';
+    const isCancelOnFloor = status.toLowerCase().includes('cancel');
+
+    const lmTable = rates.lastmile[size] || {};
+    const puTable = rates.pickup[size] || {};
+    const lmFull = lmTable[destZone] || 0;
+    const calcLM = isCancelOnFloor ? Math.round(lmFull*0.5*100)/100 : lmFull;
+    const calcPickup = puTable[origZone] || 0;
+    const calcIns = Math.round(goodsVal*INS_PCT*100)/100;
+    const calcCOD = isDelivered ? Math.round(codValue*COD_PCT*100)/100 : 0;
+
+    const totalBilled = actualCharge + actualPickup + actualIns + actualCODFees;
+    const totalCalc = calcLM + calcPickup + calcIns + calcCOD;
+    const diff = Math.round((totalCalc-totalBilled)*100)/100;
+    const isOver = Math.abs(diff) > THRESH;
+
+    return { idx:idx+1, awb, month, status, size, destCity, origCity, destZone, origZone, codValue, goodsVal,
+      actualCharge, actualPickup, actualIns, actualCODFees,
+      calcLM, calcPickup, calcIns, calcCOD,
+      totalBilled, totalCalc, diff, isOver };
+  });
+}
+
+document.getElementById('mq-file-inp').addEventListener('change', e=>{ if(e.target.files[0]){ mqReportFile=e.target.files[0]; document.getElementById('mq-file-status').textContent='✅ '+mqReportFile.name; applyI18nMashreq(); } e.target.value=''; });
+document.getElementById('mq-rates-inp').addEventListener('change', e=>{ if(e.target.files[0]){ mqRatesFile=e.target.files[0]; document.getElementById('mq-rates-status').textContent='✅ '+mqRatesFile.name; applyI18nMashreq(); } e.target.value=''; });
+document.getElementById('mq-second-inp').addEventListener('change', e=>{ if(e.target.files[0]){ mqSecondFile=e.target.files[0]; document.getElementById('mq-second-status').textContent='✅ '+mqSecondFile.name; applyI18nMashreq(); } e.target.value=''; });
+
+async function processMashreq(){
+  if(!mqReportFile){ alert(T('mq_alertNoFile')); return; }
+  showLoading(T('mq_loadingMsg'));
+  await new Promise(r=>setTimeout(r,30));
+  try{
+    const rwb = XLSX.read(await readBuf(mqReportFile), {type:'array'});
+    const rawReport = XLSX.utils.sheet_to_json(rwb.Sheets[rwb.SheetNames[0]], {defval:''});
+    let rates = { zones:[1,2,3,4], lastmile:{}, pickup:{} };
+    if(mqRatesFile){
+      const rawb = XLSX.read(await readBuf(mqRatesFile), {type:'array'});
+      rates = parseMQRates(XLSX.utils.sheet_to_json(rawb.Sheets[rawb.SheetNames[0]], {header:1, defval:''}));
+    }
+    let raw2nd = [];
+    if(mqSecondFile){
+      const swb = XLSX.read(await readBuf(mqSecondFile), {type:'array'});
+      raw2nd = XLSX.utils.sheet_to_json(swb.Sheets[swb.SheetNames[0]], {defval:''});
+    }
+    const INS_PCT = parseFloat(document.getElementById('mq-cfg-inspct').value)||0;
+    const COD_PCT = parseFloat(document.getElementById('mq-cfg-codpct').value)||0;
+    const THRESH = parseFloat(document.getElementById('mq-cfg-thresh').value)||0;
+    mqData = processMQ({ rawReport, raw2nd, rates, INS_PCT, COD_PCT, THRESH });
+    document.getElementById('mq-save-btn').disabled = !mqData.length;
+    renderMashreq();
+  }catch(err){
+    alert(T('errorPrefix') + err.message);
+  }finally{
+    hideLoading();
+  }
+}
+function renderMashreq(){
+  const hasData = mqData.length > 0;
+  document.getElementById('mq-results').style.display = hasData ? 'block' : 'none';
+  document.getElementById('mq-empty').style.display = hasData ? 'none' : 'block';
+  if(!hasData) return;
+  const totalBilled = mqData.reduce((s,r)=>s+r.totalBilled, 0);
+  const totalCalc = mqData.reduce((s,r)=>s+r.totalCalc, 0);
+  const overCount = mqData.filter(r=>r.isOver).length;
+  document.getElementById('mq-kpi-total').textContent = fm(mqData.length);
+  document.getElementById('mq-kpi-invoice').textContent = fm(totalBilled);
+  document.getElementById('mq-kpi-calc').textContent = fm(totalCalc);
+  document.getElementById('mq-kpi-diff').textContent = fm(overCount);
+  document.getElementById('mq-kpi-diff-pct').textContent = ((overCount/mqData.length)*100).toFixed(1)+'%';
+  renderMashreqTable();
+}
+function getFilteredMashreq(){
+  let d = mqData;
+  const filter = document.getElementById('mq-filter-status').value || 'ALL';
+  const sizeF = document.getElementById('mq-filter-size').value || 'ALL';
+  const overOnly = document.getElementById('mq-over-only').checked;
+  const search = document.getElementById('mq-search').value.trim().toLowerCase();
+  if(filter!=='ALL') d=d.filter(r=>r.status.toLowerCase()===filter.toLowerCase());
+  if(sizeF!=='ALL') d=d.filter(r=>r.size===sizeF);
+  if(overOnly) d=d.filter(r=>r.isOver);
+  if(search) d=d.filter(r=>String(r.awb||'').toLowerCase().includes(search) || String(r.destCity||'').toLowerCase().includes(search));
+  return d;
+}
+function mqSizeBadge(sz){ return sz==='Large' ? 'sz-badge sz-l' : sz==='Medium' ? 'sz-badge sz-m' : 'sz-badge sz-s'; }
+function renderMashreqTable(){
+  if(!mqData.length) return;
+  const filtered = getFilteredMashreq();
+  document.getElementById('mq-results-count').textContent = filtered.length + ' / ' + mqData.length;
+  document.getElementById('mq-table-body').innerHTML = filtered.map(r => `
+    <tr class="${r.isOver?'mq-over':'mq-ok'}">
+      <td>${r.idx}</td>
+      <td class="td-lft" style="font-family:monospace;font-size:.76rem">${r.awb}</td>
+      <td>${r.month}</td>
+      <td><span style="background:${r.status==='Delivered'?'#dcfce7':'#fee2e2'};color:${r.status==='Delivered'?'#15803d':'#b91c1c'};border-radius:4px;padding:2px 7px;font-size:.68rem;font-weight:700">${r.status}</span></td>
+      <td><span class="${mqSizeBadge(r.size)}">${r.size}</span></td>
+      <td>${r.destZone}</td><td>${r.origZone}</td>
+      <td class="td-ah">${fm(r.actualCharge)}</td>
+      <td class="td-ai">${fm(r.actualPickup)}</td>
+      <td class="td-ins">${fm(r.actualIns)}</td>
+      <td class="td-cod">${fm(r.actualCODFees)}</td>
+      <td class="td-lm">${fm(r.calcLM)}</td>
+      <td class="td-pu">${fm(r.calcPickup)}</td>
+      <td class="td-r">${fm(r.calcIns)}</td>
+      <td class="td-r">${fm(r.calcCOD)}</td>
+      <td style="font-weight:700">${fm(r.totalBilled)}</td>
+      <td style="font-weight:700;color:var(--purple)">${fm(r.totalCalc)}</td>
+      <td class="td-diff ${r.isOver?'fb-over':'fb-ok'}">${fm(r.diff)}</td>
+    </tr>`).join('');
+}
+function exportMashreq(){
+  const filtered = getFilteredMashreq();
+  const headers = ['#','AWB','Month','Status','Size','Dest Zone','Orig Zone','Actual Charge','Actual PU','Actual Ins','Actual COD','Calc LM','Calc PU','Calc Ins','Calc COD','Total Billed','Total Calc','Diff'];
+  exportCSV(headers, filtered.map(r=>[r.idx,r.awb,r.month,r.status,r.size,r.destZone,r.origZone,r.actualCharge,r.actualPickup,r.actualIns,r.actualCODFees,r.calcLM,r.calcPickup,r.calcIns,r.calcCOD,r.totalBilled,r.totalCalc,r.diff]), 'mashreq_audit.csv');
+}
+function saveMashreq(){
+  try{ localStorage.setItem(MQ_STORAGE_KEY, JSON.stringify({data: mqData, saved: new Date().toISOString()}));
+    const t=document.getElementById('mq-toast'); t.classList.add('show'); setTimeout(()=>t.classList.remove('show'), 3000);
+  }catch(e){ alert('Save failed.'); }
+}
+function clearMashreq(){
+  if(!confirm(T('mq_confirmClear'))) return;
+  localStorage.removeItem(MQ_STORAGE_KEY);
+  mqData = [];
+  document.getElementById('mq-save-btn').disabled = true;
+  renderMashreq();
+}
+function loadPersistedMashreq(){
+  try{
+    const raw = localStorage.getItem(MQ_STORAGE_KEY);
+    if(raw){ const parsed = JSON.parse(raw); if(parsed?.data?.length){ mqData = parsed.data; document.getElementById('mq-save-btn').disabled = false; } }
+  }catch(e){}
+}
+function applyI18nMashreq(){
+  document.getElementById('mq-note').innerHTML = T('note');
+  document.getElementById('mq-file-title').textContent = T('mq_file');
+  document.getElementById('mq-file-desc').textContent = T('mq_fileDesc');
+  document.getElementById('mq-file-btn').textContent = mqReportFile ? T('changeFile') : T('upload');
+  document.getElementById('mq-rates-title').textContent = T('mq_rates');
+  document.getElementById('mq-rates-desc').textContent = T('mq_ratesDesc');
+  document.getElementById('mq-rates-btn').textContent = mqRatesFile ? T('changeFile') : T('upload');
+  document.getElementById('mq-second-title').textContent = T('mq_second');
+  document.getElementById('mq-second-desc').textContent = T('mq_secondDesc');
+  document.getElementById('mq-second-btn').textContent = mqSecondFile ? T('changeFile') : T('upload');
+  document.getElementById('mq-settings-title').textContent = T('mq_settings');
+  document.getElementById('mq-settings-desc').textContent = T('mq_settingsDesc');
+  document.getElementById('mq-inspct-lbl').textContent = T('mq_insPct');
+  document.getElementById('mq-codpct-lbl').textContent = T('mq_codPct');
+  document.getElementById('mq-thresh-lbl').textContent = T('mq_thresh');
+  document.getElementById('mq-process-btn').textContent = T('process');
+  document.getElementById('mq-save-btn').textContent = T('saveResults');
+  document.getElementById('mq-clear-btn').textContent = T('clearData');
+  document.getElementById('mq-toast').textContent = T('mq_toast');
+  document.getElementById('mq-kpi-total-lbl').textContent = T('totalShipments');
+  document.getElementById('mq-kpi-invoice-lbl').textContent = T('invoice');
+  document.getElementById('mq-kpi-egp1').textContent = T('egp');
+  document.getElementById('mq-kpi-calc-lbl').textContent = T('kenzzCalc');
+  document.getElementById('mq-kpi-egp2').textContent = T('egp');
+  document.getElementById('mq-kpi-diff-lbl').textContent = T('differences');
+  document.getElementById('mq-status-lbl').textContent = 'Status';
+  document.getElementById('mq-opt-all').textContent = T('all');
+  document.getElementById('mq-opt-del').textContent = T('delivered');
+  document.getElementById('mq-opt-ret').textContent = T('returned');
+  document.getElementById('mq-size-lbl').textContent = T('mq_sizeFilter');
+  document.getElementById('mq-opt-allsizes').textContent = T('allSizes');
+  document.getElementById('mq-search-lbl').textContent = T('search');
+  document.getElementById('mq-over-only-lbl').textContent = T('overOnly');
+  document.getElementById('mq-export-btn').textContent = T('export');
+  document.getElementById('mq-results-title').textContent = T('mq_resultsTitle');
+  document.getElementById('mq-empty-title').textContent = T('mq_emptyTitle');
+}
+
+/* ---------- Raya engine (ported from rayaEngine.js) ---------- */
+const RAYA_STORAGE_KEY = 'kenzz3pl_raya_v1';
+let rayaData = [];
+let rayaReportFile=null, rayaContractFile=null;
+
+function zoneToTier(zone){
+  if(!zone) return 'Tier 1';
+  const n = parseInt(String(zone).replace(/[^0-9]/g,''))||1;
+  if(n<=1) return 'Tier 1';
+  if(n===2) return 'Tier 2';
+  if(n<=5) return 'Tier 3';
+  if(n===6) return 'Tier 4';
+  return 'Tier 5';
+}
+function rg(row, ...names){
+  for(const n of names){
+    const k = Object.keys(row).find(k => k.trim().toLowerCase()===n.toLowerCase() || k.trim().toLowerCase().replace(/[^a-z0-9]/g,'')===n.toLowerCase().replace(/[^a-z0-9]/g,''));
+    if(k!==undefined && row[k]!==null && row[k]!==undefined && row[k]!=='') return row[k];
+  }
+  return null;
+}
+function rayaCategory(row){
+  const get = (k) => {
+    const key = Object.keys(row).find(r => r.trim().toLowerCase()===k.toLowerCase() || r.trim().toLowerCase().replace(/[^a-z]/g,'')===k.toLowerCase().replace(/[^a-z]/g,''));
+    return key ? (parseFloat(row[key])||0) : 0;
+  };
+  if(get('Large QTY')>0) return 'Large';
+  if(get('Medium QTY')>0) return 'Medium';
+  if(get('Small QTY')>0) return 'Small';
+  const catKey = Object.keys(row).find(k=>k.trim()==='Category'||k.trim()==='category');
+  if(catKey && row[catKey]) return String(row[catKey]).trim();
+  return 'Small';
+}
+function parseRayaContract(rows){
+  const contract = {};
+  rows.forEach(row=>{
+    const tier = String(rg(row,'Tier')||'').trim();
+    if(!tier || !tier.startsWith('Tier')) return;
+    contract[tier] = {
+      Small: parseFloat(rg(row,'Small')||0)||0,
+      Medium: parseFloat(rg(row,'Medium')||0)||0,
+      Large: parseFloat(rg(row,'Large')||0)||0,
+    };
+  });
+  return contract;
+}
+function processRaya({rawRows, contract, THRESH}){
+  return rawRows.map((row, idx)=>{
+    const awb = String(rg(row,'AWB')||'').trim();
+    const status = String(rg(row,'Status')||'').trim();
+    const zone = String(rg(row,'Zone')||'').trim();
+    const month = String(rg(row,'Month')||'').trim();
+    const city = String(rg(row,'City')||'').trim();
+
+    const category = rayaCategory(row);
+    const tierFromFile = String(rg(row,'Tair','Tier')||'').trim();
+    const tier = tierFromFile.startsWith('Tier') ? tierFromFile : zoneToTier(zone);
+
+    const dlCost = parseFloat(rg(row,'DL Cost','DLCost')||0)||0;
+    const pickupCost = parseFloat(rg(row,'Pickup Cost','PickupCost')||0)||0;
+    const codFees = parseFloat(rg(row,'COD Fees','CODFees')||0)||0;
+    const insFees = parseFloat(rg(row,'Insurace Fees','Insurance Fees','InsuranceFees')||0)||0;
+    const extraCost = parseFloat(rg(row,'EXtra Attempets Cost','Extra Attempts Cost','ExtraAttemptsCost')||0)||0;
+    const totalBilled = parseFloat(rg(row,'Total')||0)||0;
+
+    const largeQty = parseFloat(rg(row,'Large QTY','Large')||0)||0;
+    const mediumQty = parseFloat(rg(row,'Medium QTY','Medium')||0)||0;
+    const smallQty = parseFloat(rg(row,'Small QTY','Small')||0)||0;
+    const categoryQty = category==='Large' ? Math.max(largeQty,1) : category==='Medium' ? Math.max(mediumQty,1) : Math.max(smallQty,1);
+
+    const unitPrice = (contract[tier]||{})[category] || 0;
+    const fullPrice = Math.round(unitPrice*categoryQty*1000)/1000;
+    const isReturned = status.toLowerCase()==='returned';
+    const contractPrice = isReturned ? Math.round(fullPrice*0.75*1000)/1000 : fullPrice;
+
+    const diff = Math.round((totalBilled - contractPrice - pickupCost - insFees - codFees - extraCost)*100)/100;
+    const isOver = diff > THRESH;
+    const isUnder = diff < -THRESH;
+
+    return { idx:idx+1, awb, status, zone, tier, category, month, city,
+      dlCost, pickupCost, codFees, insFees, extraCost, totalBilled,
+      fullPrice, contractPrice, isReturned, diff, isOver, isUnder };
+  });
+}
+
+document.getElementById('ra-file-inp').addEventListener('change', e=>{ if(e.target.files[0]){ rayaReportFile=e.target.files[0]; document.getElementById('ra-file-status').textContent='✅ '+rayaReportFile.name; applyI18nRaya(); } e.target.value=''; });
+document.getElementById('ra-contract-inp').addEventListener('change', e=>{ if(e.target.files[0]){ rayaContractFile=e.target.files[0]; document.getElementById('ra-contract-status').textContent='✅ '+rayaContractFile.name; applyI18nRaya(); } e.target.value=''; });
+
+async function processRayaPage(){
+  if(!rayaReportFile){ alert(T('ra_alertNoFile')); return; }
+  showLoading(T('ra_loadingMsg'));
+  await new Promise(r=>setTimeout(r,30));
+  try{
+    const rwb = XLSX.read(await readBuf(rayaReportFile), {type:'array'});
+    const rawRows = XLSX.utils.sheet_to_json(rwb.Sheets[rwb.SheetNames[0]], {defval:''});
+    let contract = {};
+    if(rayaContractFile){
+      const cwb = XLSX.read(await readBuf(rayaContractFile), {type:'array'});
+      contract = parseRayaContract(XLSX.utils.sheet_to_json(cwb.Sheets[cwb.SheetNames[0]], {defval:''}));
+    }
+    const THRESH = parseFloat(document.getElementById('ra-thresh').value)||0;
+    rayaData = processRaya({ rawRows, contract, THRESH });
+    document.getElementById('ra-save-btn').disabled = !rayaData.length;
+    renderRayaPage();
+  }catch(err){
+    alert(T('errorPrefix') + err.message);
+  }finally{
+    hideLoading();
+  }
+}
+function renderRayaPage(){
+  const hasData = rayaData.length > 0;
+  document.getElementById('ra-results').style.display = hasData ? 'block' : 'none';
+  document.getElementById('ra-empty').style.display = hasData ? 'none' : 'block';
+  if(!hasData) return;
+  const totalBilled = rayaData.reduce((s,r)=>s+r.totalBilled, 0);
+  const totalCalc = rayaData.reduce((s,r)=>s + r.contractPrice + (r.pickupCost||0) + (r.insFees||0) + (r.codFees||0) + (r.extraCost||0), 0);
+  const overCount = rayaData.filter(r=>r.isOver||r.isUnder).length;
+  document.getElementById('ra-kpi-total').textContent = fm(rayaData.length);
+  document.getElementById('ra-kpi-invoice').textContent = fm(totalBilled);
+  document.getElementById('ra-kpi-calc').textContent = fm(totalCalc);
+  document.getElementById('ra-kpi-diff').textContent = fm(overCount);
+  renderRayaTable();
+}
+function getFilteredRaya(){
+  let d = rayaData;
+  const filter = document.getElementById('ra-filter-status').value || 'ALL';
+  const catF = document.getElementById('ra-filter-cat').value || 'ALL';
+  const overOnly = document.getElementById('ra-over-only').checked;
+  const search = document.getElementById('ra-search').value.trim().toLowerCase();
+  if(filter!=='ALL') d=d.filter(r=>r.status.toLowerCase()===filter.toLowerCase());
+  if(catF!=='ALL') d=d.filter(r=>r.category===catF);
+  if(overOnly) d=d.filter(r=>r.isOver||r.isUnder);
+  if(search) d=d.filter(r=>String(r.awb||'').toLowerCase().includes(search) || String(r.city||'').toLowerCase().includes(search));
+  return d;
+}
+function rayaCatBadge(c){ return c==='Large' ? 'raya-cat-l' : c==='Medium' ? 'raya-cat-m' : 'raya-cat-s'; }
+function renderRayaTable(){
+  if(!rayaData.length) return;
+  const filtered = getFilteredRaya();
+  document.getElementById('ra-results-count').textContent = filtered.length + ' / ' + rayaData.length;
+  document.getElementById('ra-table-body').innerHTML = filtered.map(r => `
+    <tr class="${r.isReturned?'raya-ret':r.isOver?'raya-over':'raya-ok'}">
+      <td>${r.idx}</td>
+      <td class="td-lft" style="font-family:monospace;font-size:.76rem">${r.awb}</td>
+      <td><span style="background:${r.status==='Delivered'?'#dcfce7':'#fee2e2'};color:${r.status==='Delivered'?'#15803d':'#b91c1c'};border-radius:4px;padding:2px 7px;font-size:.68rem;font-weight:700">${r.status}</span></td>
+      <td><span class="raya-tier">${r.tier}</span></td>
+      <td><span class="${rayaCatBadge(r.category)}">${r.category}</span></td>
+      <td class="td-raya-dl">${fm(r.dlCost)}</td>
+      <td class="td-raya-pu">${fm(r.pickupCost)}</td>
+      <td class="td-ins">${fm(r.insFees)}</td>
+      <td class="td-cod">${fm(r.codFees)}</td>
+      <td>${fm(r.extraCost)}</td>
+      <td class="td-raya-k">${fm(r.contractPrice)}</td>
+      <td style="font-weight:700">${fm(r.totalBilled)}</td>
+      <td class="td-raya-diff ${r.isOver?'fb-over':'fb-ok'}">${fm(r.diff)}</td>
+    </tr>`).join('');
+}
+function exportRayaPage(){
+  const filtered = getFilteredRaya();
+  const headers = ['#','AWB','Status','Zone','Tier','Category','Total Billed','Contract Price','Diff'];
+  exportCSV(headers, filtered.map(r=>[r.idx,r.awb,r.status,r.zone,r.tier,r.category,r.totalBilled,r.contractPrice,r.diff]), 'raya_audit.csv');
+}
+function saveRayaPage(){
+  try{ localStorage.setItem(RAYA_STORAGE_KEY, JSON.stringify({data: rayaData, saved: new Date().toISOString()}));
+    const t=document.getElementById('ra-toast'); t.classList.add('show'); setTimeout(()=>t.classList.remove('show'), 3000);
+  }catch(e){ alert('Save failed.'); }
+}
+function clearRayaPage(){
+  if(!confirm(T('ra_confirmClear'))) return;
+  localStorage.removeItem(RAYA_STORAGE_KEY);
+  rayaData = [];
+  document.getElementById('ra-save-btn').disabled = true;
+  renderRayaPage();
+}
+function loadPersistedRaya(){
+  try{
+    const raw = localStorage.getItem(RAYA_STORAGE_KEY);
+    if(raw){ const parsed = JSON.parse(raw); if(parsed?.data?.length){ rayaData = parsed.data; document.getElementById('ra-save-btn').disabled = false; } }
+  }catch(e){}
+}
+function applyI18nRaya(){
+  document.getElementById('ra-note').innerHTML = T('note');
+  document.getElementById('ra-file-title').textContent = T('ra_file');
+  document.getElementById('ra-file-desc').textContent = T('ra_fileDesc');
+  document.getElementById('ra-file-btn').textContent = rayaReportFile ? T('changeFile') : T('upload');
+  document.getElementById('ra-contract-title').textContent = T('ra_contract');
+  document.getElementById('ra-contract-desc').textContent = T('ra_contractDesc');
+  document.getElementById('ra-contract-btn').textContent = rayaContractFile ? T('changeFile') : T('upload');
+  document.getElementById('ra-thresh-title').textContent = T('ra_thresh');
+  document.getElementById('ra-thresh-desc').textContent = T('ra_threshDesc');
+  document.getElementById('ra-process-btn').textContent = T('process');
+  document.getElementById('ra-save-btn').textContent = T('saveResults');
+  document.getElementById('ra-clear-btn').textContent = T('clearData');
+  document.getElementById('ra-toast').textContent = T('ra_toast');
+  document.getElementById('ra-kpi-total-lbl').textContent = T('totalShipments');
+  document.getElementById('ra-kpi-invoice-lbl').textContent = T('invoice');
+  document.getElementById('ra-kpi-egp1').textContent = T('egp');
+  document.getElementById('ra-kpi-calc-lbl').textContent = T('kenzzCalc');
+  document.getElementById('ra-kpi-egp2').textContent = T('egp');
+  document.getElementById('ra-kpi-diff-lbl').textContent = T('differences');
+  document.getElementById('ra-status-lbl').textContent = 'Status';
+  document.getElementById('ra-opt-all').textContent = T('all');
+  document.getElementById('ra-opt-del').textContent = T('delivered');
+  document.getElementById('ra-opt-ret').textContent = T('returned');
+  document.getElementById('ra-cat-lbl').textContent = T('ra_catFilter');
+  document.getElementById('ra-opt-allcat').textContent = T('all');
+  document.getElementById('ra-search-lbl').textContent = T('search');
+  document.getElementById('ra-over-only-lbl').textContent = T('overOnly');
+  document.getElementById('ra-export-btn').textContent = T('export');
+  document.getElementById('ra-results-title').textContent = T('ra_resultsTitle');
+  document.getElementById('ra-empty-title').textContent = T('ra_emptyTitle');
+}
+
+/* ---------- Breakdown Engine ---------- */
+const BD_COMPANIES = ['Flextock','Bosta','Aramex','Raya','Mashreq'];
+const BD_GRAND     = 'All Shipments Cost';
+const BD_ROW_TYPES = ['SEND','Returns-RTN','Returns-RTO','Pickup','COD','Insurance','Lost & Damage','Last Mile CN','Total'];
+const BD_STORAGE   = 'kenzz3pl_bd_v1';
+
+function bdRv(v){ if(v===null||v===undefined||v==='') return null; const n=parseFloat(v); return isNaN(n)?null:n; }
+
+function bdEmptyStore(){
+  const store={months:[],lockedMonths:[],companies:{}};
+  [...BD_COMPANIES,BD_GRAND].forEach(co=>{
+    store.companies[co]={};
+    BD_ROW_TYPES.forEach(rt=>{ store.companies[co][rt]={qty:[],value:[],rate:[],valueDel:[],valueRet:[],qtyDel:[],qtyRet:[]}; });
+  });
+  return store;
+}
+
+function bdSetSlot(node,key,val,mi){ while(node[key].length<=mi) node[key].push(null); node[key][mi]=val; }
+
+function bdRecomputeGrand(store,mi){
+  const grand=store.companies[BD_GRAND];
+  BD_ROW_TYPES.forEach(rt=>{
+    const node=grand[rt];
+    ['qty','value','rate','valueDel','valueRet','qtyDel','qtyRet'].forEach(k=>{
+      while(node[k].length<=mi) node[k].push(null);
+      if(k!=='rate'){
+        let total=0,hasVal=false;
+        BD_COMPANIES.forEach(co=>{ const v=store.companies[co]?.[rt]?.[k]?.[mi]; if(v!==null&&v!==undefined){total+=v;hasVal=true;} });
+        node[k][mi]=hasVal?total:null;
+      }
+    });
+    const q=grand[rt].qty[mi],v=grand[rt].value[mi];
+    grand[rt].rate[mi]=(q&&v)?Math.round(v/q*100)/100:null;
+  });
+}
+
+function bdParseFile(raw,existing){
+  let hdrRow=-1;
+  for(let r=0;r<Math.min(raw.length,10);r++){ if(raw[r]&&raw[r].some(c=>String(c||'').trim()==='3PL Name')){hdrRow=r;break;} }
+  if(hdrRow===-1) throw new Error('Could not find header row with "3PL Name"');
+  const months=raw[hdrRow].slice(3).map(m=>String(m||'').trim()).filter(Boolean);
+  const newAddedMonths=existing?existing.months.filter(m=>!months.includes(m)):[];
+  const store=bdEmptyStore();
+  store.months=[...months,...newAddedMonths];
+  store.lockedMonths=[...months];
+  let curCo=null,curRt=null;
+  for(let r=hdrRow+1;r<raw.length;r++){
+    const row=raw[r]; if(!row) continue;
+    const c0=String(row[0]||'').trim(),c1=String(row[1]||'').trim(),c2=String(row[2]||'').trim();
+    if(c0) curCo=c0;
+    if(!curCo||!store.companies[curCo]) continue;
+    if(c1){
+      if(c1==='SEND') curRt='SEND';
+      else if(c1.includes('RTN')) curRt='Returns-RTN';
+      else if(c1.includes('RTO')||c1==='Returns') curRt='Returns-RTO';
+      else if(c1==='Pickup') curRt='Pickup';
+      else if(c1==='COD') curRt='COD';
+      else if(c1==='Insurance') curRt='Insurance';
+      else if(c1.includes('Lost')) curRt='Lost & Damage';
+      else if(c1.includes('Last Mile CN')) curRt='Last Mile CN';
+      else if(c1==='Total') curRt='Total';
+      else if(c1.includes('Annual')||c1.includes('Pickup fees')) curRt=null;
+      else curRt=null;
+    }
+    const rt=curRt; if(!rt) continue;
+    const node=store.companies[curCo][rt];
+    const vals=row.slice(3);
+    if(c2==='Qty'||c2==='Del.'||c2==='Ret.'){
+      const key=c2==='Del.'?'qtyDel':c2==='Ret.'?'qtyRet':'qty';
+      months.forEach((_,i)=>{ node[key][i]=bdRv(vals[i]); });
+    } else if(c2.toLowerCase().includes('value')){
+      const key=c2.toLowerCase().includes('del')?'valueDel':c2.toLowerCase().includes('ret')?'valueRet':'value';
+      months.forEach((_,i)=>{ node[key][i]=bdRv(vals[i]); });
+    } else if(c2.toLowerCase().includes('rate')){
+      months.forEach((_,i)=>{ node['rate'][i]=bdRv(vals[i]); });
+    }
+  }
+  if(existing&&newAddedMonths.length>0){
+    newAddedMonths.forEach(m=>{
+      const gi=store.months.indexOf(m);
+      Object.keys(existing.companies).forEach(co=>{
+        if(!store.companies[co]) return;
+        Object.keys(existing.companies[co]).forEach(rt=>{
+          const ei=existing.months.indexOf(m);
+          if(ei!==-1&&store.companies[co][rt]){
+            ['qty','value','rate','valueDel','valueRet','qtyDel','qtyRet'].forEach(k=>{
+              if(store.companies[co][rt][k].length<=gi) store.companies[co][rt][k][gi]=existing.companies[co][rt][k]?.[ei]??null;
+            });
+          }
+        });
+      });
+    });
+  }
+  store.months.forEach((_,mi)=>{
+    const hasData=BD_COMPANIES.some(co=>BD_ROW_TYPES.some(rt=>{ const v=store.companies[co]?.[rt]?.value?.[mi]; return v!==null&&v!==undefined; }));
+    if(hasData) bdRecomputeGrand(store,mi);
+  });
+  return store;
+}
+
+function bdAddMonth({store,monthName,sources}){
+  if(!store.months.includes(monthName)) store.months.push(monthName);
+  const mi=store.months.indexOf(monthName);
+  const sum=(arr,k)=>arr.reduce((s,r)=>s+(r[k]||0),0);
+  const added=[];
+  if(sources.bosta&&bostaData.length){
+    const co=store.companies['Bosta'];
+    const delivered=bostaData.filter(r=>r.breakdownLabel==='Delivered');
+    const rtn=bostaData.filter(r=>r.breakdownLabel==='RTN');
+    const rto=bostaData.filter(r=>r.breakdownLabel==='RTO');
+    const cod=bostaData.filter(r=>r.breakdownLabel==='COD Fees');
+    const lost=bostaData.filter(r=>r.breakdownLabel==='Lost & Damaged');
+    const lastmile=bostaData.filter(r=>r.breakdownLabel==='Last Mile CN');
+    bdSetSlot(co['SEND'],'qty',delivered.length,mi);
+    bdSetSlot(co['SEND'],'value',Math.round(sum(delivered,'priceBAV')*100)/100,mi);
+    bdSetSlot(co['SEND'],'rate',delivered.length?Math.round(sum(delivered,'priceBAV')/delivered.length*100)/100:0,mi);
+    bdSetSlot(co['Returns-RTN'],'qty',rtn.length,mi);
+    bdSetSlot(co['Returns-RTN'],'value',Math.round(sum(rtn,'priceBAV')*100)/100,mi);
+    bdSetSlot(co['Returns-RTN'],'rate',rtn.length?Math.round(sum(rtn,'priceBAV')/rtn.length*100)/100:0,mi);
+    bdSetSlot(co['Returns-RTO'],'qty',rto.length,mi);
+    bdSetSlot(co['Returns-RTO'],'value',Math.round(sum(rto,'priceBAV')*100)/100,mi);
+    bdSetSlot(co['Returns-RTO'],'rate',rto.length?Math.round(sum(rto,'priceBAV')/rto.length*100)/100:0,mi);
+    bdSetSlot(co['COD'],'value',Math.round(sum(cod,'priceBAV')*100)/100,mi);
+    bdSetSlot(co['Insurance'],'value',Math.round(sum(bostaData,'insurance')*100)/100,mi);
+    bdSetSlot(co['Lost & Damage'],'qty',lost.length,mi);
+    bdSetSlot(co['Lost & Damage'],'value',Math.round(sum(lost,'priceBAV')*100)/100,mi);
+    bdSetSlot(co['Last Mile CN'],'value',Math.round(sum(lastmile,'priceBAV')*100)/100,mi);
+    const totQty=delivered.length+rtn.length+rto.length;
+    const totVal=Math.round(sum(bostaData,'priceBAV')*100)/100;
+    bdSetSlot(co['Total'],'qty',totQty,mi); bdSetSlot(co['Total'],'value',totVal,mi);
+    bdSetSlot(co['Total'],'rate',totQty?Math.round(totVal/totQty*100)/100:0,mi);
+    added.push('Bosta');
+  }
+  if(sources.aramex&&auditData.length){
+    const co=store.companies['Aramex'];
+    const delivered=auditData.filter(r=>r.statusBucket==='DELIVERED');
+    const returned=auditData.filter(r=>r.statusBucket==='RETURNED');
+    bdSetSlot(co['SEND'],'qty',delivered.length,mi);
+    bdSetSlot(co['SEND'],'value',Math.round(sum(delivered,'baseCharge')*100)/100,mi);
+    bdSetSlot(co['SEND'],'rate',delivered.length?Math.round(sum(delivered,'baseCharge')/delivered.length*100)/100:0,mi);
+    bdSetSlot(co['Returns-RTO'],'qty',returned.length,mi);
+    bdSetSlot(co['Returns-RTO'],'value',Math.round(sum(returned,'baseCharge')*100)/100,mi);
+    bdSetSlot(co['Returns-RTO'],'rate',returned.length?Math.round(sum(returned,'baseCharge')/returned.length*100)/100:0,mi);
+    bdSetSlot(co['COD'],'value',Math.round(sum(auditData,'codFees')*100)/100,mi);
+    bdSetSlot(co['Last Mile CN'],'value',Math.round(sum(auditData,'annualIncrease')*100)/100,mi);
+    const totQty=delivered.length+returned.length;
+    const totVal=Math.round(sum(auditData,'totalCalc')*100)/100;
+    bdSetSlot(co['Total'],'qty',totQty,mi); bdSetSlot(co['Total'],'value',totVal,mi);
+    bdSetSlot(co['Total'],'rate',totQty?Math.round(totVal/totQty*100)/100:0,mi);
+    added.push('Aramex');
+  }
+  if(sources.raya&&rayaData.length){
+    const co=store.companies['Raya'];
+    const delivered=rayaData.filter(r=>r.status==='Delivered');
+    const returned=rayaData.filter(r=>r.status==='Returned'||r.status==='Cancel on floor');
+    bdSetSlot(co['SEND'],'qty',delivered.length,mi);
+    bdSetSlot(co['SEND'],'value',Math.round(sum(delivered,'totalBilled')*100)/100,mi);
+    bdSetSlot(co['SEND'],'rate',delivered.length?Math.round(sum(delivered,'totalBilled')/delivered.length*100)/100:0,mi);
+    bdSetSlot(co['Returns-RTO'],'qty',returned.length,mi);
+    bdSetSlot(co['Returns-RTO'],'value',Math.round(sum(returned,'totalBilled')*100)/100,mi);
+    bdSetSlot(co['Returns-RTO'],'rate',returned.length?Math.round(sum(returned,'totalBilled')/returned.length*100)/100:0,mi);
+    bdSetSlot(co['COD'],'value',Math.round(sum(rayaData,'codFees')*100)/100,mi);
+    bdSetSlot(co['Insurance'],'value',Math.round(sum(rayaData,'insFees')*100)/100,mi);
+    const totQty=delivered.length+returned.length;
+    const totVal=Math.round(sum(rayaData,'totalBilled')*100)/100;
+    bdSetSlot(co['Total'],'qty',totQty,mi); bdSetSlot(co['Total'],'value',totVal,mi);
+    bdSetSlot(co['Total'],'rate',totQty?Math.round(totVal/totQty*100)/100:0,mi);
+    added.push('Raya');
+  }
+  if(sources.mashreq&&mqData.length){
+    const co=store.companies['Mashreq'];
+    const delivered=mqData.filter(r=>r.status==='Delivered');
+    const returned=mqData.filter(r=>r.status==='Returned'||r.status==='Cancel on floor');
+    bdSetSlot(co['SEND'],'qty',delivered.length,mi);
+    bdSetSlot(co['SEND'],'value',Math.round(sum(delivered,'totalBilled')*100)/100,mi);
+    bdSetSlot(co['SEND'],'rate',delivered.length?Math.round(sum(delivered,'totalBilled')/delivered.length*100)/100:0,mi);
+    bdSetSlot(co['Returns-RTO'],'qty',returned.length,mi);
+    bdSetSlot(co['Returns-RTO'],'value',Math.round(sum(returned,'totalBilled')*100)/100,mi);
+    bdSetSlot(co['Returns-RTO'],'rate',returned.length?Math.round(sum(returned,'totalBilled')/returned.length*100)/100:0,mi);
+    bdSetSlot(co['COD'],'value',Math.round(sum(mqData,'actualCODFees')*100)/100,mi);
+    bdSetSlot(co['Insurance'],'value',Math.round(sum(mqData,'actualIns')*100)/100,mi);
+    const totQty=delivered.length+returned.length;
+    const totVal=Math.round(sum(mqData,'totalBilled')*100)/100;
+    bdSetSlot(co['Total'],'qty',totQty,mi); bdSetSlot(co['Total'],'value',totVal,mi);
+    bdSetSlot(co['Total'],'rate',totQty?Math.round(totVal/totQty*100)/100:0,mi);
+    added.push('Mashreq');
+  }
+  bdRecomputeGrand(store,mi);
+  return {store,added};
+}
+
+/* ---------- Breakdown UI ---------- */
+let bdStore = null;
+let bdSelCo = BD_GRAND;
+let bdFile  = null;
+
+(function loadPersistedBD(){
+  try{ const s=localStorage.getItem(BD_STORAGE); if(s) bdStore=JSON.parse(s); }catch(e){}
+})();
+
+function bdSave(){ try{ localStorage.setItem(BD_STORAGE,JSON.stringify(bdStore)); }catch(e){} }
+
+function bdShowToast(msg){ const t=document.getElementById('bd-toast'); t.textContent=msg; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),3200); }
+
+document.getElementById('bd-file-inp').addEventListener('change',e=>{
+  if(e.target.files[0]){ bdFile=e.target.files[0]; const s=document.getElementById('bd-file-status'); s.textContent='✅ '+bdFile.name; s.style.display='block'; document.getElementById('bd-load-btn').disabled=false; }
+  e.target.value='';
+});
+
+async function bdHandleLoadFile(){
+  if(!bdFile){ alert(T('bd_alertNoFile')); return; }
+  showLoading(T('bd_loadingFile'));
+  await new Promise(r=>setTimeout(r,30));
+  try{
+    const buf = await readBuf(bdFile);
+    const wb=XLSX.read(buf,{type:'array'});
+    const raw=XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]],{header:1,defval:''});
+    bdStore=bdParseFile(raw,bdStore);
+    bdSave();
+    bdShowToast(T('bd_successFile'));
+    renderBreakdown();
+  }catch(err){ alert(T('errorPrefix')+err.message); }
+  finally{ hideLoading(); }
+}
+
+async function bdHandleAddMonth(){
+  const monthName=document.getElementById('bd-month-inp').value.trim();
+  if(!monthName){ alert(T('bd_alertNoMonth')); return; }
+  const hasData=bostaData.length||auditData.length||rayaData.length||mqData.length;
+  if(!hasData){ alert(T('bd_alertNoData')); return; }
+  showLoading(T('bd_loadingMonth'));
+  await new Promise(r=>setTimeout(r,20));
+  try{
+    const base=bdStore||bdEmptyStore();
+    const sources={
+      bosta:document.getElementById('bd-src-bosta').checked,
+      aramex:document.getElementById('bd-src-aramex').checked,
+      raya:document.getElementById('bd-src-raya').checked,
+      mashreq:document.getElementById('bd-src-mashreq').checked,
+    };
+    const {store,added}=bdAddMonth({store:JSON.parse(JSON.stringify(base)),monthName,sources});
+    bdStore=store;
+    bdSave();
+    bdShowToast('✅ '+monthName+' ('+added.join(', ')+')');
+    renderBreakdown();
+  }catch(err){ alert(T('errorPrefix')+err.message); }
+  finally{ hideLoading(); }
+}
+
+function bdHandleSave(){ if(!bdStore) return; bdSave(); bdShowToast('✅ Breakdown saved!'); }
+
+function bdHandleClear(){
+  if(!confirm(T('bd_confirmClear'))) return;
+  bdStore=null; bdSelCo=BD_GRAND;
+  localStorage.removeItem(BD_STORAGE);
+  renderBreakdown();
+}
+
+function renderBreakdown(){
+  applyI18nBreakdown();
+  const content=document.getElementById('bd-content');
+  if(!bdStore||!bdStore.months.length){
+    content.innerHTML=`<div class="coming-soon" style="display:flex"><div class="empty-icon">📊</div><h3>${T('bd_emptyTitle')}</h3><p style="color:var(--muted);font-size:.85rem;margin-top:6px">${T('bd_emptyDesc')}</p></div>`;
+    return;
+  }
+  const allCos=[BD_GRAND,...BD_COMPANIES];
+  const months=bdStore.months;
+  const val=(co,rt,key,mi)=>{ const v=bdStore?.companies?.[co]?.[rt]?.[key]?.[mi]; return (v===null||v===undefined)?null:v; };
+  const fmVal=v=>v===null?'<span style="color:var(--muted);font-size:.72rem">–</span>':fm(v);
+
+  // carrier filter chips
+  const hasData=co=>BD_ROW_TYPES.some(rt=>bdStore.companies[co]?.[rt]?.value?.some(v=>v!==null&&v!==undefined));
+  const chipsHtml=allCos.map(co=>{
+    const active=co===bdSelCo;
+    const cls=active?'chip chip-g':'chip';
+    return `<span class="${cls}" style="cursor:pointer;${active?'':'opacity:.65'}" onclick="bdSelCo='${co}';renderBreakdown()">${co}</span>`;
+  }).join('');
+
+  const thStyle='background:#2d0066;color:#e9d5ff;padding:6px 10px;font-size:.72rem;font-weight:700;white-space:nowrap;text-align:center';
+  const thSubStyle='padding:5px 8px;font-size:.68rem;font-weight:700;white-space:nowrap;text-align:center';
+  const tdStyle='padding:5px 10px;font-size:.76rem;text-align:center;border-bottom:1px solid var(--border)';
+
+  let thead=`<tr>
+    <th style="${thStyle};text-align:left;min-width:130px">Category</th>
+    <th style="${thStyle};text-align:left;min-width:60px">Sub</th>
+    ${months.map(m=>`<th colspan="3" style="${thStyle};min-width:200px;border-right:2px solid rgba(255,255,255,.2)">${m}</th>`).join('')}
+  </tr>
+  <tr>
+    <th style="${thSubStyle};background:#1a0038"></th><th style="${thSubStyle};background:#1a0038"></th>
+    ${months.map(()=>`
+      <th style="${thSubStyle};background:#1d4ed8;min-width:65px">Qty</th>
+      <th style="${thSubStyle};background:#0f766e;min-width:85px">Value</th>
+      <th style="${thSubStyle};background:#7c3aed;min-width:65px">Rate</th>
+    `).join('')}
+  </tr>`;
+
+  const tbody=BD_ROW_TYPES.map(rt=>{
+    const isTotal=rt==='Total';
+    const rowBg=isTotal?'background:#f0fdf4;font-weight:800':'';
+    const cellBg=isTotal?'background:#dcfce7;color:#15803d;':'';
+    return `<tr style="${rowBg}">
+      <td style="${tdStyle};text-align:left;font-weight:${isTotal?800:600};color:${isTotal?'var(--green2)':'var(--purple)'}">${rt}</td>
+      <td style="${tdStyle}"></td>
+      ${months.map((_,mi)=>`
+        <td style="${tdStyle};${cellBg}">${fmVal(val(bdSelCo,rt,'qty',mi))}</td>
+        <td style="${tdStyle};${cellBg}font-weight:700">${fmVal(val(bdSelCo,rt,'value',mi))}</td>
+        <td style="${tdStyle};${cellBg}">${fmVal(val(bdSelCo,rt,'rate',mi))}</td>
+      `).join('')}
+    </tr>`;
+  }).join('');
+
+  content.innerHTML=`
+    <div class="ctrl-bar">
+      <div class="ctrl-grp">
+        <span class="ctrl-lbl">${T('bd_carrier')}</span>
+        <select class="ctrl-sel" onchange="bdSelCo=this.value;renderBreakdown()">
+          ${allCos.map(co=>`<option value="${co}" ${co===bdSelCo?'selected':''}>${co}</option>`).join('')}
+        </select>
+      </div>
+      <div class="chips-wrap">
+        <span class="chip"><span class="chip-lbl">Months</span>${months.length}</span>
+        ${BD_COMPANIES.filter(hasData).map(co=>`<span class="chip chip-g">${co}</span>`).join('')}
+      </div>
+    </div>
+    <div class="tbl-card">
+      <div class="card-hdr"><span><span class="dot"></span>Data Breakdown – ${bdSelCo}</span></div>
+      <div class="tbl-scroll">
+        <table class="bd-table" style="width:100%;border-collapse:collapse">
+          <thead>${thead}</thead>
+          <tbody>${tbody}</tbody>
+        </table>
+      </div>
+    </div>`;
+}
+
+function applyI18nBreakdown(){
+  const t=I18N[lang];
+  const el=id=>document.getElementById(id);
+  el('bd-note').innerHTML=t.note;
+  el('bd-file-title').textContent=t.bd_fileTitle;
+  el('bd-file-desc').textContent=t.bd_fileDesc;
+  el('bd-file-btn').textContent='📂 '+(bdFile?t.changeFile:t.upload);
+  el('bd-load-btn').textContent=t.bd_loadBtn;
+  el('bd-add-title').textContent=t.bd_addTitle;
+  el('bd-add-desc').textContent=t.bd_addDesc;
+  el('bd-month-inp').placeholder=t.bd_monthPlaceholder;
+  el('bd-add-btn').textContent=t.bd_addBtn;
+  el('bd-clear-title').textContent=t.bd_clearTitle;
+  el('bd-clear-desc').textContent=t.bd_clearDesc;
+  el('bd-clear-btn').textContent=t.bd_clearBtn;
+}
+
+/* ---------- Analytics ---------- */
+function renderAnalytics(){
+  const t = I18N[lang];
+  const hasAny = bostaData.length || auditData.length || rayaData.length || mqData.length;
+  const emptyEl = document.getElementById('an-empty');
+  const contentEl = document.getElementById('an-content');
+  if(!hasAny){
+    emptyEl.style.display='flex'; contentEl.style.display='none';
+    document.getElementById('an-empty-title').textContent = t.an_emptyTitle;
+    document.getElementById('an-empty-desc').textContent = t.an_emptyDesc;
+    return;
+  }
+  emptyEl.style.display='none'; contentEl.style.display='block';
+
+  const COLORS = { Aramex:'#7E00E1', Bosta:'#00b844', Raya:'#0369a1', Mashreq:'#b45309' };
+
+  const carriers = [];
+  if(auditData.length)  carriers.push({ name:'Aramex',  data:auditData });
+  if(bostaData.length)  carriers.push({ name:'Bosta',   data:bostaData });
+  if(rayaData.length)   carriers.push({ name:'Raya',    data:rayaData });
+  if(mqData.length)     carriers.push({ name:'Mashreq', data:mqData });
+
+  const grandShipm = carriers.reduce((s,c)=>s+c.data.length,0);
+
+  // Carrier summaries
+  const AR = auditData.length ? (() => {
+    const del = auditData.filter(r=>r.statusBucket==='DELIVERED').length;
+    const ret = auditData.filter(r=>r.statusBucket==='RETURNED').length;
+    const totalBill = auditData.reduce((s,r)=>s+(r.baseCharge||0)+(r.otherCharge||0),0);
+    const totalCalc = auditData.reduce((s,r)=>s+(r.totalCalc||0),0);
+    const flagCount = auditData.filter(r=>r.flagBase||r.flagOther).length;
+    return { total:auditData.length, del, ret, pend:auditData.length-del-ret, totalBill, totalCalc, flagCount,
+      overchargeEGP: auditData.reduce((s,r)=>s+(r.colRResult||0),0) };
+  })() : null;
+
+  const BO = bostaData.length ? (() => {
+    const byLabel={};
+    bostaData.forEach(r=>{ byLabel[r.breakdownLabel]=(byLabel[r.breakdownLabel]||0)+1; });
+    return { total:bostaData.length,
+      totalBill:bostaData.reduce((s,r)=>s+r.priceBAV,0),
+      overCount:bostaData.filter(r=>r.isOver).length, byLabel };
+  })() : null;
+
+  const RA = rayaData.length ? (() => {
+    const totalBill = rayaData.reduce((s,r)=>s+r.totalBilled,0);
+    const totalCalc = rayaData.reduce((s,r)=>s+r.contractPrice+(r.pickupCost||0)+(r.insFees||0)+(r.codFees||0)+(r.extraCost||0),0);
+    return { total:rayaData.length, totalBill, totalCalc,
+      flagCount:rayaData.filter(r=>r.isOver||r.isUnder).length,
+      overchargeEGP:rayaData.reduce((s,r)=>s+(r.diff||0),0) };
+  })() : null;
+
+  const MQ = mqData.length ? (() => {
+    const totalBill = mqData.reduce((s,r)=>s+r.totalBilled,0);
+    const totalCalc = mqData.reduce((s,r)=>s+r.totalCalc,0);
+    return { total:mqData.length, totalBill, totalCalc,
+      flagCount:mqData.filter(r=>r.isOver).length,
+      overchargeEGP:Math.round(totalBill-totalCalc) };
+  })() : null;
+
+  const grandBill = (AR?.totalBill||0)+(BO?.totalBill||0)+(RA?.totalBill||0)+(MQ?.totalBill||0);
+
+  // Helpers
+  function kpiCard(label, value, sub, color){
+    return `<div class="an-kpi" style="border-top:3px solid ${color}">
+      <div class="an-kpi-lbl">${label}</div>
+      <div class="an-kpi-val" style="color:${color}">${value}</div>
+      ${sub?`<div class="an-kpi-sub">${sub}</div>`:''}
+    </div>`;
+  }
+  function bar(label, value, max, color){
+    const pct = max>0 ? Math.round((value/max)*100) : 0;
+    return `<div style="margin-bottom:8px">
+      <div style="display:flex;justify-content:space-between;font-size:.75rem;margin-bottom:3px">
+        <span>${label}</span><span style="color:${color};font-weight:700">${fm(value)} (${pct}%)</span>
+      </div>
+      <div style="background:var(--border);border-radius:6px;height:10px;overflow:hidden">
+        <div style="width:${pct}%;height:100%;background:${color};border-radius:6px;transition:width .4s"></div>
+      </div>
+    </div>`;
+  }
+  function section(gradient, title, body){
+    return `<div class="an-section" style="margin-bottom:20px">
+      <div class="an-hdr" style="background:${gradient}"><span class="dot"></span>${title}</div>
+      <div class="an-body">${body}</div>
+    </div>`;
+  }
+  function overviewTable(rows, getMonth, isDelivered, isReturned, isCancelled, getCharge, hasCancelled){
+    const monthSet = new Set(rows.map(getMonth).filter(Boolean));
+    const months = monthSet.size > 0 ? [...monthSet].sort() : ['All'];
+    function colData(subset){
+      const total=subset.length;
+      const del=subset.filter(isDelivered).length;
+      const ret=subset.filter(isReturned).length;
+      const can=hasCancelled?subset.filter(isCancelled).length:0;
+      const delCharge=subset.filter(isDelivered).reduce((s,r)=>s+(getCharge(r)||0),0);
+      const retCharge=subset.filter(isReturned).reduce((s,r)=>s+(getCharge(r)||0),0);
+      const canCharge=hasCancelled?subset.filter(isCancelled).reduce((s,r)=>s+(getCharge(r)||0),0):0;
+      return {total,del,ret,can,delCharge,retCharge,canCharge};
+    }
+    const cols = months.map(m=>({ label:m, d:colData(m==='All'?rows:rows.filter(r=>!getMonth||getMonth(r)===m)) }));
+    const pct=(n,d)=>d>0?Math.round((n/d)*100)+'%':'–';
+    const egp=v=>v?fm(Math.round(v)):'–';
+    const metrics = [
+      {key:'total', label:t.totalShipments, fmt:d=>fm(d.total), bold:true},
+      {key:'del', label:t.delivered, fmt:d=>fm(d.del)},
+      {key:'ret', label:t.returned, fmt:d=>fm(d.ret)},
+      ...(hasCancelled?[{key:'can',label:t.an_cancelFloor,fmt:d=>fm(d.can)}]:[]),
+      {key:'delRate', label:t.an_delRate, fmt:d=>pct(d.del,d.total), color:'#16a34a'},
+      {key:'retRate', label:t.an_retRate, fmt:d=>pct(d.ret,d.total), color:'#dc2626'},
+      ...(hasCancelled?[{key:'canRate',label:t.an_cancelRate,fmt:d=>pct(d.can,d.total),color:'#d97706'}]:[]),
+      {key:'delCharge', label:t.an_revDel, fmt:d=>egp(d.delCharge), color:'#0369a1'},
+      {key:'retCharge', label:t.an_costRet, fmt:d=>egp(d.retCharge), color:'#dc2626'},
+      ...(hasCancelled?[{key:'canCharge',label:t.an_chgCan,fmt:d=>egp(d.canCharge),color:'#d97706'}]:[]),
+      {key:'retPct', label:t.an_retPct, fmt:d=>pct(d.retCharge,d.delCharge), color:'#9333ea'},
+    ];
+    const thBase='padding:6px 14px;font-size:.72rem;font-weight:700;text-align:center;white-space:nowrap';
+    const tdBase='padding:5px 14px;font-size:.76rem;text-align:center;border-bottom:1px solid rgba(255,255,255,.06)';
+    return `<div style="margin-top:16px">
+      <div style="background:#1d4ed8;border-radius:8px 8px 0 0;padding:7px 14px;font-size:.72rem;font-weight:700;color:#fff;letter-spacing:.05em">${t.an_sec1}</div>
+      <div class="tbl-scroll" style="border-radius:0 0 8px 8px"><table style="width:100%;border-collapse:collapse">
+        <thead><tr style="background:#1e3a5f">
+          <th style="${thBase};text-align:left;min-width:200px;color:#bfdbfe">${t.an_metric}</th>
+          ${cols.map(c=>`<th style="${thBase};color:#7dd3fc;min-width:90px">${c.label}</th>`).join('')}
+          <th style="${thBase};color:#bfdbfe;min-width:200px;text-align:left">${t.an_notes}</th>
+        </tr></thead>
+        <tbody>${metrics.map((m,mi)=>`<tr style="background:${mi%2===0?'rgba(255,255,255,.03)':'transparent'}">
+          <td style="${tdBase};text-align:left;font-weight:${m.bold?700:600};color:${m.color||'var(--text)'}">${m.label}</td>
+          ${cols.map(c=>`<td style="${tdBase};font-weight:600;color:${m.color||'var(--text)'}">${m.fmt(c.d)}</td>`).join('')}
+          <td style="${tdBase};text-align:left;color:var(--muted);font-size:.7rem;font-style:italic"></td>
+        </tr>`).join('')}</tbody>
+      </table></div>
+    </div>`;
+  }
+  function zoneSizeTable(rows, getZone, getSize, sizeLabels){
+    const zones=[...new Set(rows.map(getZone).filter(Boolean))].sort((a,b)=>a.localeCompare(b,undefined,{numeric:true}));
+    if(!zones.length) return '';
+    const matrix={};
+    zones.forEach(z=>{ matrix[z]={}; sizeLabels.forEach(s=>{ matrix[z][s]=0; }); });
+    rows.forEach(r=>{ const z=getZone(r),s=getSize(r); if(z&&s&&matrix[z]&&matrix[z][s]!==undefined) matrix[z][s]++; });
+    const thS='background:#1e3a5f;color:#7dd3fc;font-size:.7rem;padding:5px 10px;text-align:center;white-space:nowrap';
+    const tdS='text-align:center;padding:4px 10px;font-size:.75rem;border-bottom:1px solid rgba(255,255,255,.06)';
+    return `<div style="margin-top:16px">
+      <div style="background:#0f2942;border-radius:8px 8px 0 0;padding:7px 14px;font-size:.72rem;font-weight:700;color:#7dd3fc;letter-spacing:.05em">${t.an_sec4}</div>
+      <div class="tbl-scroll" style="border-radius:0 0 8px 8px"><table style="width:100%;border-collapse:collapse">
+        <thead><tr>
+          <th style="${thS};text-align:left;min-width:80px">Zone / Size</th>
+          ${sizeLabels.map(s=>`<th style="${thS}">${s}</th>`).join('')}
+          ${sizeLabels.map(s=>`<th style="${thS};color:#86efac">${s} %</th>`).join('')}
+        </tr></thead>
+        <tbody>${zones.map((z,zi)=>{
+          const rowTotal=sizeLabels.reduce((sum,s)=>sum+(matrix[z][s]||0),0);
+          return `<tr style="background:${zi%2===0?'rgba(255,255,255,.03)':'transparent'}">
+            <td style="${tdS};text-align:left;font-weight:600;color:#c084fc">${z}</td>
+            ${sizeLabels.map(s=>`<td style="${tdS}">${matrix[z][s]||'–'}</td>`).join('')}
+            ${sizeLabels.map(s=>`<td style="${tdS};color:#86efac;font-weight:600">${rowTotal>0?Math.round((matrix[z][s]/rowTotal)*100)+'%':'–'}</td>`).join('')}
+          </tr>`;
+        }).join('')}</tbody>
+      </table></div>
+    </div>`;
+  }
+
+  const aramexSize = r=>{ const w=r.weight||0; if(w<=2)return'Size S';if(w<=5)return'Size M';if(w<=10)return'Size L';return'Size XL'; };
+  const normSize = raw=>{ const s=String(raw||'').trim(); if(s==='Small')return'Size S';if(s==='Medium')return'Size M';if(s==='Large')return'Size L';return s; };
+  const bostaSizes = [...new Set(bostaData.map(r=>r.pkgSize).filter(Boolean))].sort();
+
+  let html = '';
+
+  // Grand summary
+  html += section(
+    'linear-gradient(135deg,var(--purple),var(--purple2))',
+    t.an_grand,
+    `<div class="an-kpi-row">
+      ${kpiCard(t.totalShipments, fm(grandShipm), carriers.length+' '+t.an_fromCarriers, 'var(--purple)')}
+      ${kpiCard(t.invoice, fm(grandBill), t.egp, 'var(--green2)')}
+      ${carriers.map(c=>kpiCard(c.name, fm(c.data.length), lang==='ar'?'شحنة':'shipments', COLORS[c.name])).join('')}
+    </div>
+    ${carriers.length>1 ? `<div style="margin-top:16px"><div class="sbar-title">${t.an_distribution}</div>${carriers.map(c=>bar(c.name,c.data.length,grandShipm,COLORS[c.name])).join('')}</div>` : ''}`
+  );
+
+  // Aramex
+  if(AR) html += section(
+    'linear-gradient(135deg,var(--purple),var(--purple2))',
+    '✈️ Aramex',
+    `<div class="an-kpi-row">
+      ${kpiCard(t.totalShipments, fm(AR.total), '', 'var(--purple)')}
+      ${kpiCard(t.delivered, fm(AR.del), (AR.del/AR.total*100).toFixed(1)+'%', 'var(--green2)')}
+      ${kpiCard(t.returned, fm(AR.ret), (AR.ret/AR.total*100).toFixed(1)+'%', 'var(--red)')}
+      ${kpiCard(t.pending, fm(AR.pend), '', 'var(--amber)')}
+      ${kpiCard(t.invoice, fm(AR.totalBill), t.egp, '#0369a1')}
+      ${kpiCard(t.kenzzCalc, fm(AR.totalCalc), t.egp, '#0f766e')}
+      ${kpiCard(t.differences, fm(AR.overchargeEGP)+' '+t.egp, AR.flagCount+(lang==='ar'?' شحنة مخالفة':' flagged'), 'var(--red)')}
+    </div>
+    ${overviewTable(auditData, r=>r.uploadMonth||null, r=>r.statusBucket==='DELIVERED', r=>r.statusBucket==='RETURNED', null, r=>(r.baseCharge||0)+(r.otherCharge||0), false)}
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:16px">
+      <div><div class="sbar-title">${t.an_statusDist}</div>
+        ${bar(t.delivered,AR.del,AR.total,'var(--green2)')}${bar(t.returned,AR.ret,AR.total,'var(--red)')}${bar(t.pending,AR.pend,AR.total,'var(--amber)')}
+      </div>
+      <div><div class="sbar-title">${t.an_costComp}</div>
+        ${bar(t.an_actualInvoice,AR.totalBill,AR.totalBill,'var(--red)')}${bar(t.kenzzCalc,AR.totalCalc,AR.totalBill,'var(--green2)')}
+      </div>
+    </div>
+    ${zoneSizeTable(auditData.filter(r=>r.destZone), r=>String(r.destZone||'').trim(), aramexSize, ['Size S','Size M','Size L','Size XL'])}`
+  );
+
+  // Bosta
+  if(BO) html += section(
+    'linear-gradient(135deg,#00b844,#009a35)',
+    '📦 Bosta',
+    `<div class="an-kpi-row">
+      ${kpiCard(t.totalShipments, fm(BO.total), '', 'var(--green2)')}
+      ${kpiCard(t.invoice, fm(BO.totalBill), t.egp, '#0369a1')}
+      ${kpiCard(t.differences, fm(BO.overCount), (BO.overCount/BO.total*100).toFixed(1)+'%', 'var(--red)')}
+    </div>
+    ${overviewTable(bostaData, r=>r.uploadMonth||null, r=>r.breakdownLabel==='Delivered', r=>r.breakdownLabel==='RTN'||r.breakdownLabel==='RTO', null, r=>r.priceBAV||0, false)}
+    <div style="margin-top:12px"><div class="sbar-title">${t.an_byLabel}</div>
+      ${Object.entries(BO.byLabel).map(([lbl,cnt])=>bar(lbl,cnt,BO.total,'var(--green2)')).join('')}
+    </div>
+    ${bostaSizes.length>0 ? zoneSizeTable(bostaData.filter(r=>r.zone&&r.pkgSize), r=>String(r.zone||'').trim(), r=>r.pkgSize, bostaSizes) : ''}`
+  );
+
+  // Raya
+  if(RA) html += section(
+    'linear-gradient(135deg,#0369a1,#0284c7)',
+    '🚚 Raya',
+    `<div class="an-kpi-row">
+      ${kpiCard(t.totalShipments, fm(RA.total), '', '#0369a1')}
+      ${kpiCard(t.invoice, fm(RA.totalBill), t.egp, 'var(--red)')}
+      ${kpiCard(t.kenzzCalc, fm(RA.totalCalc), t.egp, 'var(--green2)')}
+      ${kpiCard(t.differences, fm(RA.overchargeEGP)+' '+t.egp, RA.flagCount+(lang==='ar'?' شحنة مخالفة':' flagged'), 'var(--amber)')}
+    </div>
+    ${overviewTable(rayaData, r=>r.month||null, r=>r.status==='Delivered', r=>r.status==='Returned', r=>r.status==='Cancel on floor', r=>r.totalBilled||0, true)}
+    <div style="margin-top:12px"><div class="sbar-title">${t.an_costComp}</div>
+      ${bar(t.invoice,RA.totalBill,RA.totalBill,'var(--red)')}${bar(t.kenzzCalc,RA.totalCalc,RA.totalBill,'var(--green2)')}
+    </div>
+    ${zoneSizeTable(rayaData.filter(r=>r.tier&&r.category), r=>String(r.tier||'').trim(), r=>normSize(r.category), ['Size S','Size M','Size L'])}`
+  );
+
+  // Mashreq
+  if(MQ) html += section(
+    'linear-gradient(135deg,#b45309,#d97706)',
+    '🔄 Aramex Mashreq',
+    `<div class="an-kpi-row">
+      ${kpiCard(t.totalShipments, fm(MQ.total), '', '#b45309')}
+      ${kpiCard(t.invoice, fm(MQ.totalBill), t.egp, 'var(--red)')}
+      ${kpiCard(t.kenzzCalc, fm(MQ.totalCalc), t.egp, 'var(--green2)')}
+      ${kpiCard(t.differences, fm(MQ.overchargeEGP)+' '+t.egp, MQ.flagCount+(lang==='ar'?' شحنة مخالفة':' flagged'), 'var(--amber)')}
+    </div>
+    ${overviewTable(mqData, r=>r.month||null, r=>r.status==='Delivered', r=>r.status==='Returned', r=>r.status==='Cancel on floor', r=>r.totalBilled||0, true)}
+    <div style="margin-top:12px"><div class="sbar-title">${t.an_costComp}</div>
+      ${bar(t.invoice,MQ.totalBill,MQ.totalBill,'var(--red)')}${bar(t.kenzzCalc,MQ.totalCalc,MQ.totalBill,'var(--green2)')}
+    </div>
+    ${zoneSizeTable(mqData.filter(r=>r.destZone&&r.size), r=>String(r.destZone||'').trim(), r=>normSize(r.size), ['Size S','Size M','Size L'])}`
+  );
+
+  contentEl.innerHTML = html;
+}
+
 /* ---------- init ---------- */
 applyI18n();
+applyI18nAramex();
+applyI18nMashreq();
+applyI18nRaya();
+applyI18nBreakdown();
 loadPersisted();
+loadPersistedAramex();
+loadPersistedMashreq();
+loadPersistedRaya();
 if(bostaData.length) renderBosta();
+if(auditData.length) renderAramex();
+if(mqData.length) renderMashreq();
+if(rayaData.length) renderRayaPage();
 if(sessionStorage.getItem(AUTH.SESSION_KEY) === '1'){ showApp(); }
 </script>
 </body>
