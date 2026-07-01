@@ -2877,16 +2877,70 @@ function _getDb(){
   }catch(e){ console.warn('Firebase init:',e); }
   return _db;
 }
-function cloudSave(key, value){
+const CLOUD_CHUNK = 300; // rows per Firestore document (~60KB each, well under 1MB limit)
+
+async function cloudSave(key, value){
   const db = _getDb(); if(!db) return;
-  db.collection('kenzz3pl').doc(key).set({ data: value, updatedAt: new Date().toISOString() })
-    .catch(e=>console.warn('cloudSave failed:',e));
+  try{
+    let parsed; try{ parsed = JSON.parse(value); }catch(e){ parsed = value; }
+    const dataArr = Array.isArray(parsed.data) ? parsed.data : (Array.isArray(parsed) ? parsed : null);
+    if(!dataArr || dataArr.length <= CLOUD_CHUNK){
+      // Small enough for single doc
+      await db.collection('kenzz3pl').doc(key).set({ data: value, chunkCount: 0, updatedAt: new Date().toISOString() });
+      return;
+    }
+    // Split into chunks
+    const chunks = [];
+    for(let i = 0; i < dataArr.length; i += CLOUD_CHUNK) chunks.push(dataArr.slice(i, i + CLOUD_CHUNK));
+    const meta = { ...parsed, data: null, chunkCount: chunks.length, totalRows: dataArr.length, updatedAt: new Date().toISOString() };
+    // Delete old chunks first (in case count decreased)
+    const oldMeta = await db.collection('kenzz3pl').doc(key).get();
+    const oldCount = oldMeta.exists ? (oldMeta.data().chunkCount || 0) : 0;
+    const deletes = [];
+    for(let i = chunks.length; i < oldCount; i++) deletes.push(db.collection('kenzz3pl_c').doc(`${key}_${i}`).delete());
+    if(deletes.length) await Promise.all(deletes);
+    // Save chunks in batches of 400 ops
+    const ops = [db.collection('kenzz3pl').doc(key).set(meta)];
+    chunks.forEach((chunk, i) => ops.push(db.collection('kenzz3pl_c').doc(`${key}_${i}`).set({ d: JSON.stringify(chunk) })));
+    // Firestore batch limit is 500; split if needed
+    for(let i = 0; i < ops.length; i += 400){
+      const batch = db.batch();
+      ops.slice(i, i+400).forEach(op => { /* op is already a promise */ });
+      await Promise.all(ops.slice(i, i+400));
+    }
+  }catch(e){ console.warn('cloudSave failed:',e); }
 }
-function cloudDelete(key){
+
+async function cloudDelete(key){
   const db = _getDb(); if(!db) return;
-  db.collection('kenzz3pl').doc(key).delete()
-    .catch(e=>console.warn('cloudDelete failed:',e));
+  try{
+    const meta = await db.collection('kenzz3pl').doc(key).get();
+    const count = meta.exists ? (meta.data().chunkCount || 0) : 0;
+    const dels = [db.collection('kenzz3pl').doc(key).delete()];
+    for(let i = 0; i < count; i++) dels.push(db.collection('kenzz3pl_c').doc(`${key}_${i}`).delete());
+    await Promise.all(dels);
+  }catch(e){ console.warn('cloudDelete failed:',e); }
 }
+
+async function cloudLoadOne(db, key){
+  const meta = await db.collection('kenzz3pl').doc(key).get();
+  if(!meta.exists) return null;
+  const metaData = meta.data();
+  const chunkCount = metaData.chunkCount || 0;
+  if(chunkCount === 0){
+    return metaData.data || null;
+  }
+  // Reassemble from chunks
+  const chunkDocs = await Promise.all(
+    Array.from({length: chunkCount}, (_,i) => db.collection('kenzz3pl_c').doc(`${key}_${i}`).get())
+  );
+  const allRows = [];
+  chunkDocs.forEach(snap => { if(snap.exists) allRows.push(...JSON.parse(snap.data().d)); });
+  const result = { ...metaData, data: allRows, chunkCount: undefined, totalRows: undefined };
+  delete result.chunkCount; delete result.totalRows;
+  return JSON.stringify(result);
+}
+
 async function cloudLoadAll(){
   const db = _getDb(); if(!db) return;
   const keys = ['bosta','aramex','mashreq','raya','breakdown'];
@@ -2895,14 +2949,11 @@ async function cloudLoadAll(){
     mashreq: MQ_STORAGE_KEY, raya: RAYA_STORAGE_KEY, breakdown: BD_STORAGE
   };
   try{
-    const docs = await Promise.all(keys.map(k=>db.collection('kenzz3pl').doc(k).get()));
+    const vals = await Promise.all(keys.map(k => cloudLoadOne(db, k)));
     let reloaded = false;
-    docs.forEach((snap,i)=>{
-      if(!snap.exists) return;
-      const key = keys[i];
-      const cloudVal = snap.data().data;
+    vals.forEach((cloudVal, i)=>{
       if(!cloudVal) return;
-      try{ localStorage.setItem(storageMap[key], cloudVal); }catch(e){}
+      try{ localStorage.setItem(storageMap[keys[i]], cloudVal); }catch(e){}
       reloaded = true;
     });
     if(reloaded){
