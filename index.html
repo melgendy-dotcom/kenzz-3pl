@@ -249,6 +249,9 @@ html[dir=ltr] #login-eye{right:12px}
       <div class="hd-title"><strong id="hd-title"></strong><small id="hd-sub"></small></div>
     </div>
     <div class="hd-right">
+      <button class="btn-lang" onclick="exportBackup()" title="Export all data as backup file" style="background:rgba(0,184,68,.15);border-color:rgba(0,184,68,.4);color:#00b844">💾 Backup</button>
+      <button class="btn-lang" onclick="document.getElementById('restore-inp').click()" title="Restore data from backup file" style="background:rgba(126,0,225,.15);border-color:rgba(126,0,225,.4);color:var(--purple)">📂 Restore</button>
+      <input type="file" id="restore-inp" accept=".json" style="display:none" onchange="importBackup(this)">
       <button class="btn-lang" onclick="toggleLang()" id="hd-lang-btn"></button>
       <button class="btn-lang" style="background:rgba(220,38,38,.2);border-color:rgba(220,38,38,.4)" onclick="logout()" id="hd-logout-btn"></button>
     </div>
@@ -1295,13 +1298,16 @@ function exportBosta(){
 
 function saveBosta(){
   try{
-    localStorage.setItem(STORAGE_KEY, JSON.stringify({data: bostaData, saved: new Date().toISOString()}));
+    const v = JSON.stringify({data: bostaData, saved: new Date().toISOString()});
+    localStorage.setItem(STORAGE_KEY, v);
+    cloudSave('bosta', v);
     showToast();
   }catch(e){ alert('Save failed.'); }
 }
 function clearBosta(){
   if(!confirm(T('bo_confirmClear'))) return;
   localStorage.removeItem(STORAGE_KEY);
+  cloudDelete('bosta');
   bostaData = [];
   document.getElementById('bo-save-btn').disabled = true;
   renderBosta();
@@ -1642,13 +1648,16 @@ function exportAramex(){
 }
 function saveAramex(){
   try{
-    localStorage.setItem(ARAMEX_STORAGE_KEY, JSON.stringify({data: auditData, cfg: getAramexCfg(), saved: new Date().toISOString()}));
+    const v = JSON.stringify({data: auditData, cfg: getAramexCfg(), saved: new Date().toISOString()});
+    localStorage.setItem(ARAMEX_STORAGE_KEY, v);
+    cloudSave('aramex', v);
     const t=document.getElementById('ar-toast'); t.classList.add('show'); setTimeout(()=>t.classList.remove('show'), 3200);
   }catch(e){ alert('Save failed.'); }
 }
 function clearAramex(){
   if(!confirm(T('ar_confirmClear'))) return;
   localStorage.removeItem(ARAMEX_STORAGE_KEY);
+  cloudDelete('aramex');
   auditData = [];
   document.getElementById('ar-save-btn').disabled = true;
   renderAramex();
@@ -1921,13 +1930,16 @@ function exportMashreq(){
   exportCSV(headers, filtered.map(r=>[r.idx,r.awb,r.month,r.status,r.size,r.destZone,r.origZone,r.actualCharge,r.actualPickup,r.actualIns,r.actualCODFees,r.calcLM,r.calcPickup,r.calcIns,r.calcCOD,r.totalBilled,r.totalCalc,r.diff]), 'mashreq_audit.csv');
 }
 function saveMashreq(){
-  try{ localStorage.setItem(MQ_STORAGE_KEY, JSON.stringify({data: mqData, saved: new Date().toISOString()}));
+  try{ const v = JSON.stringify({data: mqData, saved: new Date().toISOString()});
+    localStorage.setItem(MQ_STORAGE_KEY, v);
+    cloudSave('mashreq', v);
     const t=document.getElementById('mq-toast'); t.classList.add('show'); setTimeout(()=>t.classList.remove('show'), 3000);
   }catch(e){ alert('Save failed.'); }
 }
 function clearMashreq(){
   if(!confirm(T('mq_confirmClear'))) return;
   localStorage.removeItem(MQ_STORAGE_KEY);
+  cloudDelete('mashreq');
   mqData = [];
   document.getElementById('mq-save-btn').disabled = true;
   renderMashreq();
@@ -2141,13 +2153,16 @@ function exportRayaPage(){
   exportCSV(headers, filtered.map(r=>[r.idx,r.awb,r.status,r.zone,r.tier,r.category,r.totalBilled,r.contractPrice,r.diff]), 'raya_audit.csv');
 }
 function saveRayaPage(){
-  try{ localStorage.setItem(RAYA_STORAGE_KEY, JSON.stringify({data: rayaData, saved: new Date().toISOString()}));
+  try{ const v = JSON.stringify({data: rayaData, saved: new Date().toISOString()});
+    localStorage.setItem(RAYA_STORAGE_KEY, v);
+    cloudSave('raya', v);
     const t=document.getElementById('ra-toast'); t.classList.add('show'); setTimeout(()=>t.classList.remove('show'), 3000);
   }catch(e){ alert('Save failed.'); }
 }
 function clearRayaPage(){
   if(!confirm(T('ra_confirmClear'))) return;
   localStorage.removeItem(RAYA_STORAGE_KEY);
+  cloudDelete('raya');
   rayaData = [];
   document.getElementById('ra-save-btn').disabled = true;
   renderRayaPage();
@@ -2391,7 +2406,7 @@ let bdFile  = null;
   try{ const s=localStorage.getItem(BD_STORAGE); if(s) bdStore=JSON.parse(s); }catch(e){}
 })();
 
-function bdSave(){ try{ localStorage.setItem(BD_STORAGE,JSON.stringify(bdStore)); }catch(e){} }
+function bdSave(){ try{ const v=JSON.stringify(bdStore); localStorage.setItem(BD_STORAGE,v); cloudSave('breakdown',v); }catch(e){} }
 
 function bdShowToast(msg){ const t=document.getElementById('bd-toast'); t.textContent=msg; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),3200); }
 
@@ -2446,6 +2461,7 @@ function bdHandleClear(){
   if(!confirm(T('bd_confirmClear'))) return;
   bdStore=null; bdSelCo=BD_GRAND;
   localStorage.removeItem(BD_STORAGE);
+  cloudDelete('breakdown');
   renderBreakdown();
 }
 
@@ -2800,6 +2816,110 @@ function renderAnalytics(){
   contentEl.innerHTML = html;
 }
 
+/* ---------- Backup / Restore ---------- */
+function exportBackup(){
+  const backup = {
+    version: 1,
+    exportedAt: new Date().toISOString(),
+    bosta:    localStorage.getItem(STORAGE_KEY),
+    aramex:   localStorage.getItem('kenzz3pl_aramex_v1'),
+    mashreq:  localStorage.getItem('kenzz3pl_mq_v1'),
+    raya:     localStorage.getItem('kenzz3pl_raya_v1'),
+    breakdown:localStorage.getItem(BD_STORAGE),
+  };
+  const json = JSON.stringify(backup, null, 2);
+  const date = new Date().toISOString().slice(0,10);
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(new Blob([json], {type:'application/json'}));
+  a.download = `kenzz-3pl-backup-${date}.json`;
+  a.click();
+}
+
+function importBackup(input){
+  const file = input.files[0];
+  if(!file) return;
+  const fr = new FileReader();
+  fr.onload = e => {
+    try {
+      const backup = JSON.parse(e.target.result);
+      if(!backup.version) throw new Error('Invalid backup file');
+      let restored = [];
+      if(backup.bosta)    { localStorage.setItem(STORAGE_KEY, backup.bosta);              restored.push('Bosta'); }
+      if(backup.aramex)   { localStorage.setItem('kenzz3pl_aramex_v1', backup.aramex);   restored.push('Aramex'); }
+      if(backup.mashreq)  { localStorage.setItem('kenzz3pl_mq_v1', backup.mashreq);      restored.push('Mashreq'); }
+      if(backup.raya)     { localStorage.setItem('kenzz3pl_raya_v1', backup.raya);       restored.push('Raya'); }
+      if(backup.breakdown){ localStorage.setItem(BD_STORAGE, backup.breakdown);           restored.push('Breakdown'); }
+      alert('✅ Restored: ' + restored.join(', ') + '\n\nPage will reload to apply data.');
+      location.reload();
+    } catch(err) {
+      alert('❌ Failed to restore: ' + err.message);
+    }
+  };
+  fr.readAsText(file);
+  input.value = '';
+}
+
+/* ---------- Firebase Cloud Sync ---------- */
+const FIREBASE_CONFIG = {
+  apiKey: "AIzaSyCW5rA3APKa7Se3TNcg1SDGycazsNMsTxk",
+  authDomain: "kenzz3pl.firebaseapp.com",
+  projectId: "kenzz3pl",
+  storageBucket: "kenzz3pl.firebasestorage.app",
+  messagingSenderId: "240673663707",
+  appId: "1:240673663707:web:b9b07f3601533e640a3afe"
+};
+let _db = null;
+function _getDb(){
+  if(_db) return _db;
+  try{
+    if(!firebase.apps.length) firebase.initializeApp(FIREBASE_CONFIG);
+    _db = firebase.firestore();
+  }catch(e){ console.warn('Firebase init:',e); }
+  return _db;
+}
+function cloudSave(key, value){
+  const db = _getDb(); if(!db) return;
+  db.collection('kenzz3pl').doc(key).set({ data: value, updatedAt: new Date().toISOString() })
+    .catch(e=>console.warn('cloudSave failed:',e));
+}
+function cloudDelete(key){
+  const db = _getDb(); if(!db) return;
+  db.collection('kenzz3pl').doc(key).delete()
+    .catch(e=>console.warn('cloudDelete failed:',e));
+}
+async function cloudLoadAll(){
+  const db = _getDb(); if(!db) return;
+  const keys = ['bosta','aramex','mashreq','raya','breakdown'];
+  const storageMap = {
+    bosta: STORAGE_KEY, aramex: ARAMEX_STORAGE_KEY,
+    mashreq: MQ_STORAGE_KEY, raya: RAYA_STORAGE_KEY, breakdown: BD_STORAGE
+  };
+  try{
+    const docs = await Promise.all(keys.map(k=>db.collection('kenzz3pl').doc(k).get()));
+    let reloaded = false;
+    docs.forEach((snap,i)=>{
+      if(!snap.exists) return;
+      const key = keys[i];
+      const cloudVal = snap.data().data;
+      if(!cloudVal) return;
+      const localVal = localStorage.getItem(storageMap[key]);
+      if(!localVal){
+        localStorage.setItem(storageMap[key], cloudVal);
+        reloaded = true;
+      }
+    });
+    if(reloaded){
+      loadPersisted(); loadPersistedAramex(); loadPersistedMashreq(); loadPersistedRaya();
+      try{ const s=localStorage.getItem(BD_STORAGE); if(s) bdStore=JSON.parse(s); }catch(e){}
+      if(bostaData.length) renderBosta();
+      if(auditData.length) renderAramex();
+      if(mqData.length) renderMashreq();
+      if(rayaData.length) renderRayaPage();
+      if(bdStore && document.getElementById('panel-breakdown').style.display!=='none') renderBreakdown();
+    }
+  }catch(e){ console.warn('cloudLoadAll failed:',e); }
+}
+
 /* ---------- init ---------- */
 applyI18n();
 applyI18nAramex();
@@ -2815,6 +2935,9 @@ if(auditData.length) renderAramex();
 if(mqData.length) renderMashreq();
 if(rayaData.length) renderRayaPage();
 if(sessionStorage.getItem(AUTH.SESSION_KEY) === '1'){ showApp(); }
+window.addEventListener('load', cloudLoadAll);
 </script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
 </body>
 </html>
