@@ -2150,11 +2150,10 @@ function exportRayaPage(){
   exportCSV(headers, filtered.map(r=>[r.idx,r.awb,r.status,r.zone,r.tier,r.category,r.totalBilled,r.contractPrice,r.diff]), 'raya_audit.csv');
 }
 function saveRayaPage(){
-  try{ const v = JSON.stringify({data: rayaData, saved: new Date().toISOString()});
-    localStorage.setItem(RAYA_STORAGE_KEY, v);
-    cloudSave('raya', v);
-    const t=document.getElementById('ra-toast'); t.classList.add('show'); setTimeout(()=>t.classList.remove('show'), 3000);
-  }catch(e){ alert('Save failed.'); }
+  const v = JSON.stringify({data: rayaData, saved: new Date().toISOString()});
+  try{ localStorage.setItem(RAYA_STORAGE_KEY, v); }catch(e){ console.warn('localStorage full, using cloud only'); }
+  cloudSave('raya', v);
+  const t=document.getElementById('ra-toast'); t.classList.add('show'); setTimeout(()=>t.classList.remove('show'), 3000);
 }
 function clearRayaPage(){
   if(!confirm(T('ra_confirmClear'))) return;
