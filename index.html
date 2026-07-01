@@ -1183,6 +1183,7 @@ function logout(){
 function showApp(){
   document.getElementById('login-screen').style.display = 'none';
   document.getElementById('app').style.display = 'block';
+  cloudLoadAll();
 }
 
 /* ---------- tabs ---------- */
@@ -2901,11 +2902,8 @@ async function cloudLoadAll(){
       const key = keys[i];
       const cloudVal = snap.data().data;
       if(!cloudVal) return;
-      const localVal = localStorage.getItem(storageMap[key]);
-      if(!localVal){
-        localStorage.setItem(storageMap[key], cloudVal);
-        reloaded = true;
-      }
+      try{ localStorage.setItem(storageMap[key], cloudVal); }catch(e){}
+      reloaded = true;
     });
     if(reloaded){
       loadPersisted(); loadPersistedAramex(); loadPersistedMashreq(); loadPersistedRaya();
