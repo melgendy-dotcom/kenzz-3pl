@@ -1337,8 +1337,8 @@ function loadPersisted(){
 
 /* ---------- Aramex engine (ported from aramexEngine.js) ---------- */
 const ARAMEX_STORAGE_KEY = 'kenzz3pl_aramex_v1';
-const STATUS_DELIVERED = new Set(['paid','delivered','successfully delivered','collected','delivery completed','shipment delivered','delivered to customer']);
-const STATUS_RETURNED = new Set(['returned','returned to shipper','rts','refused','cancelled','return','rejected','undelivered','return to shipper','could not deliver']);
+const STATUS_DELIVERED = new Set(['paid','delivered','successfully delivered','collected','delivery completed','shipment delivered','delivered to customer','تم التسليم','تم التوصيل','تسليم ناجح','مسلم','تسليم']);
+const STATUS_RETURNED = new Set(['returned','returned to shipper','rts','refused','cancelled','return','rejected','undelivered','return to shipper','could not deliver','مرتجع','إرجاع','رفض','ملغي','لم يتم التسليم']);
 
 function normAWB(v){
   if(v===null||v===undefined||v==='') return '';
@@ -1358,9 +1358,20 @@ function g(row, ...cands){ const k=findKey(row,cands); return k!=null ? row[k] :
 function classifyStatus(st){
   if(!st) return 'PENDING';
   const s=st.toLowerCase().trim();
-  if(s==='out for delivery'||s.includes('out for')||s.includes('in transit')||s.includes('in warehouse')||s.includes('misrouted')||s.includes('processing')) return 'PENDING';
-  if(STATUS_DELIVERED.has(s)||s==='paid'||s==='delivered'||s.includes('collected')||s.includes('successfully delivered')||s.includes('delivery completed')) return 'DELIVERED';
-  if(STATUS_RETURNED.has(s)||s.includes('return')||s.includes('cancel')||s.includes('refus')||s.includes('reject')||s.includes('rts')) return 'RETURNED';
+  // Explicitly pending/in-progress states
+  if(s.includes('out for')||s.includes('in transit')||s.includes('in warehouse')||
+     s.includes('misrouted')||s.includes('processing')||s.includes('on hold')||
+     s.includes('exception')||s.includes('attempted')||s.includes('محاولة')||
+     s.includes('قيد')||s.includes('جاري')) return 'PENDING';
+  // Delivered
+  if(STATUS_DELIVERED.has(s)||s.includes('delivered')||s.includes('collected')||
+     s.includes('handover')||s.includes('handed')||s.includes('received')||
+     s.includes('تسليم')||s.includes('تم التسليم')||s.includes('مسلم')) return 'DELIVERED';
+  // Returned
+  if(STATUS_RETURNED.has(s)||s.includes('return')||s.includes('cancel')||
+     s.includes('refus')||s.includes('reject')||s.includes('rts')||
+     s.includes('unable')||s.includes('not available')||s.includes('not found')||
+     s.includes('address')||s.includes('مرتجع')||s.includes('إرجاع')||s.includes('رفض')) return 'RETURNED';
   return 'PENDING';
 }
 function getCost(w,c5,c10,c15,c20,ca){
