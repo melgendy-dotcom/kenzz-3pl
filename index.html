@@ -1605,12 +1605,7 @@ async function processAramex(){
     if(statusFile){
       const swb = XLSX.read(await readBuf(statusFile), {type:'array'});
       statusMap = parseStatusFile(swb, XLSX);
-      const uniqueKeys = Object.keys(statusMap).length;
-      const sampleKey = Object.keys(statusMap)[0];
-      const sampleVal = sampleKey ? statusMap[sampleKey] : 'none';
-      alert(`Status File loaded: ${uniqueKeys} entries\nFirst entry: AWB=${sampleKey} → Status="${sampleVal}"\n\nIf 0 entries, the file format was not recognized.`);
-    } else {
-      alert('No Status File uploaded! Please upload the Status File in the 4th slot (📡 Status File).');
+      console.log('Status File loaded:', Object.keys(statusMap).length, 'entries. Sample:', Object.entries(statusMap).slice(0,3));
     }
     _step = 'processing audit calculations';
     const CFG = getAramexCfg();
