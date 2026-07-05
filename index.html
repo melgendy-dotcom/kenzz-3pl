@@ -1492,7 +1492,10 @@ function parseStatusFile(wb, XLSXref){
 }
 function processAudit({aramexRows, odooPayMap, odooTypeMap, zoneMap, statusMap, CFG}){
   return aramexRows.map((row, idx)=>{
-    const awb = normAWB(g(row,'Airway Bill No.','airway bill','awb','waybill'));
+    const awbRaw = String(g(row,'Airway Bill No.','airway bill','awb','waybill')||'').trim();
+    // Skip summary/rounding rows (non-numeric AWB entries like "TAX Rounding Diff")
+    if(awbRaw && isNaN(Number(awbRaw)) && awbRaw.toLowerCase().includes('rounding')) return null;
+    const awb = normAWB(awbRaw);
     const city = String(g(row,'Consignee City','city')||'').trim();
     const origLoc = String(g(row,'Origin Location','origin location','origin')||'').trim();
     const destLoc = String(g(row,'Destination Location','destination location','destination')||'').trim();
@@ -1552,7 +1555,7 @@ function processAudit({aramexRows, odooPayMap, odooTypeMap, zoneMap, statusMap, 
       paymentType, statusRaw, statusBucket, paymentValue, baseCharge, otherCharge, totalAmtR,
       kenzzBase, annualIncrease, codFees, fuelCharges, diffBase, diffOther, colRResult,
       flagBase, flagOther, isPending };
-  });
+  }).filter(Boolean);
 }
 
 /* ---------- Aramex page wiring ---------- */
