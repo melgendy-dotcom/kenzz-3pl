@@ -1470,7 +1470,6 @@ function parseStatusFile(wb, XLSXref){
       const ai=low.findIndex(c=>AWB_CANDS.some(x=>c===x||c.replace(/[.\s]/g,'')===x.replace(/[.\s]/g,''))||c.includes('awb')||c.includes('airway')||c.includes('tracking')||c.includes('waybill')||c.includes('شحنة')||c.includes('بوليصة'));
       const si=low.findIndex(c=>STS_CANDS.some(x=>c===x)||c.includes('status')||c.includes('state')||c.includes('الحالة')||c.includes('حالة'));
       if(ai!==-1&&si!==-1){ hdrRow=r; awbCol=ai; stCol=si; break; }
-      if(ai!==-1&&si===-1&&ai+1<raw[r].length){ hdrRow=r; awbCol=ai; stCol=ai+1; break; }
     }
 
     let loaded=0;
