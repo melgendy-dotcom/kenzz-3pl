@@ -1446,32 +1446,45 @@ function parseOdooFile(raw){
 }
 function parseStatusFile(wb, XLSXref){
   const statusMap={};
-  const AWB_CANDS=['airway bill no','airway bill no.','awb','3pl tracking no','3pl tracking no.','tracking no','waybill','shipment number','airwaybill','air waybill','reference'];
-  const STS_CANDS=['status','shipment status','delivery status','state','current status','last status','final status'];
+  const AWB_CANDS=['airway bill no','airway bill no.','awb','3pl tracking no','3pl tracking no.','tracking no','waybill','shipment number','airwaybill','air waybill','reference','tracking','شحنة','رقم الشحنة','بوليصة'];
+  const STS_CANDS=['status','shipment status','delivery status','state','current status','last status','final status','الحالة','حالة الشحنة','الوضع'];
+
+  function storeAWB(map, rawAWB, st){
+    const awb = normAWB(rawAWB);
+    if(!awb || !st) return false;
+    map[awb] = st;
+    map[String(rawAWB).trim()] = st;
+    map[String(parseInt(awb)||awb)] = st;
+    return true;
+  }
+
   for(const sheetName of wb.SheetNames){
     const ws=wb.Sheets[sheetName];
     const raw=XLSXref.utils.sheet_to_json(ws,{header:1,defval:''});
+    if(raw.length<2) continue;
+
     let hdrRow=-1, awbCol=-1, stCol=-1;
+    // Try to find headers in first 20 rows
     for(let r=0;r<Math.min(raw.length,20);r++){
       const low=raw[r].map(c=>String(c||'').trim().toLowerCase());
-      const ai=low.findIndex(c=>AWB_CANDS.some(x=>c===x||c.replace(/[.\s]/g,'')===x.replace(/[.\s]/g,'')||c.includes('awb')||c.includes('airway')||c.includes('tracking')));
-      const si=low.findIndex(c=>STS_CANDS.some(x=>c===x||c.includes('status')||c.includes('state')));
+      const ai=low.findIndex(c=>AWB_CANDS.some(x=>c===x||c.replace(/[.\s]/g,'')===x.replace(/[.\s]/g,''))||c.includes('awb')||c.includes('airway')||c.includes('tracking')||c.includes('waybill')||c.includes('شحنة')||c.includes('بوليصة'));
+      const si=low.findIndex(c=>STS_CANDS.some(x=>c===x)||c.includes('status')||c.includes('state')||c.includes('الحالة')||c.includes('حالة'));
       if(ai!==-1&&si!==-1){ hdrRow=r; awbCol=ai; stCol=si; break; }
-      if(ai!==-1&&si===-1 &&ai+1<raw[r].length){ hdrRow=r; awbCol=ai; stCol=ai+1; break; }
+      if(ai!==-1&&si===-1&&ai+1<raw[r].length){ hdrRow=r; awbCol=ai; stCol=ai+1; break; }
     }
-    if(hdrRow===-1) continue;
+
     let loaded=0;
-    for(let r=hdrRow+1;r<raw.length;r++){
-      const rawAWB = raw[r][awbCol];
-      const awb = normAWB(rawAWB);
-      const st = String(raw[r][stCol]||'').trim();
-      if(!awb||!st) continue;
-      // Store under multiple formats to maximize match chance
-      statusMap[awb] = st;
-      statusMap[String(rawAWB).trim()] = st;
-      const noLeadZero = String(parseInt(awb)||awb);
-      statusMap[noLeadZero] = st;
-      loaded++;
+    if(hdrRow!==-1){
+      // Header found — load rows below it
+      for(let r=hdrRow+1;r<raw.length;r++){
+        if(storeAWB(statusMap, raw[r][awbCol], String(raw[r][stCol]||'').trim())) loaded++;
+      }
+    } else {
+      // No header found — assume Column A = AWB, Column B = Status (skip first row as possible header)
+      for(let r=1;r<raw.length;r++){
+        const st = String(raw[r][1]||'').trim(); // Column B
+        if(storeAWB(statusMap, raw[r][0], st)) loaded++;
+      }
     }
     if(loaded>0) break;
   }
