@@ -1435,28 +1435,32 @@ function parseOdooFile(raw){
 }
 function parseStatusFile(wb, XLSXref){
   const statusMap={};
-  const AWB_CANDS=['airway bill no','airway bill no.','awb','3pl tracking no','3pl tracking no.','tracking no','waybill','shipment number'];
-  const STS_CANDS=['status','shipment status','delivery status','state'];
+  const AWB_CANDS=['airway bill no','airway bill no.','awb','3pl tracking no','3pl tracking no.','tracking no','waybill','shipment number','airwaybill','air waybill','reference'];
+  const STS_CANDS=['status','shipment status','delivery status','state','current status','last status','final status'];
   for(const sheetName of wb.SheetNames){
     const ws=wb.Sheets[sheetName];
     const raw=XLSXref.utils.sheet_to_json(ws,{header:1,defval:''});
     let hdrRow=-1, awbCol=-1, stCol=-1;
-    for(let r=0;r<Math.min(raw.length,10);r++){
+    for(let r=0;r<Math.min(raw.length,20);r++){
       const low=raw[r].map(c=>String(c||'').trim().toLowerCase());
-      const ai=low.findIndex(c=>AWB_CANDS.some(x=>c===x||c===x.replace(/\./g,'')));
-      const si=low.findIndex(c=>STS_CANDS.some(x=>c===x));
+      const ai=low.findIndex(c=>AWB_CANDS.some(x=>c===x||c.replace(/[.\s]/g,'')===x.replace(/[.\s]/g,'')||c.includes('awb')||c.includes('airway')||c.includes('tracking')));
+      const si=low.findIndex(c=>STS_CANDS.some(x=>c===x||c.includes('status')||c.includes('state')));
       if(ai!==-1&&si!==-1){ hdrRow=r; awbCol=ai; stCol=si; break; }
-      if(ai!==-1&&si===-1){
-        const candidate=ai+1;
-        if(candidate<raw[r].length){ hdrRow=r; awbCol=ai; stCol=candidate; break; }
-      }
+      if(ai!==-1&&si===-1 &&ai+1<raw[r].length){ hdrRow=r; awbCol=ai; stCol=ai+1; break; }
     }
     if(hdrRow===-1) continue;
     let loaded=0;
     for(let r=hdrRow+1;r<raw.length;r++){
-      const awb=normAWB(raw[r][awbCol]);
-      const st=String(raw[r][stCol]||'').trim();
-      if(awb&&awb!==''&&st!==''){ statusMap[awb]=st; loaded++; }
+      const rawAWB = raw[r][awbCol];
+      const awb = normAWB(rawAWB);
+      const st = String(raw[r][stCol]||'').trim();
+      if(!awb||!st) continue;
+      // Store under multiple formats to maximize match chance
+      statusMap[awb] = st;
+      statusMap[String(rawAWB).trim()] = st;
+      const noLeadZero = String(parseInt(awb)||awb);
+      statusMap[noLeadZero] = st;
+      loaded++;
     }
     if(loaded>0) break;
   }
@@ -1487,7 +1491,14 @@ function processAudit({aramexRows, odooPayMap, odooTypeMap, zoneMap, statusMap, 
     let paymentType = awb ? (odooTypeMap[awb]||'') : '';
     if(!paymentType) paymentType=String(g(row,'comment','payment type','payment method')||'').trim();
 
-    let statusRaw = (awb && statusMap[awb]) ? statusMap[awb] : '';
+    // Status File takes priority — try multiple AWB formats to maximize match
+    let statusRaw = '';
+    if(awb && Object.keys(statusMap).length){
+      statusRaw = statusMap[awb]
+        || statusMap[String(parseInt(awb)||awb)]
+        || statusMap[awb.replace(/^0+/,'')]
+        || '';
+    }
     if(!statusRaw){
       const colVal=String(g(row,'Status','shipment status','delivery status')||'').trim();
       if(colVal && !colVal.startsWith('=')) statusRaw=colVal;
