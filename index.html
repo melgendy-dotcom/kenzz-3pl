@@ -1665,7 +1665,7 @@ function getFilteredAramex(){
 function aramexRowCls(r){
   return (r.flagBase&&r.flagOther) ? 'flag-both' : r.flagBase ? 'flag-base' : r.flagOther ? 'flag-other' : r.isPending ? 'flag-pending' : '';
 }
-function aramexStLabel(b){ return b==='DELIVERED'?T('delivered'):b==='RETURNED'?T('returned'):T('pending'); }
+function aramexStLabel(b,raw){ return b==='DELIVERED'?T('delivered'):b==='RETURNED'?T('returned'):(raw&&raw.trim()?raw.trim():T('pending')); }
 function aramexStStyle(b){
   if(b==='DELIVERED') return 'background:#dcfce7;color:#15803d';
   if(b==='RETURNED') return 'background:#fee2e2;color:#b91c1c';
@@ -1684,7 +1684,7 @@ function renderAramexTable(){
       <td>${r.idx}</td>
       <td class="td-lft" style="font-family:monospace;font-size:.76rem">${r.awb}</td>
       <td>${r.city}</td>
-      <td><span style="${aramexStStyle(r.statusBucket)};border-radius:4px;padding:2px 8px;font-size:.68rem;font-weight:700;white-space:nowrap">${aramexStLabel(r.statusBucket)}</span></td>
+      <td><span style="${aramexStStyle(r.statusBucket)};border-radius:4px;padding:2px 8px;font-size:.68rem;font-weight:700;white-space:nowrap">${aramexStLabel(r.statusBucket,r.statusRaw)}</span></td>
       <td>${r.originZone}</td><td>${r.destZone}</td><td>${fm(r.weight)}</td>
       <td class="td-ah">${fm(r.baseCharge)}</td>
       <td class="td-ai">${fm(r.kenzzBase)}</td>
