@@ -1543,26 +1543,32 @@ async function processAramex(){
   if(!aramexFile){ alert(T('ar_alertNoFile')); return; }
   showLoading(T('ar_loadingMsg'));
   await new Promise(r=>setTimeout(r,30));
+  let _step = 'reading Aramex file';
   try{
     const awb_wb = XLSX.read(await readBuf(aramexFile), {type:'array'});
     const aramexRows = XLSX.utils.sheet_to_json(awb_wb.Sheets[awb_wb.SheetNames[0]], {defval:''});
+    if(!aramexRows.length) throw new Error('Aramex file appears empty or has no readable rows');
 
+    _step = 'reading Odoo file';
     let odooPayMap={}, odooTypeMap={};
     if(odooFile){
       const owb = XLSX.read(await readBuf(odooFile), {type:'array'});
       const raw = XLSX.utils.sheet_to_json(owb.Sheets[owb.SheetNames[0]], {header:1, defval:''});
       ({ odooPayMap, odooTypeMap } = parseOdooFile(raw));
     }
+    _step = 'reading Zones file';
     let zoneMap={};
     if(zoneFile){
       const zwb = XLSX.read(await readBuf(zoneFile), {type:'array'});
       zoneMap = parseZoneFile(XLSX.utils.sheet_to_json(zwb.Sheets[zwb.SheetNames[0]], {header:1, defval:''}));
     }
+    _step = 'reading Status file';
     let statusMap={};
     if(statusFile){
       const swb = XLSX.read(await readBuf(statusFile), {type:'array'});
       statusMap = parseStatusFile(swb, XLSX);
     }
+    _step = 'processing audit calculations';
     const CFG = getAramexCfg();
     const result = processAudit({ aramexRows, odooPayMap, odooTypeMap, zoneMap, statusMap, CFG });
     const uploadMonth = document.getElementById('ar-month').value;
@@ -1571,7 +1577,9 @@ async function processAramex(){
     document.getElementById('ar-save-btn').disabled = !auditData.length;
     renderAramex();
   }catch(err){
-    alert(T('errorPrefix') + err.message);
+    const msg = err?.message || String(err) || 'Unknown error';
+    alert('Error while ' + _step + ':\n' + msg);
+    console.error('processAramex failed at step:', _step, err);
   }finally{
     hideLoading();
   }
