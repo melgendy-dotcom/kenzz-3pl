@@ -1859,11 +1859,14 @@ function mqSize(row){
 }
 let mqSecondTotal = 0;
 function processMQ({rawReport, raw2nd, rates, INS_PCT, COD_PCT, THRESH}){
-  // Sum all second attempt charges as a flat total — no per-row matching needed
+  // Sum all second attempt charges as a flat total — same columns as main report totalBilled
   mqSecondTotal = 0;
   (raw2nd||[]).forEach(row=>{
     const chg = parseFloat(mqCol(row,'Charge')||0)||0;
-    mqSecondTotal += chg;
+    const ins = parseFloat(mqCol(row,'insurance','Insurance')||0)||0;
+    const cod = parseFloat(mqCol(row,'COD Fees','CODFees')||0)||0;
+    const pu  = parseFloat(mqCol(row,'Pickup Fees','PickupFees')||0)||0;
+    mqSecondTotal += chg + ins + cod + pu;
   });
   mqSecondTotal = Math.round(mqSecondTotal*100)/100;
 
