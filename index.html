@@ -569,8 +569,10 @@ html[dir=ltr] #login-eye{right:12px}
                   <th>D.Zone</th><th>O.Zone</th>
                   <th class="th-ah">Act. LM</th><th class="th-ai">Act. PU</th>
                   <th class="th-ins">Act. Ins</th><th class="th-cod">Act. COD</th>
+                  <th class="th-r" style="color:#d97706">Act. 2nd</th>
                   <th class="th-lm">Calc LM</th><th class="th-pu">Calc PU</th>
                   <th class="th-r">Calc Ins</th><th class="th-r">Calc COD</th>
+                  <th class="th-r" style="color:#d97706">Calc 2nd</th>
                   <th class="th-diff">Billed</th><th class="th-diff">Kenzz</th><th class="th-diff">Diff</th>
                 </tr>
               </thead>
@@ -1877,6 +1879,7 @@ function processMQ({rawReport, raw2nd, rates, INS_PCT, COD_PCT, THRESH}){
     const actualIns = parseFloat(mqCol(row,'insurance','Insurance')||0)||0;
     const actualCODFees = parseFloat(mqCol(row,'COD Fees','CODFees')||0)||0;
     const actualPickup = parseFloat(mqCol(row,'Pickup Fees','PickupFees')||0)||0;
+    const actualSecond = secondMap[normAWB(awb)] || 0;
 
     const size = mqSize(row);
     const isDelivered = status.toLowerCase()==='delivered';
@@ -1889,15 +1892,16 @@ function processMQ({rawReport, raw2nd, rates, INS_PCT, COD_PCT, THRESH}){
     const calcPickup = puTable[origZone] || 0;
     const calcIns = Math.round(goodsVal*INS_PCT*100)/100;
     const calcCOD = isDelivered ? Math.round(codValue*COD_PCT*100)/100 : 0;
+    const calcSecond = actualSecond > 0 ? lmFull : 0;
 
-    const totalBilled = actualCharge + actualPickup + actualIns + actualCODFees;
-    const totalCalc = calcLM + calcPickup + calcIns + calcCOD;
+    const totalBilled = actualCharge + actualPickup + actualIns + actualCODFees + actualSecond;
+    const totalCalc = calcLM + calcPickup + calcIns + calcCOD + calcSecond;
     const diff = Math.round((totalCalc-totalBilled)*100)/100;
     const isOver = Math.abs(diff) > THRESH;
 
     return { idx:idx+1, awb, month, status, size, destCity, origCity, destZone, origZone, codValue, goodsVal,
-      actualCharge, actualPickup, actualIns, actualCODFees,
-      calcLM, calcPickup, calcIns, calcCOD,
+      actualCharge, actualPickup, actualIns, actualCODFees, actualSecond,
+      calcLM, calcPickup, calcIns, calcCOD, calcSecond,
       totalBilled, totalCalc, diff, isOver };
   });
 }
@@ -1979,10 +1983,12 @@ function renderMashreqTable(){
       <td class="td-ai">${fm(r.actualPickup)}</td>
       <td class="td-ins">${fm(r.actualIns)}</td>
       <td class="td-cod">${fm(r.actualCODFees)}</td>
+      <td class="td-r" style="${r.actualSecond?'color:#d97706;font-weight:700':'color:#9ca3af'}">${r.actualSecond?fm(r.actualSecond):'-'}</td>
       <td class="td-lm">${fm(r.calcLM)}</td>
       <td class="td-pu">${fm(r.calcPickup)}</td>
       <td class="td-r">${fm(r.calcIns)}</td>
       <td class="td-r">${fm(r.calcCOD)}</td>
+      <td class="td-r" style="${r.calcSecond?'color:#d97706;font-weight:700':'color:#9ca3af'}">${r.calcSecond?fm(r.calcSecond):'-'}</td>
       <td style="font-weight:700">${fm(r.totalBilled)}</td>
       <td style="font-weight:700;color:var(--purple)">${fm(r.totalCalc)}</td>
       <td class="td-diff ${r.isOver?'fb-over':'fb-ok'}">${fm(r.diff)}</td>
@@ -1990,8 +1996,8 @@ function renderMashreqTable(){
 }
 function exportMashreq(){
   const filtered = getFilteredMashreq();
-  const headers = ['#','AWB','Month','Status','Size','Dest Zone','Orig Zone','Actual Charge','Actual PU','Actual Ins','Actual COD','Calc LM','Calc PU','Calc Ins','Calc COD','Total Billed','Total Calc','Diff'];
-  exportCSV(headers, filtered.map(r=>[r.idx,r.awb,r.month,r.status,r.size,r.destZone,r.origZone,r.actualCharge,r.actualPickup,r.actualIns,r.actualCODFees,r.calcLM,r.calcPickup,r.calcIns,r.calcCOD,r.totalBilled,r.totalCalc,r.diff]), 'mashreq_audit.csv');
+  const headers = ['#','AWB','Month','Status','Size','Dest Zone','Orig Zone','Actual Charge','Actual PU','Actual Ins','Actual COD','Act. 2nd Attempt','Calc LM','Calc PU','Calc Ins','Calc COD','Calc 2nd Attempt','Total Billed','Total Calc','Diff'];
+  exportCSV(headers, filtered.map(r=>[r.idx,r.awb,r.month,r.status,r.size,r.destZone,r.origZone,r.actualCharge,r.actualPickup,r.actualIns,r.actualCODFees,r.actualSecond||0,r.calcLM,r.calcPickup,r.calcIns,r.calcCOD,r.calcSecond||0,r.totalBilled,r.totalCalc,r.diff]), 'mashreq_audit.csv');
 }
 async function saveMashreq(){
   const btn = document.getElementById('mq-save-btn');
