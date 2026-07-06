@@ -1862,7 +1862,7 @@ function processMQ({rawReport, raw2nd, rates, INS_PCT, COD_PCT, THRESH}){
   (raw2nd||[]).forEach(row=>{
     const awb = String(mqCol(row,'AWB')||'').trim();
     const chg = parseFloat(mqCol(row,'Charge')||0)||0;
-    if(awb && chg) secondMap[normAWB(awb)] = { chg, raw: row };
+    if(awb && chg){ const k=normAWB(awb); secondMap[k]={ chg:(secondMap[k]?.chg||0)+chg, raw: row }; }
   });
   const matchedAWBs = new Set();
   const mainRows = rawReport.map((row, idx)=>{
