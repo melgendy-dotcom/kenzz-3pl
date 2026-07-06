@@ -1962,14 +1962,14 @@ function renderMashreq(){
   document.getElementById('mq-results').style.display = hasData ? 'block' : 'none';
   document.getElementById('mq-empty').style.display = hasData ? 'none' : 'block';
   if(!hasData) return;
+  const mainRows = mqData.filter(r=>r.status!=='2nd Attempt');
   const totalBilled = mqData.reduce((s,r)=>s+r.totalBilled, 0);
-  const totalCalc = mqData.reduce((s,r)=>s+r.totalCalc, 0);
-  const overCount = mqData.filter(r=>r.isOver).length;
-  document.getElementById('mq-kpi-total').textContent = fm(mqData.length);
+  const overCount = mainRows.filter(r=>r.isOver).length;
+  document.getElementById('mq-kpi-total').textContent = fm(mainRows.length);
   document.getElementById('mq-kpi-invoice').textContent = fm(totalBilled);
-  document.getElementById('mq-kpi-calc').textContent = fm(totalCalc);
+  document.getElementById('mq-kpi-calc').textContent = fm(totalBilled);
   document.getElementById('mq-kpi-diff').textContent = fm(overCount);
-  document.getElementById('mq-kpi-diff-pct').textContent = ((overCount/mqData.length)*100).toFixed(1)+'%';
+  document.getElementById('mq-kpi-diff-pct').textContent = ((overCount/mainRows.length)*100).toFixed(1)+'%';
   renderMashreqTable();
 }
 function getFilteredMashreq(){
