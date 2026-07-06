@@ -1857,15 +1857,17 @@ function mqSize(row){
   }
   return 'Small';
 }
+let mqSecondTotal = 0;
 function processMQ({rawReport, raw2nd, rates, INS_PCT, COD_PCT, THRESH}){
-  const secondMap = {};
+  // Sum all second attempt charges as a flat total — no per-row matching needed
+  mqSecondTotal = 0;
   (raw2nd||[]).forEach(row=>{
-    const awb = String(mqCol(row,'AWB')||'').trim();
     const chg = parseFloat(mqCol(row,'Charge')||0)||0;
-    if(awb && chg){ const k=normAWB(awb); secondMap[k]={ chg:(secondMap[k]?.chg||0)+chg, raw: row }; }
+    mqSecondTotal += chg;
   });
-  const matchedAWBs = new Set();
-  const mainRows = rawReport.map((row, idx)=>{
+  mqSecondTotal = Math.round(mqSecondTotal*100)/100;
+
+  return rawReport.map((row, idx)=>{
     const awb = normAWB(mqCol(row,'AWB'));
     const goodsVal = parseFloat(mqCol(row,'Goods Value','GoodsValue')||0)||0;
     const month = String(mqCol(row,'Month')||'').trim();
@@ -1880,9 +1882,6 @@ function processMQ({rawReport, raw2nd, rates, INS_PCT, COD_PCT, THRESH}){
     const actualIns = parseFloat(mqCol(row,'insurance','Insurance')||0)||0;
     const actualCODFees = parseFloat(mqCol(row,'COD Fees','CODFees')||0)||0;
     const actualPickup = parseFloat(mqCol(row,'Pickup Fees','PickupFees')||0)||0;
-    const secondEntry = secondMap[normAWB(awb)];
-    const actualSecond = secondEntry ? secondEntry.chg : 0;
-    if(secondEntry) matchedAWBs.add(normAWB(awb));
 
     const size = mqSize(row);
     const isDelivered = status.toLowerCase()==='delivered';
@@ -1895,33 +1894,17 @@ function processMQ({rawReport, raw2nd, rates, INS_PCT, COD_PCT, THRESH}){
     const calcPickup = puTable[origZone] || 0;
     const calcIns = Math.round(goodsVal*INS_PCT*100)/100;
     const calcCOD = isDelivered ? Math.round(codValue*COD_PCT*100)/100 : 0;
-    const calcSecond = actualSecond > 0 ? lmFull : 0;
 
-    const totalBilled = actualCharge + actualPickup + actualIns + actualCODFees + actualSecond;
-    const totalCalc = calcLM + calcPickup + calcIns + calcCOD + calcSecond;
+    const totalBilled = actualCharge + actualPickup + actualIns + actualCODFees;
+    const totalCalc = calcLM + calcPickup + calcIns + calcCOD;
     const diff = Math.round((totalCalc-totalBilled)*100)/100;
     const isOver = Math.abs(diff) > THRESH;
 
     return { idx:idx+1, awb, month, status, size, destCity, origCity, destZone, origZone, codValue, goodsVal,
-      actualCharge, actualPickup, actualIns, actualCODFees, actualSecond,
-      calcLM, calcPickup, calcIns, calcCOD, calcSecond,
+      actualCharge, actualPickup, actualIns, actualCODFees,
+      calcLM, calcPickup, calcIns, calcCOD,
       totalBilled, totalCalc, diff, isOver };
   });
-
-  // Add unmatched second attempt AWBs as standalone rows so total is always correct
-  const unmatchedRows = [];
-  Object.entries(secondMap).forEach(([awb, entry])=>{
-    if(matchedAWBs.has(awb)) return;
-    const actualSecond = entry.chg;
-    unmatchedRows.push({ idx: mainRows.length + unmatchedRows.length + 1,
-      awb, month:'', status:'2nd Attempt', size:'-', destCity:'', origCity:'',
-      destZone:0, origZone:0, codValue:0, goodsVal:0,
-      actualCharge:0, actualPickup:0, actualIns:0, actualCODFees:0, actualSecond,
-      calcLM:0, calcPickup:0, calcIns:0, calcCOD:0, calcSecond:0,
-      totalBilled: actualSecond, totalCalc: actualSecond, diff:0, isOver:false });
-  });
-
-  return [...mainRows, ...unmatchedRows];
 }
 
 document.getElementById('mq-file-inp').addEventListener('change', e=>{ if(e.target.files[0]){ mqReportFile=e.target.files[0]; document.getElementById('mq-file-status').textContent='✅ '+mqReportFile.name; applyI18nMashreq(); } e.target.value=''; });
@@ -1962,14 +1945,13 @@ function renderMashreq(){
   document.getElementById('mq-results').style.display = hasData ? 'block' : 'none';
   document.getElementById('mq-empty').style.display = hasData ? 'none' : 'block';
   if(!hasData) return;
-  const mainRows = mqData.filter(r=>r.status!=='2nd Attempt');
-  const totalBilled = mqData.reduce((s,r)=>s+r.totalBilled, 0);
-  const overCount = mainRows.filter(r=>r.isOver).length;
-  document.getElementById('mq-kpi-total').textContent = fm(mainRows.length);
+  const totalBilled = Math.round((mqData.reduce((s,r)=>s+r.totalBilled,0) + (mqSecondTotal||0))*100)/100;
+  const overCount = mqData.filter(r=>r.isOver).length;
+  document.getElementById('mq-kpi-total').textContent = fm(mqData.length);
   document.getElementById('mq-kpi-invoice').textContent = fm(totalBilled);
   document.getElementById('mq-kpi-calc').textContent = fm(totalBilled);
   document.getElementById('mq-kpi-diff').textContent = fm(overCount);
-  document.getElementById('mq-kpi-diff-pct').textContent = ((overCount/mainRows.length)*100).toFixed(1)+'%';
+  document.getElementById('mq-kpi-diff-pct').textContent = (mqData.length?((overCount/mqData.length)*100).toFixed(1):0)+'%';
   renderMashreqTable();
 }
 function getFilteredMashreq(){
