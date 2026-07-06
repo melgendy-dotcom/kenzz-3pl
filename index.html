@@ -1862,9 +1862,10 @@ function processMQ({rawReport, raw2nd, rates, INS_PCT, COD_PCT, THRESH}){
   (raw2nd||[]).forEach(row=>{
     const awb = String(mqCol(row,'AWB')||'').trim();
     const chg = parseFloat(mqCol(row,'Charge')||0)||0;
-    if(awb) secondMap[normAWB(awb)] = chg;
+    if(awb && chg) secondMap[normAWB(awb)] = { chg, raw: row };
   });
-  return rawReport.map((row, idx)=>{
+  const matchedAWBs = new Set();
+  const mainRows = rawReport.map((row, idx)=>{
     const awb = normAWB(mqCol(row,'AWB'));
     const goodsVal = parseFloat(mqCol(row,'Goods Value','GoodsValue')||0)||0;
     const month = String(mqCol(row,'Month')||'').trim();
@@ -1879,7 +1880,9 @@ function processMQ({rawReport, raw2nd, rates, INS_PCT, COD_PCT, THRESH}){
     const actualIns = parseFloat(mqCol(row,'insurance','Insurance')||0)||0;
     const actualCODFees = parseFloat(mqCol(row,'COD Fees','CODFees')||0)||0;
     const actualPickup = parseFloat(mqCol(row,'Pickup Fees','PickupFees')||0)||0;
-    const actualSecond = secondMap[normAWB(awb)] || 0;
+    const secondEntry = secondMap[normAWB(awb)];
+    const actualSecond = secondEntry ? secondEntry.chg : 0;
+    if(secondEntry) matchedAWBs.add(normAWB(awb));
 
     const size = mqSize(row);
     const isDelivered = status.toLowerCase()==='delivered';
@@ -1904,6 +1907,21 @@ function processMQ({rawReport, raw2nd, rates, INS_PCT, COD_PCT, THRESH}){
       calcLM, calcPickup, calcIns, calcCOD, calcSecond,
       totalBilled, totalCalc, diff, isOver };
   });
+
+  // Add unmatched second attempt AWBs as standalone rows so total is always correct
+  const unmatchedRows = [];
+  Object.entries(secondMap).forEach(([awb, entry])=>{
+    if(matchedAWBs.has(awb)) return;
+    const actualSecond = entry.chg;
+    unmatchedRows.push({ idx: mainRows.length + unmatchedRows.length + 1,
+      awb, month:'', status:'2nd Attempt', size:'-', destCity:'', origCity:'',
+      destZone:0, origZone:0, codValue:0, goodsVal:0,
+      actualCharge:0, actualPickup:0, actualIns:0, actualCODFees:0, actualSecond,
+      calcLM:0, calcPickup:0, calcIns:0, calcCOD:0, calcSecond:0,
+      totalBilled: actualSecond, totalCalc: actualSecond, diff:0, isOver:false });
+  });
+
+  return [...mainRows, ...unmatchedRows];
 }
 
 document.getElementById('mq-file-inp').addEventListener('change', e=>{ if(e.target.files[0]){ mqReportFile=e.target.files[0]; document.getElementById('mq-file-status').textContent='✅ '+mqReportFile.name; applyI18nMashreq(); } e.target.value=''; });
