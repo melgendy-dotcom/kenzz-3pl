@@ -2293,7 +2293,7 @@ function applyI18nRaya(){
 /* ---------- Breakdown Engine ---------- */
 const BD_COMPANIES = ['Flextock','Bosta','Aramex','Raya','Mashreq'];
 const BD_GRAND     = 'All Shipments Cost';
-const BD_ROW_TYPES = ['SEND','Returns-RTN','Returns-RTO','Pickup','COD','Insurance','Lost & Damage','Last Mile CN','Total'];
+const BD_ROW_TYPES = ['SEND','Returns-RTN','Returns-RTO','Pickup','COD','Insurance','Lost & Damage','Last Mile CN','2nd Attempt','Total'];
 const BD_STORAGE   = 'kenzz3pl_bd_v1';
 
 function bdRv(v){ if(v===null||v===undefined||v==='') return null; const n=parseFloat(v); return isNaN(n)?null:n; }
@@ -2471,6 +2471,13 @@ function bdAddMonth({store,monthName,sources}){
     bdSetSlot(co['Returns-RTO'],'rate',returned.length?Math.round(sum(returned,'totalBilled')/returned.length*100)/100:0,mi);
     bdSetSlot(co['COD'],'value',Math.round(sum(mqData,'actualCODFees')*100)/100,mi);
     bdSetSlot(co['Insurance'],'value',Math.round(sum(mqData,'actualIns')*100)/100,mi);
+    const secondTotal=Math.round(sum(mqData,'actualSecond')*100)/100;
+    const secondCount=mqData.filter(r=>(r.actualSecond||0)>0).length;
+    if(secondTotal>0){
+      bdSetSlot(co['2nd Attempt'],'qty',secondCount,mi);
+      bdSetSlot(co['2nd Attempt'],'value',secondTotal,mi);
+      bdSetSlot(co['2nd Attempt'],'rate',secondCount?Math.round(secondTotal/secondCount*100)/100:0,mi);
+    }
     const totQty=delivered.length+returned.length;
     const totVal=Math.round(sum(mqData,'totalBilled')*100)/100;
     bdSetSlot(co['Total'],'qty',totQty,mi); bdSetSlot(co['Total'],'value',totVal,mi);
@@ -2589,10 +2596,11 @@ function renderBreakdown(){
 
   const tbody=BD_ROW_TYPES.map(rt=>{
     const isTotal=rt==='Total';
-    const rowBg=isTotal?'background:#f0fdf4;font-weight:800':'';
-    const cellBg=isTotal?'background:#dcfce7;color:#15803d;':'';
+    const is2nd=rt==='2nd Attempt';
+    const rowBg=isTotal?'background:#f0fdf4;font-weight:800':is2nd?'background:#fffbeb':'';
+    const cellBg=isTotal?'background:#dcfce7;color:#15803d;':is2nd?'color:#d97706;font-weight:700;':'';
     return `<tr style="${rowBg}">
-      <td style="${tdStyle};text-align:left;font-weight:${isTotal?800:600};color:${isTotal?'var(--green2)':'var(--purple)'}">${rt}</td>
+      <td style="${tdStyle};text-align:left;font-weight:${isTotal?800:600};color:${isTotal?'var(--green2)':is2nd?'#d97706':'var(--purple)'}">${rt}</td>
       <td style="${tdStyle}"></td>
       ${months.map((_,mi)=>`
         <td style="${tdStyle};${cellBg}">${fmVal(val(bdSelCo,rt,'qty',mi))}</td>
