@@ -2312,7 +2312,17 @@ function bdEmptyStore(){
 
 function bdSetSlot(node,key,val,mi){ while(node[key].length<=mi) node[key].push(null); node[key][mi]=val; }
 
+function bdMigrate(store){
+  // Ensure all companies have all current row types (handles stores saved before new rows were added)
+  [...BD_COMPANIES,BD_GRAND].forEach(co=>{
+    if(!store.companies[co]) return;
+    BD_ROW_TYPES.forEach(rt=>{
+      if(!store.companies[co][rt]) store.companies[co][rt]={qty:[],value:[],rate:[],valueDel:[],valueRet:[],qtyDel:[],qtyRet:[]};
+    });
+  });
+}
 function bdRecomputeGrand(store,mi){
+  bdMigrate(store);
   const grand=store.companies[BD_GRAND];
   BD_ROW_TYPES.forEach(rt=>{
     const node=grand[rt];
