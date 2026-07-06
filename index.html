@@ -2484,15 +2484,12 @@ function bdAddMonth({store,monthName,sources}){
     bdSetSlot(co['Returns-RTO'],'rate',returned.length?Math.round(sum(returned,'totalBilled')/returned.length*100)/100:0,mi);
     bdSetSlot(co['COD'],'value',Math.round(sum(mqData,'actualCODFees')*100)/100,mi);
     bdSetSlot(co['Insurance'],'value',Math.round(sum(mqData,'actualIns')*100)/100,mi);
-    const secondTotal=Math.round(sum(mqData,'actualSecond')*100)/100;
-    const secondCount=mqData.filter(r=>(r.actualSecond||0)>0).length;
+    const secondTotal=mqSecondTotal||0;
     if(secondTotal>0){
-      bdSetSlot(co['2nd Attempt'],'qty',secondCount,mi);
       bdSetSlot(co['2nd Attempt'],'value',secondTotal,mi);
-      bdSetSlot(co['2nd Attempt'],'rate',secondCount?Math.round(secondTotal/secondCount*100)/100:0,mi);
     }
     const totQty=delivered.length+returned.length;
-    const totVal=Math.round(sum(mqData,'totalBilled')*100)/100;
+    const totVal=Math.round((sum(mqData,'totalBilled')+secondTotal)*100)/100;
     bdSetSlot(co['Total'],'qty',totQty,mi); bdSetSlot(co['Total'],'value',totVal,mi);
     bdSetSlot(co['Total'],'rate',totQty?Math.round(totVal/totQty*100)/100:0,mi);
     added.push('Mashreq');
