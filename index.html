@@ -2131,8 +2131,9 @@ function processRaya({rawRows, contract, THRESH}){
     const pickupCost = parseFloat(rg(row,'Pickup Cost','PickupCost')||0)||0;
     const codFees = parseFloat(rg(row,'COD Fees','CODFees')||0)||0;
     const insFees = parseFloat(rg(row,'Insurace Fees','Insurance Fees','InsuranceFees')||0)||0;
-    const extraCost = parseFloat(rg(row,'EXtra Attempets Cost','Extra Attempts Cost','ExtraAttemptsCost')||0)||0;
-    const totalBilled = parseFloat(rg(row,'Total')||0)||0;
+    const extraCost = parseFloat(rg(row,'EXtra Attempets Cost1','EXtra Attempets Cost','Extra Attempts Cost','ExtraAttemptsCost')||0)||0;
+    const totalFees = parseFloat(rg(row,'Total')||0)||0;
+    const totalBilled = Math.round((totalFees + extraCost)*1000)/1000;
 
     const largeQty = parseFloat(rg(row,'Large QTY','Large')||0)||0;
     const mediumQty = parseFloat(rg(row,'Medium QTY','Medium')||0)||0;
@@ -2144,7 +2145,7 @@ function processRaya({rawRows, contract, THRESH}){
     const isReturned = status.toLowerCase()==='returned';
     const contractPrice = isReturned ? Math.round(fullPrice*0.75*1000)/1000 : fullPrice;
 
-    const diff = Math.round((totalBilled - contractPrice - pickupCost - insFees - codFees - extraCost)*100)/100;
+    const diff = Math.round((totalBilled - contractPrice - pickupCost - insFees - codFees)*100)/100;
     const isOver = diff > THRESH;
     const isUnder = diff < -THRESH;
 
