@@ -514,6 +514,8 @@ html[dir=ltr] #login-eye{right:12px}
       </div>
 
       <div class="process-row">
+        <label id="mq-month-lbl" style="font-size:.75rem;color:var(--muted);white-space:nowrap"></label>
+        <input type="month" id="mq-month" style="background:transparent;border:none;color:var(--text);font-size:.8rem;outline:none;cursor:pointer">
         <button class="btn-primary" onclick="processMashreq()" id="mq-process-btn"></button>
         <button class="btn-save" id="mq-save-btn" onclick="saveMashreq()" disabled></button>
         <button class="btn-clear" onclick="clearMashreq()" id="mq-clear-btn"></button>
@@ -611,6 +613,8 @@ html[dir=ltr] #login-eye{right:12px}
       </div>
 
       <div class="process-row">
+        <label id="ra-month-lbl" style="font-size:.75rem;color:var(--muted);white-space:nowrap"></label>
+        <input type="month" id="ra-month" style="background:transparent;border:none;color:var(--text);font-size:.8rem;outline:none;cursor:pointer">
         <button class="btn-primary" onclick="processRayaPage()" id="ra-process-btn"></button>
         <button class="btn-save" id="ra-save-btn" onclick="saveRayaPage()" disabled></button>
         <button class="btn-clear" onclick="clearRayaPage()" id="ra-clear-btn"></button>
@@ -778,6 +782,7 @@ const I18N = {
     ar_kpiDiffTot:'إجمالي الفارق', ar_kpiFlagBase:'Base فروقات', ar_kpiFlagOther:'Other فروقات',
     ar_statusFilter:'الحالة', ar_monthLbl:'شهر البيانات:',
     allSizes:'جميع الأحجام', kenzzCalc:'إجمالي Kenzz',
+    mq_monthLbl:'شهر البيانات:', ra_monthLbl:'شهر البيانات:',
     mq_file:'📋 تقرير Aramex Mashreq *', mq_fileDesc:'ملف التقرير الشهري',
     mq_rates:'📝 ملف الأسعار', mq_ratesDesc:'جدول أسعار Last Mile & Pickup',
     mq_second:'2️⃣ ملف المحاولة الثانية', mq_secondDesc:'تقرير المحاولات الثانية (اختياري)',
@@ -877,6 +882,7 @@ const I18N = {
     ar_kpiDiffTot:'Total Difference', ar_kpiFlagBase:'Base Flags', ar_kpiFlagOther:'Other Flags',
     ar_statusFilter:'Status', ar_monthLbl:'Data Month:',
     allSizes:'All Sizes', kenzzCalc:'Kenzz Total',
+    mq_monthLbl:'Data Month:', ra_monthLbl:'Data Month:',
     mq_file:'📋 Aramex Mashreq Report *', mq_fileDesc:'Monthly report file',
     mq_rates:'📝 Rates File', mq_ratesDesc:'Last Mile & Pickup rate table',
     mq_second:'2️⃣ Second Attempt File', mq_secondDesc:'Second attempt report (optional)',
@@ -1934,7 +1940,11 @@ async function processMashreq(){
     const INS_PCT = parseFloat(document.getElementById('mq-cfg-inspct').value)||0;
     const COD_PCT = parseFloat(document.getElementById('mq-cfg-codpct').value)||0;
     const THRESH = parseFloat(document.getElementById('mq-cfg-thresh').value)||0;
+    const mqUploadMonthRaw = document.getElementById('mq-month').value;
+    const fmMoMq = iso => { if(!iso) return ''; const [y,m]=iso.split('-'); return ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][+m-1]+"'"+y.slice(2); };
+    const mqUploadMonth = fmMoMq(mqUploadMonthRaw);
     mqData = processMQ({ rawReport, raw2nd, rates, INS_PCT, COD_PCT, THRESH });
+    if(mqUploadMonth) mqData.forEach(r=>{ r.uploadMonth = mqUploadMonth; });
     document.getElementById('mq-save-btn').disabled = !mqData.length;
     renderMashreq();
   }catch(err){
@@ -2065,6 +2075,7 @@ function applyI18nMashreq(){
   document.getElementById('mq-search-lbl').textContent = T('search');
   document.getElementById('mq-over-only-lbl').textContent = T('overOnly');
   document.getElementById('mq-export-btn').textContent = T('export');
+  document.getElementById('mq-month-lbl').textContent = T('mq_monthLbl');
   document.getElementById('mq-results-title').textContent = T('mq_resultsTitle');
   document.getElementById('mq-empty-title').textContent = T('mq_emptyTitle');
 }
@@ -2174,7 +2185,10 @@ async function processRayaPage(){
       contract = parseRayaContract(XLSX.utils.sheet_to_json(cwb.Sheets[cwb.SheetNames[0]], {header:1, defval:''}));
     }
     const THRESH = parseFloat(document.getElementById('ra-thresh').value)||0;
+    const raUploadMonth = document.getElementById('ra-month').value;
+    const fmMo = iso => { if(!iso) return ''; const [y,m]=iso.split('-'); return ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][+m-1]+"'"+y.slice(2); };
     rayaData = processRaya({ rawRows, contract, THRESH });
+    if(raUploadMonth) rayaData = rayaData.map(r=>({...r, uploadMonth: fmMo(raUploadMonth)}));
     document.getElementById('ra-save-btn').disabled = !rayaData.length;
     renderRayaPage();
   }catch(err){
@@ -2293,6 +2307,7 @@ function applyI18nRaya(){
   document.getElementById('ra-search-lbl').textContent = T('search');
   document.getElementById('ra-over-only-lbl').textContent = T('overOnly');
   document.getElementById('ra-export-btn').textContent = T('export');
+  document.getElementById('ra-month-lbl').textContent = T('ra_monthLbl');
   document.getElementById('ra-results-title').textContent = T('ra_resultsTitle');
   document.getElementById('ra-empty-title').textContent = T('ra_emptyTitle');
 }
