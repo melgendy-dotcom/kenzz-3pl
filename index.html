@@ -2221,20 +2221,20 @@ function renderRayaTable(){
       <td><span style="background:${r.status==='Delivered'?'#dcfce7':'#fee2e2'};color:${r.status==='Delivered'?'#15803d':'#b91c1c'};border-radius:4px;padding:2px 7px;font-size:.68rem;font-weight:700">${r.status}</span></td>
       <td><span class="raya-tier">${r.tier}</span></td>
       <td><span class="${rayaCatBadge(r.category)}">${r.category}</span></td>
-      <td class="td-raya-dl">${fm(r.dlCost)}</td>
+      <td class="td-raya-dl">${fm(r.billedPrice)}</td>
       <td class="td-raya-pu">${fm(r.pickupCost)}</td>
       <td class="td-ins">${fm(r.insFees)}</td>
       <td class="td-cod">${fm(r.codFees)}</td>
       <td>${fm(r.extraCost)}</td>
       <td class="td-raya-k">${fm(r.contractPrice)}</td>
       <td style="font-weight:700">${fm(r.totalBilled)}</td>
-      <td class="td-raya-diff ${r.isOver?'fb-over':'fb-ok'}">${fm(r.diff)}</td>
+      <td class="td-raya-diff ${r.isOver?'fb-over':r.isUnder?'fb-under':'fb-ok'}">${fm(r.diff)}</td>
     </tr>`).join('');
 }
 function exportRayaPage(){
   const filtered = getFilteredRaya();
-  const headers = ['#','AWB','Status','Zone','Tier','Category','Total Billed','Contract Price','Diff'];
-  exportCSV(headers, filtered.map(r=>[r.idx,r.awb,r.status,r.zone,r.tier,r.category,r.totalBilled,r.contractPrice,r.diff]), 'raya_audit.csv');
+  const headers = ['#','AWB','Status','Zone','Category','Raya Price','Pickup Cost','Insurance','COD Fees','Extra Attempts','Contract Price','Total Billed','Diff'];
+  exportCSV(headers, filtered.map(r=>[r.idx,r.awb,r.status,r.zone,r.category,r.billedPrice,r.pickupCost,r.insFees,r.codFees,r.extraCost,r.contractPrice,r.totalBilled,r.diff]), 'raya_audit.csv');
 }
 async function saveRayaPage(){
   const btn = document.getElementById('ra-save-btn');
