@@ -2133,31 +2133,27 @@ function processRaya({rawRows, contract, THRESH}){
 
     const category = rayaCategory(row);
 
-    const dlCost = parseFloat(rg(row,'DL Cost','DLCost')||0)||0;
+    const billedPrice = Math.round((parseFloat(rg(row,'Price')||0)||0)*1000)/1000;
     const pickupCost = parseFloat(rg(row,'Pickup Cost','PickupCost')||0)||0;
     const codFees = parseFloat(rg(row,'COD Fees','CODFees')||0)||0;
     const insFees = parseFloat(rg(row,'Insurace Fees','Insurance Fees','InsuranceFees')||0)||0;
     const extraCost = parseFloat(rg(row,'EXtra Attempets Cost1','EXtra Attempets Cost','Extra Attempts Cost','ExtraAttemptsCost')||0)||0;
     const totalBilled = Math.round((parseFloat(rg(row,'Total')||0)||0)*1000)/1000;
 
-    const largeQty = parseFloat(rg(row,'Large QTY','Large')||0)||0;
-    const mediumQty = parseFloat(rg(row,'Medium QTY','Medium')||0)||0;
-    const smallQty = parseFloat(rg(row,'Small QTY','Small')||0)||0;
-    const categoryQty = category==='Large' ? Math.max(largeQty,1) : category==='Medium' ? Math.max(mediumQty,1) : Math.max(smallQty,1);
-
     const isReturned = status.toLowerCase().includes('return') || status.toLowerCase().includes('cancel');
     const rateTable = (isReturned ? (contract.returns||{}) : (contract.delivery||{}));
     const zoneKey = String(zone).trim().replace(/^zone\s*/i,'');
     const rates = rateTable[zoneKey] || {};
     const unitPrice = rates[category] || 0;
-    const contractPrice = Math.round(unitPrice * categoryQty * 1000) / 1000;
+    const contractPrice = Math.round(unitPrice * 1000) / 1000;
 
-    const diff = Math.round((totalBilled - contractPrice - pickupCost - insFees - codFees)*100)/100;
+    // diff = Raya's Price (col W) vs our contract rate — delivery charge comparison only
+    const diff = Math.round((billedPrice - contractPrice)*100)/100;
     const isOver = diff > THRESH;
     const isUnder = diff < -THRESH;
 
     return { idx:idx+1, awb, status, zone, tier: zoneKey, category, month, city,
-      dlCost, pickupCost, codFees, insFees, extraCost, totalBilled,
+      billedPrice, pickupCost, codFees, insFees, extraCost, totalBilled,
       contractPrice, isReturned, diff, isOver, isUnder };
   });
 }
