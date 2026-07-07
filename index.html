@@ -2102,18 +2102,26 @@ function rayaCategory(row){
   if(catKey && row[catKey]) return String(row[catKey]).trim();
   return 'Small';
 }
-function parseRayaContract(rows){
-  const contract = {};
-  rows.forEach(row=>{
-    const tier = String(rg(row,'Tier')||'').trim();
-    if(!tier || !tier.startsWith('Tier')) return;
-    contract[tier] = {
-      Small: parseFloat(rg(row,'Small')||0)||0,
-      Medium: parseFloat(rg(row,'Medium')||0)||0,
-      Large: parseFloat(rg(row,'Large')||0)||0,
-    };
-  });
-  return contract;
+function parseRayaContract(raw){
+  // raw = sheet_to_json with header:1 (array of arrays)
+  // Delivery table: col G=zone(6), H=tier(7), I=Small(8), J=Medium(9), K=Large(10), rows 2-7 (0-idx 1-6)
+  // Returns table: same columns, rows 13-18 (0-idx 12-17)
+  const delivery = {}, returns = {};
+  function parseZones(v){ return String(v||'').split(',').map(z=>z.trim()).filter(Boolean); }
+  function fillMap(map, startRow, endRow){
+    for(let r=startRow; r<=endRow && r<raw.length; r++){
+      const row = raw[r];
+      const zoneVal = row[6];
+      const small  = parseFloat(row[8])||0;
+      const medium = parseFloat(row[9])||0;
+      const large  = parseFloat(row[10])||0;
+      if(!zoneVal || (!small && !medium && !large)) continue;
+      parseZones(zoneVal).forEach(z => { map[z] = {Small:small, Medium:medium, Large:large}; });
+    }
+  }
+  fillMap(delivery, 1, 6);   // Delivery table rows 2-7
+  fillMap(returns,  12, 17); // Returns table rows 13-18
+  return {delivery, returns};
 }
 function processRaya({rawRows, contract, THRESH}){
   return rawRows.map((row, idx)=>{
@@ -2124,8 +2132,6 @@ function processRaya({rawRows, contract, THRESH}){
     const city = String(rg(row,'City')||'').trim();
 
     const category = rayaCategory(row);
-    const tierFromFile = String(rg(row,'Tair','Tier')||'').trim();
-    const tier = tierFromFile.startsWith('Tier') ? tierFromFile : zoneToTier(zone);
 
     const dlCost = parseFloat(rg(row,'DL Cost','DLCost')||0)||0;
     const pickupCost = parseFloat(rg(row,'Pickup Cost','PickupCost')||0)||0;
@@ -2140,16 +2146,18 @@ function processRaya({rawRows, contract, THRESH}){
     const smallQty = parseFloat(rg(row,'Small QTY','Small')||0)||0;
     const categoryQty = category==='Large' ? Math.max(largeQty,1) : category==='Medium' ? Math.max(mediumQty,1) : Math.max(smallQty,1);
 
-    const unitPrice = (contract[tier]||{})[category] || 0;
-    const fullPrice = Math.round(unitPrice*categoryQty*1000)/1000;
-    const isReturned = status.toLowerCase()==='returned';
-    const contractPrice = isReturned ? Math.round(fullPrice*0.75*1000)/1000 : fullPrice;
+    const isReturned = status.toLowerCase().includes('return') || status.toLowerCase().includes('cancel');
+    const rateTable = (isReturned ? (contract.returns||{}) : (contract.delivery||{}));
+    const zoneKey = String(zone).trim();
+    const rates = rateTable[zoneKey] || {};
+    const unitPrice = rates[category] || 0;
+    const contractPrice = Math.round(unitPrice * categoryQty * 1000) / 1000;
 
     const diff = Math.round((totalBilled - contractPrice - pickupCost - insFees - codFees)*100)/100;
     const isOver = diff > THRESH;
     const isUnder = diff < -THRESH;
 
-    return { idx:idx+1, awb, status, zone, tier, category, month, city,
+    return { idx:idx+1, awb, status, zone, tier: zoneKey, category, month, city,
       dlCost, pickupCost, codFees, insFees, extraCost, totalBilled,
       fullPrice, contractPrice, isReturned, diff, isOver, isUnder };
   });
@@ -2168,7 +2176,7 @@ async function processRayaPage(){
     let contract = {};
     if(rayaContractFile){
       const cwb = XLSX.read(await readBuf(rayaContractFile), {type:'array'});
-      contract = parseRayaContract(XLSX.utils.sheet_to_json(cwb.Sheets[cwb.SheetNames[0]], {defval:''}));
+      contract = parseRayaContract(XLSX.utils.sheet_to_json(cwb.Sheets[cwb.SheetNames[0]], {header:1, defval:''}));
     }
     const THRESH = parseFloat(document.getElementById('ra-thresh').value)||0;
     rayaData = processRaya({ rawRows, contract, THRESH });
