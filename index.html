@@ -2956,60 +2956,70 @@ function renderAnalytics(){
           <tbody>${rows}</tbody>
         </table></div></div>`;
     }
-    const bridgeRows=[
-      `<tr style="background:rgba(30,58,138,.3)">
-        <td style="${tdB};font-weight:700;color:#bfdbfe;font-size:.82rem">● Baseline ACPS (${M1})</td>
-        <td style="${tdB};font-weight:700;color:#bfdbfe;font-size:.95rem;text-align:center">${acps1.toFixed(2)}</td>
-        <td style="${tdB}"></td>
-        <td style="${tdB};color:var(--muted);font-size:.72rem">${fm(r1.length)} shipments</td>
-      </tr>`,
-      `<tr style="background:rgba(255,255,255,.02)">
-        <td style="${tdB};padding-left:28px">📦 Size Mix Effect</td>
-        <td style="${tdB};font-weight:700;color:${clr(sizeEffect)};text-align:center">${fmD(sizeEffect)}</td>
-        <td style="${tdB}">${wBar(sizeEffect)}</td>
-        <td style="${tdB};color:var(--muted);font-size:.71rem">${Math.abs(sizeEffect)<0.05?'No size mix change':sizeEffect>0?'Heavier size mix → higher cost':'Lighter size mix → lower cost'}</td>
-      </tr>`,
-      hasZone&&getZone?`<tr>
-        <td style="${tdB};padding-left:28px">🗺️ Zone Mix Effect</td>
-        <td style="${tdB};font-weight:700;color:${clr(zoneEffect)};text-align:center">${fmD(zoneEffect)}</td>
-        <td style="${tdB}">${wBar(zoneEffect)}</td>
-        <td style="${tdB};color:var(--muted);font-size:.71rem">${Math.abs(zoneEffect)<0.05?'No zone mix change':zoneEffect>0?'More distant zones → higher cost':'Closer zones → lower cost'}</td>
-      </tr>`:'',
-      `<tr style="background:rgba(255,255,255,.02)">
-        <td style="${tdB};padding-left:28px">⚙️ Rate / Other Effect</td>
-        <td style="${tdB};font-weight:700;color:${clr(residual)};text-align:center">${fmD(residual)}</td>
-        <td style="${tdB}">${wBar(residual)}</td>
-        <td style="${tdB};color:var(--muted);font-size:.71rem">Residual: rate changes &amp; interactions</td>
-      </tr>`,
-      `<tr>
-        <td style="${tdB};padding-left:28px">📊 Volume</td>
-        <td style="${tdB};color:var(--muted);text-align:center">—</td>
-        <td style="${tdB}"></td>
-        <td style="${tdB};color:${volChange>0?'#4ade80':volChange<0?'#f87171':'var(--muted)'};font-size:.71rem">${fm(r1.length)} → ${fm(r2.length)} (${volChange>=0?'+':''}${volPct}%)</td>
-      </tr>`,
-      `<tr style="background:rgba(30,58,138,.3)">
-        <td style="${tdB};font-weight:700;color:#bfdbfe;font-size:.82rem">● Current ACPS (${M2})</td>
-        <td style="${tdB};font-weight:700;color:${clr(totalChange)};font-size:.95rem;text-align:center">${acps2.toFixed(2)}</td>
-        <td style="${tdB}"></td>
-        <td style="${tdB};font-weight:700;color:${clr(totalChange)};font-size:.75rem">${fm(r2.length)} shipments · Net: ${fmD(totalChange)} EGP/ship</td>
-      </tr>`,
-    ].join('');
-    return `<div style="margin-top:18px">
-      <div style="background:linear-gradient(90deg,#1e3a5f,#0f2942);border-radius:8px 8px 0 0;padding:7px 14px;font-size:.72rem;font-weight:700;color:#7dd3fc;letter-spacing:.05em">
-        SECTION 5 — AVG COST / SHIPMENT · BRIDGE ANALYSIS · ${M1} → ${M2}
+    // Reference-style badge impact
+    function impactBadge(val){
+      if(Math.abs(val)<0.05) return `<span style="color:#9ca3af;font-size:.82rem">—</span>`;
+      const up=val>0;
+      const bc=up?'#fee2e2':'#dcfce7'; const tc=up?'#dc2626':'#16a34a'; const bdr=up?'#fca5a5':'#86efac';
+      return `<span style="display:inline-flex;align-items:center;gap:3px;background:${bc};color:${tc};border:1.5px solid ${bdr};border-radius:8px;padding:3px 10px;font-size:.78rem;font-weight:700">${up?'▲':'▼'} ${Math.abs(val).toFixed(2)} EGP</span>`;
+    }
+    function wBar2(val){ const pct=Math.min(Math.abs(val)/maxEff*100,100).toFixed(1); const c=val>0.05?'#ef4444':val<-0.05?'#22c55e':'#94a3b8'; return `<div style="background:#f1f5f9;border-radius:6px;height:12px;overflow:hidden;min-width:100px;max-width:200px"><div style="width:${pct}%;height:100%;background:${c};border-radius:6px"></div></div>`; }
+    const rowStyle='border-bottom:1px solid #f1f5f9;background:#fff';
+    const tdL='padding:12px 14px;font-size:.8rem;vertical-align:middle';
+    const factors=[
+      {icon:'📦',num:'①',label:'Size Mix',color:'#dc2626',val:sizeEffect,
+       desc:Math.abs(sizeEffect)<0.05?'No size mix change':sizeEffect>0?`Size mix shifted to more expensive sizes`:`Size mix shifted to cheaper sizes`},
+      ...(hasZone&&getZone?[{icon:'🗺️',num:'②',label:'Zone Mix',color:'#2563eb',val:zoneEffect,
+       desc:Math.abs(zoneEffect)<0.05?'No zone mix change':zoneEffect>0?`More shipments to distant zones → higher cost`:`More shipments to closer zones → lower cost`}]:[]),
+      {icon:'⚡',num:hasZone&&getZone?'③':'②',label:'Rate / Other',color:'#d97706',val:residual,
+       desc:`${Math.abs(residual).toFixed(2)} EGP unexplained ← possible rate ${residual<0?'reduction':'increase'}`},
+      {icon:'📊',num:hasZone&&getZone?'④':'③',label:'Volume',color:'#9ca3af',val:null,
+       desc:`${volChange>=0?'+':''}${fm(Math.abs(volChange))} shipments (${volChange>=0?'+':''}${volPct}%) — impacts total spend, not cost-per-shipment`},
+    ];
+    const factorRows=factors.map(f=>`<tr style="${rowStyle}">
+      <td style="${tdL};border-left:4px solid ${f.color}">
+        <span style="margin-right:6px">${f.icon}</span>
+        <span style="color:#6b7280;font-size:.72rem;margin-right:4px">${f.num}</span>
+        <span style="font-weight:600;color:#374151">${f.label}</span>
+      </td>
+      <td style="${tdL};text-align:center">${f.val!==null?impactBadge(f.val):`<span style="color:#9ca3af">—</span>`}</td>
+      <td style="${tdL}">${f.val!==null?wBar2(f.val):''}</td>
+      <td style="${tdL};color:#6b7280;font-size:.78rem">${f.desc}</td>
+    </tr>`).join('');
+    return `<div style="margin-top:18px;border-radius:12px;overflow:hidden;box-shadow:0 2px 12px rgba(126,0,225,.10)">
+      <!-- Top summary bar -->
+      <div style="background:linear-gradient(135deg,#7E00E1,#5a00a3);padding:10px 16px;display:flex;align-items:center;gap:12px;flex-wrap:wrap">
+        <span style="color:#fff;font-weight:700;font-size:.85rem">${M1} → ${M2}</span>
+        <span style="background:rgba(255,255,255,.15);color:#e9d5ff;border:1px solid rgba(255,255,255,.25);border-radius:20px;padding:3px 12px;font-size:.75rem;font-weight:600">${fmD(totalChange)} EGP avg cost</span>
+        <span style="background:rgba(255,255,255,.10);color:#bbf7d0;border:1px solid rgba(255,255,255,.2);border-radius:20px;padding:3px 12px;font-size:.75rem;font-weight:600">${volChange>=0?'+':''}${fm(Math.abs(volChange))} shipments (${volChange>=0?'+':''}${volPct}%) volume</span>
       </div>
-      <div class="tbl-scroll" style="border-radius:0;margin-bottom:1px">
-        <table style="width:100%;border-collapse:collapse">
-          <thead><tr style="background:#0f172a">
-            <th style="${thB};text-align:left;min-width:210px">Factor</th>
-            <th style="${thB};text-align:center;min-width:100px">EGP / Ship</th>
-            <th style="${thB};text-align:left;min-width:120px">Impact Bar</th>
-            <th style="${thB};text-align:left;min-width:200px">Detail</th>
-          </tr></thead>
-          <tbody>${bridgeRows}</tbody>
-        </table>
+      <!-- Column headers -->
+      <div style="background:#7E00E1;display:grid;grid-template-columns:2fr 1fr 1fr 2fr;padding:8px 14px;gap:8px">
+        <span style="color:#fff;font-size:.72rem;font-weight:700">Driver</span>
+        <span style="color:#fff;font-size:.72rem;font-weight:700;text-align:center">Impact (EGP/shipment)</span>
+        <span style="color:#fff;font-size:.72rem;font-weight:700">← Cost Down | <span style="color:#fca5a5">Cost Up</span> →</span>
+        <span style="color:#fff;font-size:.72rem;font-weight:700">What drove this</span>
       </div>
-      <div style="display:grid;grid-template-columns:${hasZone&&getZone?'1fr 1fr':'1fr'};gap:12px;margin-top:12px;border-radius:0 0 8px 8px;overflow:hidden">
+      <!-- Baseline row -->
+      <div style="background:linear-gradient(90deg,#faf5ff,#f5f3ff);padding:12px 14px;display:grid;grid-template-columns:2fr 1fr 1fr 2fr;gap:8px;align-items:center;border-bottom:1px solid #e9d5ff">
+        <span style="font-weight:700;color:#7E00E1;font-size:.88rem">${M1} Avg</span>
+        <span style="text-align:center"><span style="background:#fff;border:2px solid #7E00E1;border-radius:8px;padding:4px 12px;font-weight:700;color:#7E00E1;font-size:.9rem">${acps1.toFixed(2)}</span></span>
+        <span></span>
+        <span style="color:#9ca3af;font-size:.78rem">Starting point — avg cost per shipment last month</span>
+      </div>
+      <!-- Factor rows -->
+      <div style="background:#fff"><table style="width:100%;border-collapse:collapse">
+        <tbody>${factorRows}</tbody>
+      </table></div>
+      <!-- Result row -->
+      <div style="background:linear-gradient(90deg,#faf5ff,#f5f3ff);padding:12px 14px;display:grid;grid-template-columns:2fr 1fr 1fr 2fr;gap:8px;align-items:center;border-top:2px solid #7E00E1">
+        <span style="font-weight:700;color:#7E00E1;font-size:.88rem">${M2} Avg</span>
+        <span style="text-align:center"><span style="background:#fff;border:2px solid ${totalChange>0.05?'#dc2626':totalChange<-0.05?'#16a34a':'#7E00E1'};border-radius:8px;padding:4px 12px;font-weight:700;color:${totalChange>0.05?'#dc2626':totalChange<-0.05?'#16a34a':'#7E00E1'};font-size:.9rem">${acps2.toFixed(2)}</span></span>
+        <span></span>
+        <span style="color:#6b7280;font-size:.78rem">Net change: ${Math.abs(totalChange).toFixed(2)} EGP per shipment</span>
+      </div>
+      <!-- Distribution tables -->
+      <div style="display:grid;grid-template-columns:${hasZone&&getZone?'1fr 1fr':'1fr'};gap:12px;margin-top:12px">
         ${shiftTbl(sShare1,sShare2,r1.length,r2.length,allSizes,'SIZE DISTRIBUTION')}
         ${hasZone&&getZone?shiftTbl(zShare1,zShare2,r1.length,r2.length,allZones,'ZONE DISTRIBUTION'):''}
       </div>
