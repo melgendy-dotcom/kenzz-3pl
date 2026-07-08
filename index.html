@@ -958,7 +958,8 @@ function _monthTabs(data, getMonth, containerId, sel, setterName, color){
   const tabs = [{ key:'ALL', count:data.length }, ...months.map(m=>({ key:m, count:data.filter(r=>getMonth(r)===m).length }))];
   container.innerHTML = tabs.map(tab=>{
     const active = tab.key === sel;
-    return `<button onclick="${setterName}('${tab.key}')" style="display:inline-flex;align-items:center;gap:5px;padding:5px 14px;border-radius:20px;border:1.5px solid ${active?color:'var(--border)'};background:${active?color:'transparent'};color:${active?'#fff':'var(--text)'};font-size:.75rem;font-weight:600;cursor:pointer;transition:all .15s">${tab.key==='ALL'?'All':tab.key} <span style="background:${active?'rgba(255,255,255,.25)':'var(--border)'};border-radius:10px;padding:1px 7px;font-size:.7rem;font-weight:700">${tab.count}</span></button>`;
+    const safeKey = tab.key.replace(/'/g, "\\'");
+    return `<button onclick="${setterName}('${safeKey}')" style="display:inline-flex;align-items:center;gap:5px;padding:5px 14px;border-radius:20px;border:1.5px solid ${active?color:'var(--border)'};background:${active?color:'transparent'};color:${active?'#fff':'var(--text)'};font-size:.75rem;font-weight:600;cursor:pointer;transition:all .15s">${tab.key==='ALL'?'All':tab.key} <span style="background:${active?'rgba(255,255,255,.25)':'var(--border)'};border-radius:10px;padding:1px 7px;font-size:.7rem;font-weight:700">${tab.count}</span></button>`;
   }).join('');
 }
 function setBoMonth(m){ boMonthSel=m; renderBosta(); }
