@@ -942,6 +942,7 @@ const I18N = {
 let lang = localStorage.getItem('kenzz3pl_lang') || 'ar';
 let showPwd = false;
 let bostaData = [];
+let _bostaPersisted = []; // shadow copy of cloud-saved data (never overwritten by processing)
 let reportFile = null, contractFile = null;
 
 /* ---------- helpers ---------- */
@@ -1315,7 +1316,10 @@ async function saveBosta(){
   const origText = btn.innerHTML;
   btn.disabled = true; btn.innerHTML = '⏳ Saving...';
   try{
-    await cloudSave('bosta', JSON.stringify({data: bostaData, saved: new Date().toISOString()}));
+    const months = new Set(bostaData.map(r=>r.uploadMonth).filter(Boolean));
+    const merged = months.size ? [..._bostaPersisted.filter(r=>!months.has(r.uploadMonth)), ...bostaData] : bostaData;
+    bostaData = merged; _bostaPersisted = [...merged];
+    await cloudSave('bosta', JSON.stringify({data: merged, saved: new Date().toISOString()}));
     showToast();
   }catch(e){
     console.error('saveBosta failed:',e);
@@ -1338,7 +1342,7 @@ function loadPersisted(){
     const raw = localStorage.getItem(STORAGE_KEY);
     if(raw){
       const parsed = JSON.parse(raw);
-      if(parsed?.data?.length){ bostaData = parsed.data; document.getElementById('bo-save-btn').disabled = false; }
+      if(parsed?.data?.length){ bostaData = parsed.data; _bostaPersisted = [...bostaData]; document.getElementById('bo-save-btn').disabled = false; }
     }
   }catch(e){}
 }
@@ -1567,6 +1571,7 @@ function processAudit({aramexRows, odooPayMap, odooTypeMap, zoneMap, statusMap, 
 
 /* ---------- Aramex page wiring ---------- */
 let auditData = [];
+let _aramexPersisted = [];
 let aramexFile=null, odooFile=null, zoneFile=null, statusFile=null;
 
 document.getElementById('ar-file-inp').addEventListener('change', e=>{ if(e.target.files[0]){ aramexFile=e.target.files[0]; document.getElementById('ar-file-status').textContent='✅ '+aramexFile.name; applyI18nAramex(); } e.target.value=''; });
@@ -1717,7 +1722,10 @@ async function saveAramex(){
   const origText = btn.innerHTML;
   btn.disabled = true; btn.innerHTML = '⏳ Saving...';
   try{
-    await cloudSave('aramex', JSON.stringify({data: auditData, cfg: getAramexCfg(), saved: new Date().toISOString()}));
+    const months = new Set(auditData.map(r=>r.uploadMonth).filter(Boolean));
+    const merged = months.size ? [..._aramexPersisted.filter(r=>!months.has(r.uploadMonth)), ...auditData] : auditData;
+    auditData = merged; _aramexPersisted = [...merged];
+    await cloudSave('aramex', JSON.stringify({data: merged, cfg: getAramexCfg(), saved: new Date().toISOString()}));
     const t=document.getElementById('ar-toast'); t.classList.add('show'); setTimeout(()=>t.classList.remove('show'), 3200);
   }catch(e){
     console.error('saveAramex failed:',e);
@@ -1740,7 +1748,7 @@ function loadPersistedAramex(){
     if(raw){
       const parsed = JSON.parse(raw);
       if(parsed?.data?.length){
-        auditData = parsed.data;
+        auditData = parsed.data; _aramexPersisted = [...auditData];
         document.getElementById('ar-save-btn').disabled = false;
         if(parsed.cfg){
           document.getElementById('ar-cfg-codthresh').value = parsed.cfg.COD_THRESH;
@@ -1807,6 +1815,7 @@ function applyI18nAramex(){
 /* ---------- Mashreq engine (ported from mashreqEngine.js) ---------- */
 const MQ_STORAGE_KEY = 'kenzz3pl_mq_v1';
 let mqData = [];
+let _mqPersisted = [];
 let mqReportFile=null, mqRatesFile=null, mqSecondFile=null;
 
 function parseMQRates(raw){
@@ -2017,7 +2026,11 @@ async function saveMashreq(){
   const origText = btn.innerHTML;
   btn.disabled = true; btn.innerHTML = '⏳ Saving...';
   try{
-    await cloudSave('mashreq', JSON.stringify({data: mqData, saved: new Date().toISOString()}));
+    const months = new Set(mqData.map(r=>r.uploadMonth).filter(Boolean));
+    const merged = months.size ? [..._mqPersisted.filter(r=>!months.has(r.uploadMonth)), ...mqData] : mqData;
+    mqData = merged; _mqPersisted = [...merged];
+    renderMashreq();
+    await cloudSave('mashreq', JSON.stringify({data: merged, saved: new Date().toISOString()}));
     const t=document.getElementById('mq-toast'); t.classList.add('show'); setTimeout(()=>t.classList.remove('show'), 3000);
   }catch(e){
     console.error('saveMashreq failed:',e);
@@ -2037,7 +2050,7 @@ function clearMashreq(){
 function loadPersistedMashreq(){
   try{
     const raw = localStorage.getItem(MQ_STORAGE_KEY);
-    if(raw){ const parsed = JSON.parse(raw); if(parsed?.data?.length){ mqData = parsed.data; document.getElementById('mq-save-btn').disabled = false; } }
+    if(raw){ const parsed = JSON.parse(raw); if(parsed?.data?.length){ mqData = parsed.data; _mqPersisted = [...mqData]; document.getElementById('mq-save-btn').disabled = false; } }
   }catch(e){}
 }
 function applyI18nMashreq(){
@@ -2083,6 +2096,7 @@ function applyI18nMashreq(){
 /* ---------- Raya engine (ported from rayaEngine.js) ---------- */
 const RAYA_STORAGE_KEY = 'kenzz3pl_raya_v1';
 let rayaData = [];
+let _rayaPersisted = [];
 let rayaReportFile=null, rayaContractFile=null;
 
 function zoneToTier(zone){
@@ -2255,7 +2269,11 @@ async function saveRayaPage(){
   const origText = btn.innerHTML;
   btn.disabled = true; btn.innerHTML = '⏳ Saving...';
   try{
-    await cloudSave('raya', JSON.stringify({data: rayaData, saved: new Date().toISOString()}));
+    const months = new Set(rayaData.map(r=>r.uploadMonth).filter(Boolean));
+    const merged = months.size ? [..._rayaPersisted.filter(r=>!months.has(r.uploadMonth)), ...rayaData] : rayaData;
+    rayaData = merged; _rayaPersisted = [...merged];
+    renderRayaPage();
+    await cloudSave('raya', JSON.stringify({data: merged, saved: new Date().toISOString()}));
     const t=document.getElementById('ra-toast'); t.classList.add('show'); setTimeout(()=>t.classList.remove('show'), 3000);
   }catch(e){
     console.error('saveRaya failed:',e);
@@ -2275,7 +2293,7 @@ function clearRayaPage(){
 function loadPersistedRaya(){
   try{
     const raw = localStorage.getItem(RAYA_STORAGE_KEY);
-    if(raw){ const parsed = JSON.parse(raw); if(parsed?.data?.length){ rayaData = parsed.data; document.getElementById('ra-save-btn').disabled = false; } }
+    if(raw){ const parsed = JSON.parse(raw); if(parsed?.data?.length){ rayaData = parsed.data; _rayaPersisted = [...rayaData]; document.getElementById('ra-save-btn').disabled = false; } }
   }catch(e){}
 }
 function applyI18nRaya(){
@@ -3166,12 +3184,12 @@ async function cloudLoadAll(){
     ]);
 
     if(bSnap?.data?.length){
-      bostaData = bSnap.data;
+      bostaData = bSnap.data; _bostaPersisted = [...bostaData];
       document.getElementById('bo-save-btn').disabled = false;
       renderBosta();
     }
     if(aSnap?.data?.length){
-      auditData = aSnap.data;
+      auditData = aSnap.data; _aramexPersisted = [...auditData];
       document.getElementById('ar-save-btn').disabled = false;
       if(aSnap.cfg){
         document.getElementById('ar-cfg-codthresh').value = aSnap.cfg.COD_THRESH;
@@ -3183,12 +3201,12 @@ async function cloudLoadAll(){
       renderAramex();
     }
     if(mSnap?.data?.length){
-      mqData = mSnap.data;
+      mqData = mSnap.data; _mqPersisted = [...mqData];
       document.getElementById('mq-save-btn').disabled = false;
       renderMashreq();
     }
     if(rSnap?.data?.length){
-      rayaData = rSnap.data;
+      rayaData = rSnap.data; _rayaPersisted = [...rayaData];
       document.getElementById('ra-save-btn').disabled = false;
       renderRayaPage();
     }
