@@ -961,10 +961,10 @@ function _monthTabs(data, getMonth, containerId, sel, setterName, color){
     return `<button onclick="${setterName}('${tab.key}')" style="display:inline-flex;align-items:center;gap:5px;padding:5px 14px;border-radius:20px;border:1.5px solid ${active?color:'var(--border)'};background:${active?color:'transparent'};color:${active?'#fff':'var(--text)'};font-size:.75rem;font-weight:600;cursor:pointer;transition:all .15s">${tab.key==='ALL'?'All':tab.key} <span style="background:${active?'rgba(255,255,255,.25)':'var(--border)'};border-radius:10px;padding:1px 7px;font-size:.7rem;font-weight:700">${tab.count}</span></button>`;
   }).join('');
 }
-function setBoMonth(m){ boMonthSel=m; renderBostaTable(); }
-function setArMonth(m){ arMonthSel=m; renderAramexTable(); }
-function setMqMonth(m){ mqMonthSel=m; renderMashreqTable(); }
-function setRaMonth(m){ raMonthSel=m; renderRayaTable(); }
+function setBoMonth(m){ boMonthSel=m; renderBosta(); }
+function setArMonth(m){ arMonthSel=m; renderAramex(); }
+function setMqMonth(m){ mqMonthSel=m; renderMashreq(); }
+function setRaMonth(m){ raMonthSel=m; renderRayaPage(); }
 let reportFile = null, contractFile = null;
 
 /* ---------- helpers ---------- */
@@ -1285,12 +1285,13 @@ function renderBosta(){
   document.getElementById('bo-empty').style.display = hasData ? 'none' : 'block';
   if(!hasData) return;
 
-  const totalBilled = bostaData.reduce((s,r)=>s+r.priceBAV, 0);
-  const overCount = bostaData.filter(r=>r.isOver).length;
-  document.getElementById('bo-kpi-shipments').textContent = fm(bostaData.length);
+  const base = boMonthSel!=='ALL' ? bostaData.filter(r=>(r.uploadMonth||null)===boMonthSel) : bostaData;
+  const totalBilled = base.reduce((s,r)=>s+r.priceBAV, 0);
+  const overCount = base.filter(r=>r.isOver).length;
+  document.getElementById('bo-kpi-shipments').textContent = fm(base.length);
   document.getElementById('bo-kpi-invoice').textContent = fm(totalBilled);
   document.getElementById('bo-kpi-diff').textContent = fm(overCount);
-  document.getElementById('bo-kpi-diff-pct').textContent = ((overCount/bostaData.length)*100).toFixed(1) + '%';
+  document.getElementById('bo-kpi-diff-pct').textContent = (base.length?((overCount/base.length)*100).toFixed(1):0) + '%';
 
   renderBostaTable();
 }
@@ -1665,18 +1666,19 @@ function renderAramex(){
   document.getElementById('ar-empty').style.display = hasData ? 'none' : 'block';
   if(!hasData) return;
 
-  const total = auditData.length;
-  const del = auditData.filter(r=>r.statusBucket==='DELIVERED').length;
-  const ret = auditData.filter(r=>r.statusBucket==='RETURNED').length;
-  const flagBase = auditData.filter(r=>r.flagBase).length;
-  const flagOther = auditData.filter(r=>r.flagOther).length;
-  const diffTot = auditData.reduce((s,r)=>s+r.colRResult, 0);
+  const base = arMonthSel!=='ALL' ? auditData.filter(r=>(r.uploadMonth||null)===arMonthSel) : auditData;
+  const total = base.length;
+  const del = base.filter(r=>r.statusBucket==='DELIVERED').length;
+  const ret = base.filter(r=>r.statusBucket==='RETURNED').length;
+  const flagBase = base.filter(r=>r.flagBase).length;
+  const flagOther = base.filter(r=>r.flagOther).length;
+  const diffTot = base.reduce((s,r)=>s+r.colRResult, 0);
 
   document.getElementById('ar-kpi-total').textContent = fm(total);
   document.getElementById('ar-kpi-del').textContent = fm(del);
-  document.getElementById('ar-kpi-del-pct').textContent = ((del/total)*100).toFixed(1)+'%';
+  document.getElementById('ar-kpi-del-pct').textContent = (total?((del/total)*100).toFixed(1):0)+'%';
   document.getElementById('ar-kpi-ret').textContent = fm(ret);
-  document.getElementById('ar-kpi-ret-pct').textContent = ((ret/total)*100).toFixed(1)+'%';
+  document.getElementById('ar-kpi-ret-pct').textContent = (total?((ret/total)*100).toFixed(1):0)+'%';
   document.getElementById('ar-kpi-flagbase').textContent = fm(flagBase);
   document.getElementById('ar-kpi-flagother').textContent = fm(flagOther);
   const diffEl = document.getElementById('ar-kpi-difftot');
@@ -1991,13 +1993,14 @@ function renderMashreq(){
   document.getElementById('mq-results').style.display = hasData ? 'block' : 'none';
   document.getElementById('mq-empty').style.display = hasData ? 'none' : 'block';
   if(!hasData) return;
-  const totalBilled = Math.round((mqData.reduce((s,r)=>s+r.totalBilled,0) + (mqSecondTotal||0))*100)/100;
-  const overCount = mqData.filter(r=>r.isOver).length;
-  document.getElementById('mq-kpi-total').textContent = fm(mqData.length);
+  const base = mqMonthSel!=='ALL' ? mqData.filter(r=>(r.uploadMonth||null)===mqMonthSel) : mqData;
+  const totalBilled = Math.round((base.reduce((s,r)=>s+r.totalBilled,0) + (mqSecondTotal||0))*100)/100;
+  const overCount = base.filter(r=>r.isOver).length;
+  document.getElementById('mq-kpi-total').textContent = fm(base.length);
   document.getElementById('mq-kpi-invoice').textContent = fm(totalBilled);
   document.getElementById('mq-kpi-calc').textContent = fm(totalBilled);
   document.getElementById('mq-kpi-diff').textContent = fm(overCount);
-  document.getElementById('mq-kpi-diff-pct').textContent = (mqData.length?((overCount/mqData.length)*100).toFixed(1):0)+'%';
+  document.getElementById('mq-kpi-diff-pct').textContent = (base.length?((overCount/base.length)*100).toFixed(1):0)+'%';
   renderMashreqTable();
 }
 function getFilteredMashreq(){
@@ -2241,10 +2244,11 @@ function renderRayaPage(){
   document.getElementById('ra-results').style.display = hasData ? 'block' : 'none';
   document.getElementById('ra-empty').style.display = hasData ? 'none' : 'block';
   if(!hasData) return;
-  const totalBilled = rayaData.reduce((s,r)=>s+r.totalBilled, 0);
-  const totalCalc = rayaData.reduce((s,r)=>s + r.contractPrice + (r.pickupCost||0) + (r.insFees||0) + (r.codFees||0) + (r.extraCost||0), 0);
-  const overCount = rayaData.filter(r=>r.isOver||r.isUnder).length;
-  document.getElementById('ra-kpi-total').textContent = fm(rayaData.length);
+  const base = raMonthSel!=='ALL' ? rayaData.filter(r=>(r.uploadMonth||null)===raMonthSel) : rayaData;
+  const totalBilled = base.reduce((s,r)=>s+r.totalBilled, 0);
+  const totalCalc = base.reduce((s,r)=>s + r.contractPrice + (r.pickupCost||0) + (r.insFees||0) + (r.codFees||0) + (r.extraCost||0), 0);
+  const overCount = base.filter(r=>r.isOver||r.isUnder).length;
+  document.getElementById('ra-kpi-total').textContent = fm(base.length);
   document.getElementById('ra-kpi-invoice').textContent = fm(totalBilled);
   document.getElementById('ra-kpi-calc').textContent = fm(totalCalc);
   document.getElementById('ra-kpi-diff').textContent = fm(overCount);
