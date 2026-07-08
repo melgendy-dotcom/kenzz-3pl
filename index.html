@@ -2845,6 +2845,123 @@ function renderAnalytics(){
   const normSize = raw=>{ const s=String(raw||'').trim(); if(s==='Small')return'Size S';if(s==='Medium')return'Size M';if(s==='Large')return'Size L';return s; };
   const bostaSizes = [...new Set(bostaData.map(r=>r.pkgSize).filter(Boolean))].sort();
 
+  /* ---- ACPS Bridge Analysis (MoM decomposition) ---- */
+  function acpsBridge(rows, getMonth, getZone, getSize, getCost, hasZone){
+    const months=[...new Set(rows.map(getMonth).filter(Boolean))].sort();
+    if(months.length<2) return '<div style="color:var(--muted);font-size:.78rem;padding:10px 0;font-style:italic">Upload 2+ months with Data Month set to enable bridge analysis.</div>';
+    const M1=months[months.length-2], M2=months[months.length-1];
+    const r1=rows.filter(r=>getMonth(r)===M1), r2=rows.filter(r=>getMonth(r)===M2);
+    if(!r1.length||!r2.length) return '';
+    const avgArr=arr=>arr.reduce((s,v)=>s+v,0)/(arr.length||1);
+    const acps1=avgArr(r1.map(getCost)), acps2=avgArr(r2.map(getCost));
+    const totalChange=acps2-acps1;
+    function buildAvg(subset,getDim){ const g={}; subset.forEach(r=>{const d=getDim(r)||'?';if(!g[d])g[d]=[];g[d].push(getCost(r));}); const o={}; Object.entries(g).forEach(([d,v])=>{o[d]=avgArr(v);}); return o; }
+    function buildShare(subset,getDim){ const m={}; subset.forEach(r=>{const d=getDim(r)||'?';m[d]=(m[d]||0)+1;}); return m; }
+    function mixEff(share2,avg1,n2,fallback){ let cf=0; Object.entries(share2).forEach(([d,cnt])=>{cf+=(cnt/n2)*(avg1[d]??fallback);}); return cf-fallback; }
+    const avgBySize1=buildAvg(r1,getSize);
+    const sShare1=buildShare(r1,getSize), sShare2=buildShare(r2,getSize);
+    const sizeEffect=mixEff(sShare2,avgBySize1,r2.length,acps1);
+    const allSizes=[...new Set([...Object.keys(sShare1),...Object.keys(sShare2)])].sort();
+    let zoneEffect=0, zShare1={}, zShare2={}, allZones=[];
+    if(hasZone&&getZone){
+      const avgByZone1=buildAvg(r1,getZone);
+      zShare1=buildShare(r1,getZone); zShare2=buildShare(r2,getZone);
+      zoneEffect=mixEff(zShare2,avgByZone1,r2.length,acps1);
+      allZones=[...new Set([...Object.keys(zShare1),...Object.keys(zShare2)])].sort((a,b)=>a.localeCompare(b,undefined,{numeric:true}));
+    }
+    const residual=totalChange-sizeEffect-zoneEffect;
+    const volChange=r2.length-r1.length;
+    const volPct=r1.length>0?((volChange/r1.length)*100).toFixed(1):'0';
+    const thB='background:#0f172a;color:#94a3b8;font-size:.68rem;padding:7px 12px;font-weight:700;letter-spacing:.04em;white-space:nowrap';
+    const tdB='padding:7px 12px;font-size:.77rem;border-bottom:1px solid rgba(255,255,255,.06);vertical-align:middle';
+    const clr=v=>v>0.05?'#f87171':v<-0.05?'#4ade80':'var(--muted)';
+    const arr=v=>v>0.05?'↑':v<-0.05?'↓':'→';
+    const fmD=v=>(v>=0?'+':'')+v.toFixed(2);
+    const maxEff=Math.max(Math.abs(sizeEffect),Math.abs(zoneEffect),Math.abs(residual),0.01);
+    function wBar(val){ const pct=Math.min(Math.abs(val)/maxEff*100,100).toFixed(1); const c=val>0.05?'#f87171':val<-0.05?'#4ade80':'#475569'; return `<div style="background:rgba(255,255,255,.1);border-radius:4px;height:10px;overflow:hidden;min-width:90px"><div style="width:${pct}%;height:100%;background:${c};border-radius:4px"></div></div>`; }
+    function shiftTbl(sh1,sh2,n1,n2,keys,label){
+      const rows=keys.map((k,ki)=>{
+        const c1=sh1[k]||0,c2=sh2[k]||0;
+        const p1=n1>0?(c1/n1*100):0,p2=n2>0?(c2/n2*100):0;
+        const d=p2-p1;
+        return `<tr style="background:${ki%2===0?'rgba(255,255,255,.025)':'transparent'}">
+          <td style="${tdB}">${k}</td>
+          <td style="${tdB};text-align:center">${fm(c1)} <span style="color:var(--muted);font-size:.7rem">(${p1.toFixed(1)}%)</span></td>
+          <td style="${tdB};text-align:center">${fm(c2)} <span style="color:var(--muted);font-size:.7rem">(${p2.toFixed(1)}%)</span></td>
+          <td style="${tdB};text-align:center;font-weight:700;color:${clr(d)}">${d>=0?'+':''}${d.toFixed(1)}pp ${arr(d)}</td>
+        </tr>`;
+      }).join('');
+      return `<div><div style="background:#1e3a5f;padding:5px 12px;font-size:.68rem;font-weight:700;color:#7dd3fc;letter-spacing:.04em">${label} · ${M1} → ${M2}</div>
+        <div class="tbl-scroll"><table style="width:100%;border-collapse:collapse">
+          <thead><tr style="background:#0f172a">
+            <th style="${thB};text-align:left">${label.split(' ')[0]}</th>
+            <th style="${thB};text-align:center">${M1}</th>
+            <th style="${thB};text-align:center">${M2}</th>
+            <th style="${thB};text-align:center">Shift</th>
+          </tr></thead>
+          <tbody>${rows}</tbody>
+        </table></div></div>`;
+    }
+    const bridgeRows=[
+      `<tr style="background:rgba(30,58,138,.3)">
+        <td style="${tdB};font-weight:700;color:#bfdbfe;font-size:.82rem">● Baseline ACPS (${M1})</td>
+        <td style="${tdB};font-weight:700;color:#bfdbfe;font-size:.95rem;text-align:center">${acps1.toFixed(2)}</td>
+        <td style="${tdB}"></td>
+        <td style="${tdB};color:var(--muted);font-size:.72rem">${fm(r1.length)} shipments</td>
+      </tr>`,
+      `<tr style="background:rgba(255,255,255,.02)">
+        <td style="${tdB};padding-left:28px">📦 Size Mix Effect</td>
+        <td style="${tdB};font-weight:700;color:${clr(sizeEffect)};text-align:center">${fmD(sizeEffect)}</td>
+        <td style="${tdB}">${wBar(sizeEffect)}</td>
+        <td style="${tdB};color:var(--muted);font-size:.71rem">${Math.abs(sizeEffect)<0.05?'No size mix change':sizeEffect>0?'Heavier size mix → higher cost':'Lighter size mix → lower cost'}</td>
+      </tr>`,
+      hasZone&&getZone?`<tr>
+        <td style="${tdB};padding-left:28px">🗺️ Zone Mix Effect</td>
+        <td style="${tdB};font-weight:700;color:${clr(zoneEffect)};text-align:center">${fmD(zoneEffect)}</td>
+        <td style="${tdB}">${wBar(zoneEffect)}</td>
+        <td style="${tdB};color:var(--muted);font-size:.71rem">${Math.abs(zoneEffect)<0.05?'No zone mix change':zoneEffect>0?'More distant zones → higher cost':'Closer zones → lower cost'}</td>
+      </tr>`:'',
+      `<tr style="background:rgba(255,255,255,.02)">
+        <td style="${tdB};padding-left:28px">⚙️ Rate / Other Effect</td>
+        <td style="${tdB};font-weight:700;color:${clr(residual)};text-align:center">${fmD(residual)}</td>
+        <td style="${tdB}">${wBar(residual)}</td>
+        <td style="${tdB};color:var(--muted);font-size:.71rem">Residual: rate changes &amp; interactions</td>
+      </tr>`,
+      `<tr>
+        <td style="${tdB};padding-left:28px">📊 Volume</td>
+        <td style="${tdB};color:var(--muted);text-align:center">—</td>
+        <td style="${tdB}"></td>
+        <td style="${tdB};color:${volChange>0?'#4ade80':volChange<0?'#f87171':'var(--muted)'};font-size:.71rem">${fm(r1.length)} → ${fm(r2.length)} (${volChange>=0?'+':''}${volPct}%)</td>
+      </tr>`,
+      `<tr style="background:rgba(30,58,138,.3)">
+        <td style="${tdB};font-weight:700;color:#bfdbfe;font-size:.82rem">● Current ACPS (${M2})</td>
+        <td style="${tdB};font-weight:700;color:${clr(totalChange)};font-size:.95rem;text-align:center">${acps2.toFixed(2)}</td>
+        <td style="${tdB}"></td>
+        <td style="${tdB};font-weight:700;color:${clr(totalChange)};font-size:.75rem">${fm(r2.length)} shipments · Net: ${fmD(totalChange)} EGP/ship</td>
+      </tr>`,
+    ].join('');
+    return `<div style="margin-top:18px">
+      <div style="background:linear-gradient(90deg,#1e3a5f,#0f2942);border-radius:8px 8px 0 0;padding:7px 14px;font-size:.72rem;font-weight:700;color:#7dd3fc;letter-spacing:.05em">
+        SECTION 5 — AVG COST / SHIPMENT · BRIDGE ANALYSIS · ${M1} → ${M2}
+      </div>
+      <div class="tbl-scroll" style="border-radius:0;margin-bottom:1px">
+        <table style="width:100%;border-collapse:collapse">
+          <thead><tr style="background:#0f172a">
+            <th style="${thB};text-align:left;min-width:210px">Factor</th>
+            <th style="${thB};text-align:center;min-width:100px">EGP / Ship</th>
+            <th style="${thB};text-align:left;min-width:120px">Impact Bar</th>
+            <th style="${thB};text-align:left;min-width:200px">Detail</th>
+          </tr></thead>
+          <tbody>${bridgeRows}</tbody>
+        </table>
+      </div>
+      <div style="display:grid;grid-template-columns:${hasZone&&getZone?'1fr 1fr':'1fr'};gap:12px;margin-top:12px;border-radius:0 0 8px 8px;overflow:hidden">
+        ${shiftTbl(sShare1,sShare2,r1.length,r2.length,allSizes,'SIZE DISTRIBUTION')}
+        ${hasZone&&getZone?shiftTbl(zShare1,zShare2,r1.length,r2.length,allZones,'ZONE DISTRIBUTION'):''}
+      </div>
+    </div>`;
+  }
+
   let html = '';
 
   // Grand summary
@@ -2881,7 +2998,8 @@ function renderAnalytics(){
         ${bar(t.an_actualInvoice,AR.totalBill,AR.totalBill,'var(--red)')}${bar(t.kenzzCalc,AR.totalCalc,AR.totalBill,'var(--green2)')}
       </div>
     </div>
-    ${zoneSizeTable(auditData.filter(r=>r.destZone), r=>String(r.destZone||'').trim(), aramexSize, ['Size S','Size M','Size L','Size XL'])}`
+    ${zoneSizeTable(auditData.filter(r=>r.destZone), r=>String(r.destZone||'').trim(), aramexSize, ['Size S','Size M','Size L','Size XL'])}
+    ${acpsBridge(auditData, r=>r.uploadMonth, r=>String(r.destZone||'').trim(), aramexSize, r=>(r.baseCharge||0)+(r.otherCharge||0), auditData.some(r=>r.destZone))}`
   );
 
   // Bosta
@@ -2897,7 +3015,8 @@ function renderAnalytics(){
     <div style="margin-top:12px"><div class="sbar-title">${t.an_byLabel}</div>
       ${Object.entries(BO.byLabel).map(([lbl,cnt])=>bar(lbl,cnt,BO.total,'var(--green2)')).join('')}
     </div>
-    ${bostaSizes.length>0 ? zoneSizeTable(bostaData.filter(r=>r.zone&&r.pkgSize), r=>String(r.zone||'').trim(), r=>r.pkgSize, bostaSizes) : ''}`
+    ${bostaSizes.length>0 ? zoneSizeTable(bostaData.filter(r=>r.zone&&r.pkgSize), r=>String(r.zone||'').trim(), r=>r.pkgSize, bostaSizes) : ''}
+    ${acpsBridge(bostaData, r=>r.uploadMonth, r=>String(r.zone||'').trim(), r=>r.pkgSize||'?', r=>r.priceBAV||0, bostaData.some(r=>r.zone))}`
   );
 
   // Raya
@@ -2914,7 +3033,8 @@ function renderAnalytics(){
     <div style="margin-top:12px"><div class="sbar-title">${t.an_costComp}</div>
       ${bar(t.invoice,RA.totalBill,RA.totalBill,'var(--red)')}${bar(t.kenzzCalc,RA.totalCalc,RA.totalBill,'var(--green2)')}
     </div>
-    ${zoneSizeTable(rayaData.filter(r=>r.tier&&r.category), r=>String(r.tier||'').trim(), r=>normSize(r.category), ['Size S','Size M','Size L'])}`
+    ${zoneSizeTable(rayaData.filter(r=>r.tier&&r.category), r=>String(r.tier||'').trim(), r=>normSize(r.category), ['Size S','Size M','Size L'])}
+    ${acpsBridge(rayaData, r=>r.uploadMonth||r.month, r=>String(r.zone||r.tier||'').trim(), r=>normSize(r.category), r=>r.totalBilled||0, true)}`
   );
 
   // Mashreq
@@ -2931,7 +3051,8 @@ function renderAnalytics(){
     <div style="margin-top:12px"><div class="sbar-title">${t.an_costComp}</div>
       ${bar(t.invoice,MQ.totalBill,MQ.totalBill,'var(--red)')}${bar(t.kenzzCalc,MQ.totalCalc,MQ.totalBill,'var(--green2)')}
     </div>
-    ${zoneSizeTable(mqData.filter(r=>r.destZone&&r.size), r=>String(r.destZone||'').trim(), r=>normSize(r.size), ['Size S','Size M','Size L'])}`
+    ${zoneSizeTable(mqData.filter(r=>r.destZone&&r.size), r=>String(r.destZone||'').trim(), r=>normSize(r.size), ['Size S','Size M','Size L'])}
+    ${acpsBridge(mqData, r=>r.uploadMonth||r.month, r=>String(r.destZone||'').trim(), r=>normSize(r.size), r=>r.totalBilled||0, mqData.some(r=>r.destZone))}`
   );
 
   contentEl.innerHTML = html;
