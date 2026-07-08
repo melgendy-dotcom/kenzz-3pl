@@ -1344,6 +1344,7 @@ async function saveBosta(){
     const merged = months.size ? [..._bostaPersisted.filter(r=>!months.has(r.uploadMonth)), ...bostaData] : bostaData;
     bostaData = merged; _bostaPersisted = [...merged];
     await cloudSave('bosta', JSON.stringify({data: merged, saved: new Date().toISOString()}));
+    renderBosta();
     showToast();
   }catch(e){
     console.error('saveBosta failed:',e);
@@ -1752,6 +1753,7 @@ async function saveAramex(){
     const merged = months.size ? [..._aramexPersisted.filter(r=>!months.has(r.uploadMonth)), ...auditData] : auditData;
     auditData = merged; _aramexPersisted = [...merged];
     await cloudSave('aramex', JSON.stringify({data: merged, cfg: getAramexCfg(), saved: new Date().toISOString()}));
+    renderAramex();
     const t=document.getElementById('ar-toast'); t.classList.add('show'); setTimeout(()=>t.classList.remove('show'), 3200);
   }catch(e){
     console.error('saveAramex failed:',e);
