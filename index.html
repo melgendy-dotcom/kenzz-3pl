@@ -327,6 +327,7 @@ html[dir=ltr] #login-eye{right:12px}
           </div>
           <button class="btn-export" onclick="exportBosta()" id="bo-export-btn"></button>
         </div>
+        <div id="bo-month-tabs" style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px"></div>
 
         <div class="tbl-card">
           <div class="card-hdr">
@@ -441,6 +442,7 @@ html[dir=ltr] #login-eye{right:12px}
           </div>
           <button class="btn-export" onclick="exportAramex()" id="ar-export-btn"></button>
         </div>
+        <div id="ar-month-tabs" style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px"></div>
 
         <div class="tbl-card">
           <div class="card-hdr">
@@ -557,6 +559,7 @@ html[dir=ltr] #login-eye{right:12px}
           </div>
           <button class="btn-export" onclick="exportMashreq()" id="mq-export-btn"></button>
         </div>
+        <div id="mq-month-tabs" style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px"></div>
 
         <div class="tbl-card">
           <div class="card-hdr">
@@ -656,6 +659,7 @@ html[dir=ltr] #login-eye{right:12px}
           </div>
           <button class="btn-export" onclick="exportRayaPage()" id="ra-export-btn"></button>
         </div>
+        <div id="ra-month-tabs" style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px"></div>
 
         <div class="tbl-card">
           <div class="card-hdr">
@@ -943,6 +947,24 @@ let lang = localStorage.getItem('kenzz3pl_lang') || 'ar';
 let showPwd = false;
 let bostaData = [];
 let _bostaPersisted = []; // shadow copy of cloud-saved data (never overwritten by processing)
+let boMonthSel='ALL', arMonthSel='ALL', mqMonthSel='ALL', raMonthSel='ALL';
+
+function _monthTabs(data, getMonth, containerId, sel, setterName, color){
+  const container = document.getElementById(containerId);
+  if(!container) return;
+  const months = [...new Set(data.map(getMonth).filter(Boolean))].sort();
+  if(months.length < 2){ container.innerHTML=''; return; }
+  if(sel !== 'ALL' && !months.includes(sel)) sel = 'ALL';
+  const tabs = [{ key:'ALL', count:data.length }, ...months.map(m=>({ key:m, count:data.filter(r=>getMonth(r)===m).length }))];
+  container.innerHTML = tabs.map(tab=>{
+    const active = tab.key === sel;
+    return `<button onclick="${setterName}('${tab.key}')" style="display:inline-flex;align-items:center;gap:5px;padding:5px 14px;border-radius:20px;border:1.5px solid ${active?color:'var(--border)'};background:${active?color:'transparent'};color:${active?'#fff':'var(--text)'};font-size:.75rem;font-weight:600;cursor:pointer;transition:all .15s">${tab.key==='ALL'?'All':tab.key} <span style="background:${active?'rgba(255,255,255,.25)':'var(--border)'};border-radius:10px;padding:1px 7px;font-size:.7rem;font-weight:700">${tab.count}</span></button>`;
+  }).join('');
+}
+function setBoMonth(m){ boMonthSel=m; renderBostaTable(); }
+function setArMonth(m){ arMonthSel=m; renderAramexTable(); }
+function setMqMonth(m){ mqMonthSel=m; renderMashreqTable(); }
+function setRaMonth(m){ raMonthSel=m; renderRayaTable(); }
 let reportFile = null, contractFile = null;
 
 /* ---------- helpers ---------- */
@@ -1274,7 +1296,7 @@ function renderBosta(){
 }
 
 function getFilteredBosta(){
-  let d = bostaData;
+  let d = boMonthSel!=='ALL' ? bostaData.filter(r=>(r.uploadMonth||null)===boMonthSel) : bostaData;
   const filter = document.getElementById('bo-filter-type').value || 'ALL';
   const overOnly = document.getElementById('bo-over-only').checked;
   const search = document.getElementById('bo-search').value.trim().toLowerCase();
@@ -1286,6 +1308,7 @@ function getFilteredBosta(){
 
 function renderBostaTable(){
   if(!bostaData.length) return;
+  _monthTabs(bostaData, r=>r.uploadMonth||null, 'bo-month-tabs', boMonthSel, 'setBoMonth', '#00b844');
   const filtered = getFilteredBosta();
   document.getElementById('bo-results-count').textContent = filtered.length + ' / ' + bostaData.length;
   const tbody = document.getElementById('bo-table-body');
@@ -1664,7 +1687,7 @@ function renderAramex(){
 }
 
 function getFilteredAramex(){
-  let d = auditData;
+  let d = arMonthSel!=='ALL' ? auditData.filter(r=>(r.uploadMonth||null)===arMonthSel) : auditData;
   const filter = document.getElementById('ar-filter-status').value || 'ALL';
   const overOnly = document.getElementById('ar-over-only').checked;
   const search = document.getElementById('ar-search').value.trim().toLowerCase();
@@ -1686,6 +1709,7 @@ function aramexStStyle(b){
 }
 function renderAramexTable(){
   if(!auditData.length) return;
+  _monthTabs(auditData, r=>r.uploadMonth||null, 'ar-month-tabs', arMonthSel, 'setArMonth', '#7E00E1');
   const filtered = getFilteredAramex();
   document.getElementById('ar-results-count').textContent = filtered.length + ' / ' + auditData.length;
   const tbody = document.getElementById('ar-table-body');
@@ -1977,7 +2001,7 @@ function renderMashreq(){
   renderMashreqTable();
 }
 function getFilteredMashreq(){
-  let d = mqData;
+  let d = mqMonthSel!=='ALL' ? mqData.filter(r=>(r.uploadMonth||null)===mqMonthSel) : mqData;
   const filter = document.getElementById('mq-filter-status').value || 'ALL';
   const sizeF = document.getElementById('mq-filter-size').value || 'ALL';
   const overOnly = document.getElementById('mq-over-only').checked;
@@ -1991,6 +2015,7 @@ function getFilteredMashreq(){
 function mqSizeBadge(sz){ return sz==='Large' ? 'sz-badge sz-l' : sz==='Medium' ? 'sz-badge sz-m' : 'sz-badge sz-s'; }
 function renderMashreqTable(){
   if(!mqData.length) return;
+  _monthTabs(mqData, r=>r.uploadMonth||null, 'mq-month-tabs', mqMonthSel, 'setMqMonth', '#b45309');
   const filtered = getFilteredMashreq();
   document.getElementById('mq-results-count').textContent = filtered.length + ' / ' + mqData.length;
   document.getElementById('mq-table-body').innerHTML = filtered.map(r => `
@@ -2226,7 +2251,7 @@ function renderRayaPage(){
   renderRayaTable();
 }
 function getFilteredRaya(){
-  let d = rayaData;
+  let d = raMonthSel!=='ALL' ? rayaData.filter(r=>(r.uploadMonth||null)===raMonthSel) : rayaData;
   const filter = document.getElementById('ra-filter-status').value || 'ALL';
   const catF = document.getElementById('ra-filter-cat').value || 'ALL';
   const overOnly = document.getElementById('ra-over-only').checked;
@@ -2240,6 +2265,7 @@ function getFilteredRaya(){
 function rayaCatBadge(c){ return c==='Large' ? 'raya-cat-l' : c==='Medium' ? 'raya-cat-m' : 'raya-cat-s'; }
 function renderRayaTable(){
   if(!rayaData.length) return;
+  _monthTabs(rayaData, r=>r.uploadMonth||null, 'ra-month-tabs', raMonthSel, 'setRaMonth', '#0369a1');
   const filtered = getFilteredRaya();
   document.getElementById('ra-results-count').textContent = filtered.length + ' / ' + rayaData.length;
   document.getElementById('ra-table-body').innerHTML = filtered.map(r => `
