@@ -2481,14 +2481,16 @@ function bdAddMonth({store,monthName,sources}){
   const mi=store.months.indexOf(monthName);
   const sum=(arr,k)=>arr.reduce((s,r)=>s+(r[k]||0),0);
   const added=[];
+  const _bdFilter=(arr)=>monthName&&arr.some(r=>r.uploadMonth)?arr.filter(r=>r.uploadMonth===monthName):arr;
   if(sources.bosta&&bostaData.length){
     const co=store.companies['Bosta'];
-    const delivered=bostaData.filter(r=>r.breakdownLabel==='Delivered');
-    const rtn=bostaData.filter(r=>r.breakdownLabel==='RTN');
-    const rto=bostaData.filter(r=>r.breakdownLabel==='RTO');
-    const cod=bostaData.filter(r=>r.breakdownLabel==='COD Fees');
-    const lost=bostaData.filter(r=>r.breakdownLabel==='Lost & Damaged');
-    const lastmile=bostaData.filter(r=>r.breakdownLabel==='Last Mile CN');
+    const bd=_bdFilter(bostaData);
+    const delivered=bd.filter(r=>r.breakdownLabel==='Delivered');
+    const rtn=bd.filter(r=>r.breakdownLabel==='RTN');
+    const rto=bd.filter(r=>r.breakdownLabel==='RTO');
+    const cod=bd.filter(r=>r.breakdownLabel==='COD Fees');
+    const lost=bd.filter(r=>r.breakdownLabel==='Lost & Damaged');
+    const lastmile=bd.filter(r=>r.breakdownLabel==='Last Mile CN');
     bdSetSlot(co['SEND'],'qty',delivered.length,mi);
     bdSetSlot(co['SEND'],'value',Math.round(sum(delivered,'priceBAV')*100)/100,mi);
     bdSetSlot(co['SEND'],'rate',delivered.length?Math.round(sum(delivered,'priceBAV')/delivered.length*100)/100:0,mi);
@@ -2499,70 +2501,73 @@ function bdAddMonth({store,monthName,sources}){
     bdSetSlot(co['Returns-RTO'],'value',Math.round(sum(rto,'priceBAV')*100)/100,mi);
     bdSetSlot(co['Returns-RTO'],'rate',rto.length?Math.round(sum(rto,'priceBAV')/rto.length*100)/100:0,mi);
     bdSetSlot(co['COD'],'value',Math.round(sum(cod,'priceBAV')*100)/100,mi);
-    bdSetSlot(co['Insurance'],'value',Math.round(sum(bostaData,'insurance')*100)/100,mi);
+    bdSetSlot(co['Insurance'],'value',Math.round(sum(bd,'insurance')*100)/100,mi);
     bdSetSlot(co['Lost & Damage'],'qty',lost.length,mi);
     bdSetSlot(co['Lost & Damage'],'value',Math.round(sum(lost,'priceBAV')*100)/100,mi);
     bdSetSlot(co['Last Mile CN'],'value',Math.round(sum(lastmile,'priceBAV')*100)/100,mi);
     const totQty=delivered.length+rtn.length+rto.length;
-    const totVal=Math.round(sum(bostaData,'priceBAV')*100)/100;
+    const totVal=Math.round(sum(bd,'priceBAV')*100)/100;
     bdSetSlot(co['Total'],'qty',totQty,mi); bdSetSlot(co['Total'],'value',totVal,mi);
     bdSetSlot(co['Total'],'rate',totQty?Math.round(totVal/totQty*100)/100:0,mi);
     added.push('Bosta');
   }
   if(sources.aramex&&auditData.length){
     const co=store.companies['Aramex'];
-    const delivered=auditData.filter(r=>r.statusBucket==='DELIVERED');
-    const returned=auditData.filter(r=>r.statusBucket==='RETURNED');
+    const ar=_bdFilter(auditData);
+    const delivered=ar.filter(r=>r.statusBucket==='DELIVERED');
+    const returned=ar.filter(r=>r.statusBucket==='RETURNED');
     bdSetSlot(co['SEND'],'qty',delivered.length,mi);
     bdSetSlot(co['SEND'],'value',Math.round(sum(delivered,'baseCharge')*100)/100,mi);
     bdSetSlot(co['SEND'],'rate',delivered.length?Math.round(sum(delivered,'baseCharge')/delivered.length*100)/100:0,mi);
     bdSetSlot(co['Returns-RTO'],'qty',returned.length,mi);
     bdSetSlot(co['Returns-RTO'],'value',Math.round(sum(returned,'baseCharge')*100)/100,mi);
     bdSetSlot(co['Returns-RTO'],'rate',returned.length?Math.round(sum(returned,'baseCharge')/returned.length*100)/100:0,mi);
-    bdSetSlot(co['COD'],'value',Math.round(sum(auditData,'codFees')*100)/100,mi);
-    bdSetSlot(co['Last Mile CN'],'value',Math.round(sum(auditData,'annualIncrease')*100)/100,mi);
+    bdSetSlot(co['COD'],'value',Math.round(sum(ar,'codFees')*100)/100,mi);
+    bdSetSlot(co['Last Mile CN'],'value',Math.round(sum(ar,'annualIncrease')*100)/100,mi);
     const totQty=delivered.length+returned.length;
-    const totVal=Math.round(sum(auditData,'totalCalc')*100)/100;
+    const totVal=Math.round(sum(ar,'totalCalc')*100)/100;
     bdSetSlot(co['Total'],'qty',totQty,mi); bdSetSlot(co['Total'],'value',totVal,mi);
     bdSetSlot(co['Total'],'rate',totQty?Math.round(totVal/totQty*100)/100:0,mi);
     added.push('Aramex');
   }
   if(sources.raya&&rayaData.length){
     const co=store.companies['Raya'];
-    const delivered=rayaData.filter(r=>r.status==='Delivered');
-    const returned=rayaData.filter(r=>r.status==='Returned'||r.status==='Cancel on floor');
+    const ra=_bdFilter(rayaData);
+    const delivered=ra.filter(r=>r.status==='Delivered');
+    const returned=ra.filter(r=>r.status==='Returned'||r.status==='Cancel on floor');
     bdSetSlot(co['SEND'],'qty',delivered.length,mi);
     bdSetSlot(co['SEND'],'value',Math.round(sum(delivered,'totalBilled')*100)/100,mi);
     bdSetSlot(co['SEND'],'rate',delivered.length?Math.round(sum(delivered,'totalBilled')/delivered.length*100)/100:0,mi);
     bdSetSlot(co['Returns-RTO'],'qty',returned.length,mi);
     bdSetSlot(co['Returns-RTO'],'value',Math.round(sum(returned,'totalBilled')*100)/100,mi);
     bdSetSlot(co['Returns-RTO'],'rate',returned.length?Math.round(sum(returned,'totalBilled')/returned.length*100)/100:0,mi);
-    bdSetSlot(co['COD'],'value',Math.round(sum(rayaData,'codFees')*100)/100,mi);
-    bdSetSlot(co['Insurance'],'value',Math.round(sum(rayaData,'insFees')*100)/100,mi);
+    bdSetSlot(co['COD'],'value',Math.round(sum(ra,'codFees')*100)/100,mi);
+    bdSetSlot(co['Insurance'],'value',Math.round(sum(ra,'insFees')*100)/100,mi);
     const totQty=delivered.length+returned.length;
-    const totVal=Math.round(sum(rayaData,'totalBilled')*100)/100;
+    const totVal=Math.round(sum(ra,'totalBilled')*100)/100;
     bdSetSlot(co['Total'],'qty',totQty,mi); bdSetSlot(co['Total'],'value',totVal,mi);
     bdSetSlot(co['Total'],'rate',totQty?Math.round(totVal/totQty*100)/100:0,mi);
     added.push('Raya');
   }
   if(sources.mashreq&&mqData.length){
     const co=store.companies['Mashreq'];
-    const delivered=mqData.filter(r=>r.status==='Delivered');
-    const returned=mqData.filter(r=>r.status==='Returned'||r.status==='Cancel on floor');
+    const mq=_bdFilter(mqData);
+    const delivered=mq.filter(r=>r.status==='Delivered');
+    const returned=mq.filter(r=>r.status==='Returned'||r.status==='Cancel on floor');
     bdSetSlot(co['SEND'],'qty',delivered.length,mi);
     bdSetSlot(co['SEND'],'value',Math.round(sum(delivered,'totalBilled')*100)/100,mi);
     bdSetSlot(co['SEND'],'rate',delivered.length?Math.round(sum(delivered,'totalBilled')/delivered.length*100)/100:0,mi);
     bdSetSlot(co['Returns-RTO'],'qty',returned.length,mi);
     bdSetSlot(co['Returns-RTO'],'value',Math.round(sum(returned,'totalBilled')*100)/100,mi);
     bdSetSlot(co['Returns-RTO'],'rate',returned.length?Math.round(sum(returned,'totalBilled')/returned.length*100)/100:0,mi);
-    bdSetSlot(co['COD'],'value',Math.round(sum(mqData,'actualCODFees')*100)/100,mi);
-    bdSetSlot(co['Insurance'],'value',Math.round(sum(mqData,'actualIns')*100)/100,mi);
+    bdSetSlot(co['COD'],'value',Math.round(sum(mq,'actualCODFees')*100)/100,mi);
+    bdSetSlot(co['Insurance'],'value',Math.round(sum(mq,'actualIns')*100)/100,mi);
     const secondTotal=mqSecondTotal||0;
     if(secondTotal>0){
       bdSetSlot(co['2nd Attempt'],'value',secondTotal,mi);
     }
     const totQty=delivered.length+returned.length;
-    const totVal=Math.round((sum(mqData,'totalBilled')+secondTotal)*100)/100;
+    const totVal=Math.round((sum(mq,'totalBilled')+secondTotal)*100)/100;
     bdSetSlot(co['Total'],'qty',totQty,mi); bdSetSlot(co['Total'],'value',totVal,mi);
     bdSetSlot(co['Total'],'rate',totQty?Math.round(totVal/totQty*100)/100:0,mi);
     added.push('Mashreq');
