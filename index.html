@@ -2648,7 +2648,7 @@ function renderBreakdown(){
   }
   const allCos=[BD_GRAND,...BD_COMPANIES];
   const _moOrder=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-  const _moKey=s=>{ const p=s.split("'"); return (+p[1]||0)*12+_moOrder.indexOf(p[0]); };
+  const _moKey=s=>{ const p=s.split("'"); const yr=p.length>1?(+p[1]||0):0; const mi=_moOrder.indexOf(p[0]); return yr*12+(mi>=0?mi:0); };
   const months=[...bdStore.months].sort((a,b)=>_moKey(a)-_moKey(b));
   const val=(co,rt,key,mi)=>{ const origMi=bdStore.months.indexOf(months[mi]); const v=bdStore?.companies?.[co]?.[rt]?.[key]?.[origMi]; return (v===null||v===undefined)?null:v; };
   const fmVal=v=>v===null?'<span style="color:var(--muted);font-size:.72rem">–</span>':fm(v);
