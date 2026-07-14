@@ -2968,10 +2968,10 @@ function renderAnalytics(){
     function impactBadge(val){
       if(Math.abs(val)<0.05) return `<span style="color:#9ca3af;font-size:.82rem">—</span>`;
       const up=val>0;
-      const bc=up?'#fee2e2':'#dcfce7'; const tc=up?'#dc2626':'#16a34a'; const bdr=up?'#fca5a5':'#86efac';
+      const bc=up?'#dcfce7':'#fee2e2'; const tc=up?'#16a34a':'#dc2626'; const bdr=up?'#86efac':'#fca5a5';
       return `<span style="display:inline-flex;align-items:center;gap:3px;background:${bc};color:${tc};border:1.5px solid ${bdr};border-radius:8px;padding:3px 10px;font-size:.78rem;font-weight:700">${up?'▲':'▼'} ${Math.abs(val).toFixed(2)} EGP</span>`;
     }
-    function wBar2(val){ const pct=Math.min(Math.abs(val)/maxEff*100,100).toFixed(1); const c=val>0.05?'#ef4444':val<-0.05?'#22c55e':'#94a3b8'; return `<div style="background:#f1f5f9;border-radius:6px;height:12px;overflow:hidden;min-width:100px;max-width:200px"><div style="width:${pct}%;height:100%;background:${c};border-radius:6px"></div></div>`; }
+    function wBar2(val){ const pct=Math.min(Math.abs(val)/maxEff*100,100).toFixed(1); const c=val>0.05?'#22c55e':val<-0.05?'#ef4444':'#94a3b8'; return `<div style="background:#f1f5f9;border-radius:6px;height:12px;overflow:hidden;min-width:100px;max-width:200px"><div style="width:${pct}%;height:100%;background:${c};border-radius:6px"></div></div>`; }
     const rowStyle='border-bottom:1px solid #f1f5f9;background:#fff';
     const tdL='padding:12px 14px;font-size:.8rem;vertical-align:middle';
     const factors=[
