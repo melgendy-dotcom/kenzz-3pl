@@ -2936,7 +2936,7 @@ function renderAnalytics(){
     const volPct=r1.length>0?((volChange/r1.length)*100).toFixed(1):'0';
     const thB='background:#0f172a;color:#94a3b8;font-size:.68rem;padding:7px 12px;font-weight:700;letter-spacing:.04em;white-space:nowrap';
     const tdB='padding:7px 12px;font-size:.77rem;border-bottom:1px solid rgba(255,255,255,.06);vertical-align:middle';
-    const clr=v=>v>0.05?'#f87171':v<-0.05?'#4ade80':'var(--muted)';
+    const clr=v=>v>0.05?'#4ade80':v<-0.05?'#f87171':'var(--muted)';
     const arr=v=>v>0.05?'↑':v<-0.05?'↓':'→';
     const fmD=v=>(v>=0?'+':'')+v.toFixed(2);
     const maxEff=Math.max(Math.abs(sizeEffect),Math.abs(zoneEffect),Math.abs(residual),0.01);
