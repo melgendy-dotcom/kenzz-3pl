@@ -3137,93 +3137,187 @@ function renderRayaValueDash(){
   if(!el) return;
   const rows = rayaData||[];
   if(!rows.length){ el.innerHTML=''; return; }
-  window.setRayaValStatus = function(s){ _rayaValStatus=s; _rayaValSize=null; renderRayaValueDash(); };
-  window.setRayaValSize   = function(s){ _rayaValSize=(s===_rayaValSize?null:s); renderRayaValueDash(); };
 
+  // helpers
   const normSz = s=>{ s=String(s||'').trim().toLowerCase(); if(s.includes('s'))return'Size S'; if(s.includes('m'))return'Size M'; if(s.includes('l'))return'Size L'; return s||'Other'; };
-  const filtered = _rayaValStatus==='all' ? rows : rows.filter(r=>String(r.status||'').toLowerCase()===_rayaValStatus);
-  const sizeFiltered = _rayaValSize ? filtered.filter(r=>normSz(r.category)===_rayaValSize) : filtered;
+  const _moOrder=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  const _moKey=s=>{ const p=s.split("'"); const yr=p.length>1?(+p[1]||0):0; const mi=_moOrder.indexOf(p[0]); return yr*12+(mi>=0?mi:0); };
 
-  // Size summary
-  const sizes = ['Size S','Size M','Size L'];
-  const sizeTotals = {};
-  sizes.forEach(s=>{ sizeTotals[s]={qty:0,val:0}; });
-  filtered.forEach(r=>{ const s=normSz(r.category); if(sizeTotals[s]){ sizeTotals[s].qty++; sizeTotals[s].val+=(r.totalBilled||0); } });
-  const totalQty = filtered.length||1;
+  // get sorted months from data
+  const allMonths=[...new Set(rows.map(r=>r.uploadMonth||r.month||null).filter(Boolean))].sort((a,b)=>_moKey(a)-_moKey(b));
+  if(allMonths.length<1){ el.innerHTML=''; return; }
 
-  // Zone breakdown for selected/all sizes
-  const zoneMap = {};
-  sizeFiltered.forEach(r=>{ const z=String(r.zone||r.tier||'').trim()||'Other'; if(!zoneMap[z])zoneMap[z]={qty:0,val:0}; zoneMap[z].qty++; zoneMap[z].val+=(r.totalBilled||0); });
-  const zones = Object.entries(zoneMap).sort((a,b)=>b[1].val-a[1].val);
-  const zTotal = sizeFiltered.length||1;
-  const zTotalVal = sizeFiltered.reduce((s,r)=>s+(r.totalBilled||0),0);
+  // default: last two months
+  if(!_rayaValStatus||!allMonths.includes(_rayaValStatus)) _rayaValStatus=allMonths[allMonths.length-1]||'';
+  if(!_rayaValSize||!allMonths.includes(_rayaValSize)){
+    const idx=allMonths.indexOf(_rayaValStatus);
+    _rayaValSize=idx>0?allMonths[idx-1]:null;
+  }
+  const M2=_rayaValStatus; // current month
+  const M1=_rayaValSize;   // previous month (may be null if only 1 month)
 
-  const statBtns = ['all','delivered','returned'].map(s=>{
-    const active=_rayaValStatus===s;
-    return `<button onclick="setRayaValStatus('${s}')" style="padding:6px 14px;border-radius:20px;border:none;cursor:pointer;font-size:.82rem;font-weight:600;background:${active?'#0369a1':'#e0f2fe'};color:${active?'#fff':'#0369a1'};transition:.15s">${s.charAt(0).toUpperCase()+s.slice(1)}</button>`;
+  window.setRayaValM2 = function(m){ _rayaValStatus=m; const i=allMonths.indexOf(m); _rayaValSize=i>0?allMonths[i-1]:null; renderRayaValueDash(); };
+  window.setRayaValM1 = function(m){ _rayaValSize=m==='none'?null:m; renderRayaValueDash(); };
+
+  const rowsM2 = rows.filter(r=>(r.uploadMonth||r.month||null)===M2);
+  const rowsM1 = M1 ? rows.filter(r=>(r.uploadMonth||r.month||null)===M1) : [];
+
+  // compute size breakdown for a set of rows
+  const sizeBreak = arr=>{
+    const sizes=['Size S','Size M','Size L']; const m={};
+    sizes.forEach(s=>m[s]={qty:0,val:0});
+    arr.forEach(r=>{ const s=normSz(r.category); if(m[s]){m[s].qty++;m[s].val+=(r.totalBilled||0);} });
+    return m;
+  };
+  // compute zone breakdown for a set of rows
+  const zoneBreak = arr=>{
+    const m={};
+    arr.forEach(r=>{ const z=String(r.zone||r.tier||'').trim()||'Other'; if(!m[z])m[z]={qty:0,val:0}; m[z].qty++;m[z].val+=(r.totalBilled||0); });
+    return m;
+  };
+
+  const sz2=sizeBreak(rowsM2); const sz1=sizeBreak(rowsM1);
+  const zn2=zoneBreak(rowsM2); const zn1=zoneBreak(rowsM1);
+
+  const totalVal2=rowsM2.reduce((s,r)=>s+(r.totalBilled||0),0);
+  const totalVal1=rowsM1.reduce((s,r)=>s+(r.totalBilled||0),0);
+  const totalQty2=rowsM2.length||1; const totalQty1=rowsM1.length||1;
+
+  const diffBadge=(v2,v1,fmt)=>{
+    if(!M1) return '';
+    const d=v2-v1; if(Math.abs(d)<0.01) return `<span style="color:#9ca3af;font-size:.78rem">—</span>`;
+    const up=d>0; const c=up?'#dc2626':'#16a34a'; const bg=up?'#fee2e2':'#dcfce7';
+    return `<span style="background:${bg};color:${c};border-radius:8px;padding:1px 6px;font-size:.76rem;font-weight:700">${up?'▲':'▼'} ${fmt(Math.abs(d))}</span>`;
+  };
+  const fmtPct=v=>`${v.toFixed(1)}%`;
+  const fmtEgp=v=>`${Math.round(v).toLocaleString()}`;
+
+  // month selector buttons
+  const m2Btns = allMonths.map(m=>{
+    const active=m===M2;
+    return `<button onclick="setRayaValM2('${m.replace(/'/g,"\\'")}\')" style="padding:5px 12px;border-radius:16px;border:none;cursor:pointer;font-size:.8rem;font-weight:600;background:${active?'#fff':'rgba(255,255,255,.2)'};color:${active?'#0369a1':'#fff'};transition:.15s">${m}</button>`;
   }).join('');
+  const m1Opts = ['none',...allMonths.filter(m=>m!==M2)].map(m=>{
+    const active=(m==='none'?!M1:m===M1);
+    const label=m==='none'?'No comparison':m;
+    return `<button onclick="setRayaValM1('${m.replace(/'/g,"\\'")}\')" style="padding:4px 10px;border-radius:14px;border:none;cursor:pointer;font-size:.78rem;font-weight:600;background:${active?'#fff':'rgba(255,255,255,.15)'};color:${active?'#0369a1':'#fff'};transition:.15s">${label}</button>`;
+  }).join('');
+
+  const thS='padding:7px 10px;font-size:.76rem;font-weight:700;text-transform:uppercase;letter-spacing:.04em;color:#fff;text-align:right';
+  const thL='padding:7px 10px;font-size:.76rem;font-weight:700;text-transform:uppercase;letter-spacing:.04em;color:#fff;text-align:left';
+  const sizes=['Size S','Size M','Size L'];
 
   const sizeRows = sizes.map(s=>{
-    const d=sizeTotals[s]; const pct=Math.round(d.qty/totalQty*100);
-    const active=_rayaValSize===s;
-    return `<tr onclick="setRayaValSize('${s}')" style="cursor:pointer;background:${active?'#ede9fe':'transparent'};transition:.1s">
-      <td style="padding:7px 10px;font-weight:600;color:#374151">${s}</td>
-      <td style="padding:7px 10px;text-align:right;color:#111">${d.qty.toLocaleString()}</td>
-      <td style="padding:7px 10px">
-        <div style="display:flex;align-items:center;gap:6px">
-          <div style="flex:1;height:6px;border-radius:3px;background:#e5e7eb;overflow:hidden"><div style="height:100%;width:${pct}%;background:#7c3aed;border-radius:3px"></div></div>
-          <span style="font-size:.78rem;color:#6b7280;width:30px;text-align:right">${pct}%</span>
+    const d2=sz2[s]; const d1=sz1[s]||{qty:0,val:0};
+    const pct2=Math.round(d2.qty/totalQty2*100); const pct1=M1?Math.round(d1.qty/totalQty1*100):null;
+    const avgs2=d2.qty?(d2.val/d2.qty):0; const avgs1=d1.qty?(d1.val/d1.qty):0;
+    return `<tr style="border-bottom:1px solid #f3f4f6">
+      <td style="padding:8px 10px;font-weight:600;color:#374151">${s}</td>
+      <td style="padding:8px 10px;text-align:right;color:#0369a1;font-weight:700">${d2.qty.toLocaleString()}</td>
+      ${M1?`<td style="padding:8px 10px;text-align:right;color:#6b7280">${d1.qty.toLocaleString()}</td>`:''}
+      <td style="padding:8px 10px;text-align:center">${diffBadge(d2.qty,d1.qty,v=>Math.round(v).toLocaleString())}</td>
+      <td style="padding:8px 10px">
+        <div style="display:flex;align-items:center;gap:4px">
+          <div style="flex:1;height:5px;border-radius:3px;background:#e5e7eb;overflow:hidden"><div style="height:100%;width:${pct2}%;background:#0369a1;border-radius:3px"></div></div>
+          <span style="font-size:.75rem;color:#374151;width:28px;text-align:right">${pct2}%</span>
         </div>
+        ${M1?`<div style="display:flex;align-items:center;gap:4px;margin-top:2px"><div style="flex:1;height:3px;border-radius:3px;background:#e5e7eb;overflow:hidden"><div style="height:100%;width:${pct1}%;background:#9ca3af;border-radius:3px"></div></div><span style="font-size:.72rem;color:#9ca3af;width:28px;text-align:right">${pct1}%</span></div>`:''}
       </td>
-      <td style="padding:7px 10px;text-align:right;color:#0369a1;font-weight:600">${Math.round(d.val).toLocaleString()} EGP</td>
+      <td style="padding:8px 10px;text-align:right;color:#0369a1;font-weight:700">${Math.round(d2.val).toLocaleString()}</td>
+      ${M1?`<td style="padding:8px 10px;text-align:right;color:#9ca3af;font-size:.82rem">${Math.round(d1.val).toLocaleString()}</td>`:''}
+      <td style="padding:8px 10px;text-align:center">${diffBadge(d2.val,d1.val,fmtEgp)}</td>
+      <td style="padding:8px 10px;text-align:right;color:#6b7280;font-size:.82rem">${avgs2?Math.round(avgs2).toLocaleString():'—'}</td>
+      ${M1?`<td style="padding:8px 10px;text-align:center">${diffBadge(avgs2,avgs1,fmtEgp)}</td>`:''}
     </tr>`;
   }).join('');
 
-  const zoneRows = zones.slice(0,10).map(([z,d])=>{
-    const pct=Math.round(d.qty/zTotal*100);
-    return `<tr>
+  // total row for sizes
+  const avgTot2=totalQty2?(totalVal2/totalQty2):0; const avgTot1=totalQty1&&M1?(totalVal1/totalQty1):0;
+  const sizeTotalRow=`<tr style="background:#f0f9ff;font-weight:700;border-top:2px solid #0369a1">
+    <td style="padding:8px 10px;color:#0369a1">Total</td>
+    <td style="padding:8px 10px;text-align:right;color:#0369a1">${rowsM2.length.toLocaleString()}</td>
+    ${M1?`<td style="padding:8px 10px;text-align:right;color:#6b7280">${rowsM1.length.toLocaleString()}</td>`:''}
+    <td style="padding:8px 10px;text-align:center">${diffBadge(rowsM2.length,rowsM1.length,v=>Math.round(v).toLocaleString())}</td>
+    <td></td>
+    <td style="padding:8px 10px;text-align:right;color:#0369a1">${Math.round(totalVal2).toLocaleString()}</td>
+    ${M1?`<td style="padding:8px 10px;text-align:right;color:#9ca3af;font-size:.82rem">${Math.round(totalVal1).toLocaleString()}</td>`:''}
+    <td style="padding:8px 10px;text-align:center">${diffBadge(totalVal2,totalVal1,fmtEgp)}</td>
+    <td style="padding:8px 10px;text-align:right;color:#6b7280;font-size:.82rem">${avgTot2?Math.round(avgTot2).toLocaleString():'—'}</td>
+    ${M1?`<td style="padding:8px 10px;text-align:center">${diffBadge(avgTot2,avgTot1,fmtEgp)}</td>`:''}
+  </tr>`;
+
+  // zone rows — union of zones in both months sorted by M2 value
+  const allZones=[...new Set([...Object.keys(zn2),...Object.keys(zn1)])].sort((a,b)=>(zn2[b]?.val||0)-(zn2[a]?.val||0)).slice(0,12);
+  const zoneRows = allZones.map(z=>{
+    const d2=zn2[z]||{qty:0,val:0}; const d1=zn1[z]||{qty:0,val:0};
+    const pct2=Math.round(d2.qty/(rowsM2.length||1)*100);
+    const avgs2=d2.qty?(d2.val/d2.qty):0; const avgs1=d1.qty?(d1.val/d1.qty):0;
+    return `<tr style="border-bottom:1px solid #f3f4f6">
       <td style="padding:7px 10px;font-weight:600;color:#374151">${z}</td>
-      <td style="padding:7px 10px;text-align:right;color:#111">${d.qty.toLocaleString()}</td>
+      <td style="padding:7px 10px;text-align:right;color:#0369a1;font-weight:700">${d2.qty.toLocaleString()}</td>
+      ${M1?`<td style="padding:7px 10px;text-align:right;color:#9ca3af;font-size:.82rem">${d1.qty.toLocaleString()}</td>`:''}
+      <td style="padding:7px 10px;text-align:center">${diffBadge(d2.qty,d1.qty,v=>Math.round(v).toLocaleString())}</td>
       <td style="padding:7px 10px">
-        <div style="display:flex;align-items:center;gap:6px">
-          <div style="flex:1;height:6px;border-radius:3px;background:#e5e7eb;overflow:hidden"><div style="height:100%;width:${pct}%;background:#0369a1;border-radius:3px"></div></div>
-          <span style="font-size:.78rem;color:#6b7280;width:30px;text-align:right">${pct}%</span>
+        <div style="display:flex;align-items:center;gap:4px">
+          <div style="flex:1;height:5px;border-radius:3px;background:#e5e7eb;overflow:hidden"><div style="height:100%;width:${pct2}%;background:#0369a1;border-radius:3px"></div></div>
+          <span style="font-size:.75rem;color:#374151;width:28px;text-align:right">${pct2}%</span>
         </div>
       </td>
-      <td style="padding:7px 10px;text-align:right;color:#0369a1;font-weight:600">${Math.round(d.val).toLocaleString()} EGP</td>
+      <td style="padding:7px 10px;text-align:right;color:#0369a1;font-weight:700">${Math.round(d2.val).toLocaleString()}</td>
+      ${M1?`<td style="padding:7px 10px;text-align:right;color:#9ca3af;font-size:.82rem">${Math.round(d1.val).toLocaleString()}</td>`:''}
+      <td style="padding:7px 10px;text-align:center">${diffBadge(d2.val,d1.val,fmtEgp)}</td>
+      <td style="padding:7px 10px;text-align:right;color:#6b7280;font-size:.82rem">${avgs2?Math.round(avgs2).toLocaleString():'—'}</td>
+      ${M1?`<td style="padding:7px 10px;text-align:center">${diffBadge(avgs2,avgs1,fmtEgp)}</td>`:''}
     </tr>`;
   }).join('');
 
-  const thStyle='padding:8px 10px;font-size:.78rem;font-weight:700;text-transform:uppercase;letter-spacing:.04em;color:#fff;text-align:left';
-  const tblStyle='width:100%;border-collapse:collapse;font-size:.86rem';
+  const colSpanN = M1 ? 10 : 6;
+  const sizeHeader=`<tr style="background:#0369a1">
+    <th style="${thL}">Size</th>
+    <th style="${thS}">${M2} Qty</th>
+    ${M1?`<th style="${thS}">${M1} Qty</th>`:''}
+    <th style="${thS}">Δ Qty</th>
+    <th style="${thL}">Share</th>
+    <th style="${thS}">${M2} Value (EGP)</th>
+    ${M1?`<th style="${thS}">${M1} Value</th>`:''}
+    <th style="${thS}">Δ Value</th>
+    <th style="${thS}">Avg/Shipment</th>
+    ${M1?`<th style="${thS}">Δ Avg</th>`:''}
+  </tr>`;
+  const zoneHeader=`<tr style="background:#0369a1">
+    <th style="${thL}">Zone</th>
+    <th style="${thS}">${M2} Qty</th>
+    ${M1?`<th style="${thS}">${M1} Qty</th>`:''}
+    <th style="${thS}">Δ Qty</th>
+    <th style="${thL}">Share</th>
+    <th style="${thS}">${M2} Value (EGP)</th>
+    ${M1?`<th style="${thS}">${M1} Value</th>`:''}
+    <th style="${thS}">Δ Value</th>
+    <th style="${thS}">Avg/Shipment</th>
+    ${M1?`<th style="${thS}">Δ Avg</th>`:''}
+  </tr>`;
 
   el.innerHTML=`
-  <div style="border-radius:12px;overflow:hidden;box-shadow:0 2px 12px rgba(0,0,0,.1);border:1px solid #e5e7eb">
-    <div style="background:linear-gradient(135deg,#0369a1,#0284c7);padding:12px 16px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px">
-      <span style="color:#fff;font-weight:700;font-size:.95rem">📦 Raya Total Shipment Value</span>
-      <div style="display:flex;gap:6px;flex-wrap:wrap">${statBtns}</div>
+  <div style="border-radius:12px;overflow:hidden;box-shadow:0 2px 12px rgba(0,0,0,.1);border:1px solid #e5e7eb;margin-top:4px">
+    <div style="background:linear-gradient(135deg,#0369a1,#0284c7);padding:12px 16px">
+      <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:10px">
+        <span style="color:#fff;font-weight:700;font-size:.95rem">📊 Raya Value — Month over Month</span>
+        <div style="display:flex;gap:6px;align-items:center">
+          <span style="color:rgba(255,255,255,.7);font-size:.78rem">Current:</span>
+          <div style="display:flex;gap:4px;flex-wrap:wrap">${m2Btns}</div>
+        </div>
+      </div>
+      ${allMonths.length>1?`<div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap"><span style="color:rgba(255,255,255,.7);font-size:.78rem">Compare vs:</span>${m1Opts}</div>`:''}
     </div>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:0">
-      <div style="border-right:1px solid #e5e7eb">
-        <div style="background:#0369a1;display:grid;grid-template-columns:1fr 80px 1fr 110px">
-          <div style="${thStyle}">Size${_rayaValSize?` <span style="background:#7c3aed;color:#fff;border-radius:10px;padding:1px 8px;font-size:.75rem">${_rayaValSize}</span>`:''}</div>
-          <div style="${thStyle};text-align:right">Qty</div>
-          <div style="${thStyle}">Share</div>
-          <div style="${thStyle};text-align:right">Value</div>
-        </div>
-        <table style="${tblStyle}">${sizeRows}</table>
-        <div style="padding:6px 10px;background:#f8fafc;border-top:1px solid #e5e7eb;font-size:.78rem;color:#6b7280">Click a size row to filter zones →</div>
-      </div>
-      <div>
-        <div style="background:#0369a1;display:grid;grid-template-columns:1fr 60px 1fr 110px">
-          <div style="${thStyle}">Zone${_rayaValSize?` (${_rayaValSize})`:''}</div>
-          <div style="${thStyle};text-align:right">Qty</div>
-          <div style="${thStyle}">Share</div>
-          <div style="${thStyle};text-align:right">Value</div>
-        </div>
-        <table style="${tblStyle}">${zoneRows||'<tr><td colspan="4" style="padding:16px;text-align:center;color:#9ca3af">No data</td></tr>'}</table>
-        <div style="padding:6px 10px;background:#f8fafc;border-top:1px solid #e5e7eb;font-size:.78rem;color:#6b7280">Total: <b>${sizeFiltered.length.toLocaleString()}</b> shipments · <b>${Math.round(zTotalVal).toLocaleString()} EGP</b></div>
-      </div>
+    <div style="padding:0">
+      <div style="padding:8px 12px;background:#f0f9ff;border-bottom:1px solid #e5e7eb;font-size:.8rem;color:#0369a1;font-weight:600">📦 Size Distribution</div>
+      <div style="overflow-x:auto"><table style="width:100%;border-collapse:collapse;font-size:.84rem">
+        ${sizeHeader}${sizeRows}${sizeTotalRow}
+      </table></div>
+      <div style="padding:8px 12px;background:#f0f9ff;border-bottom:1px solid #e5e7eb;border-top:1px solid #e5e7eb;font-size:.8rem;color:#0369a1;font-weight:600">🗺️ Zone Distribution (Top 12 by ${M2} Value)</div>
+      <div style="overflow-x:auto"><table style="width:100%;border-collapse:collapse;font-size:.84rem">
+        ${zoneHeader}${zoneRows||`<tr><td colspan="${colSpanN}" style="padding:16px;text-align:center;color:#9ca3af">No data</td></tr>`}
+      </table></div>
     </div>
   </div>`;
 }
