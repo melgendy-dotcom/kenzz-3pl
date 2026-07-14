@@ -2909,7 +2909,9 @@ function renderAnalytics(){
 
   /* ---- ACPS Bridge Analysis (MoM decomposition) ---- */
   function acpsBridge(rows, getMonth, getZone, getSize, getCost, hasZone, extraFactors, rateCompare){
-    const months=[...new Set(rows.map(getMonth).filter(Boolean))].sort();
+    const _moOrd=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+    const _moK=s=>{ const p=s.split("'"); const yr=p.length>1?(+p[1]||0):0; const mi=_moOrd.indexOf(p[0]); return yr*12+(mi>=0?mi:0); };
+    const months=[...new Set(rows.map(getMonth).filter(Boolean))].sort((a,b)=>_moK(a)-_moK(b));
     if(months.length<2) return '<div style="color:var(--muted);font-size:.78rem;padding:10px 0;font-style:italic">Upload 2+ months with Data Month set to enable bridge analysis.</div>';
     const M1=months[months.length-2], M2=months[months.length-1];
     const r1=rows.filter(r=>getMonth(r)===M1), r2=rows.filter(r=>getMonth(r)===M2);
