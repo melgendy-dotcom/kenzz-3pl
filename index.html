@@ -3146,7 +3146,8 @@ function renderAnalytics(){
   renderValDash({
     elId:'bo-value-dash', key:'bo', data:()=>bostaData,
     getMonth:r=>r.uploadMonth||null,
-    getStatus:null, statuses:null,
+    getStatus:r=>{ const l=r.breakdownLabel||''; if(l==='Delivered')return'delivered'; if(l==='RTN'||l==='RTO')return'returned'; return'other'; },
+    statuses:[{v:'all',l:'All'},{v:'delivered',l:'Delivered'},{v:'returned',l:'Returned'}],
     getSize:r=>r.pkgSize||'Other',
     sizes:null,
     getZone:r=>String(r.zone||'').trim()||'Other',
