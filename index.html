@@ -3204,7 +3204,8 @@ function renderRayaValueDash(){
       ${td(Math.round(d2.val).toLocaleString()+' EGP',true,true)}
       ${M1?td(Math.round(d1.val).toLocaleString(),true,false,true):''}
       ${tdc(deltaV(d2.val,d1.val))}
-      ${td(avg2?avg2.toLocaleString()+' EGP':'—',true,false,true)}
+      ${td(avg2?avg2.toLocaleString()+' EGP':'—',true,true)}
+      ${M1?td(avg1?avg1.toLocaleString()+' EGP':'—',true,false,true):''}
       ${M1?tdc(deltaV(avg2,avg1)):''}
     </tr>`;
   }).join('');
@@ -3219,7 +3220,8 @@ function renderRayaValueDash(){
     ${td(Math.round(totV2).toLocaleString()+' EGP',true,true)}
     ${M1?td(Math.round(totV1).toLocaleString(),true,false,true):''}
     ${tdc(deltaV(totV2,totV1))}
-    ${td(totAvg2?totAvg2.toLocaleString()+' EGP':'—',true,false,true)}
+    ${td(totAvg2?totAvg2.toLocaleString()+' EGP':'—',true,true)}
+    ${M1?td(totAvg1?totAvg1.toLocaleString()+' EGP':'—',true,false,true):''}
     ${M1?tdc(deltaV(totAvg2,totAvg1)):''}
   </tr>`;
 
@@ -3238,13 +3240,14 @@ function renderRayaValueDash(){
       ${td(Math.round(d2.val).toLocaleString()+' EGP',true,true)}
       ${M1?td(Math.round(d1.val).toLocaleString(),true,false,true):''}
       ${tdc(deltaV(d2.val,d1.val))}
-      ${td(avg2?avg2.toLocaleString()+' EGP':'—',true,false,true)}
+      ${td(avg2?avg2.toLocaleString()+' EGP':'—',true,true)}
+      ${M1?td(avg1?avg1.toLocaleString()+' EGP':'—',true,false,true):''}
       ${M1?tdc(deltaV(avg2,avg1)):''}
     </tr>`;
   }).join('');
 
-  const sizeHdr=`<tr style="background:#0369a1">${th('Size')}${th(M2+' Qty',true)}${M1?th(M1+' Qty',true):''}${th('Δ Qty',true)}${th('Share')}${th(M2+' Value',true)}${M1?th(M1+' Value',true):''}${th('Δ Value',true)}${th('Avg/Ship',true)}${M1?th('Δ Avg',true):''}</tr>`;
-  const zoneHdr=`<tr style="background:#7c3aed">${th(_rayaValSize?'Zone ('+_rayaValSize+')':'Zone')}${th(M2+' Qty',true)}${M1?th(M1+' Qty',true):''}${th('Δ Qty',true)}${th('Share')}${th(M2+' Value',true)}${M1?th(M1+' Value',true):''}${th('Δ Value',true)}${th('Avg/Ship',true)}${M1?th('Δ Avg',true):''}</tr>`;
+  const sizeHdr=`<tr style="background:#0369a1">${th('Size')}${th(M2+' Qty',true)}${M1?th(M1+' Qty',true):''}${th('Δ Qty',true)}${th('Share')}${th(M2+' Value',true)}${M1?th(M1+' Value',true):''}${th('Δ Value',true)}${th(M2+' Avg/Ship',true)}${M1?th(M1+' Avg/Ship',true):''}${M1?th('Δ Avg',true):''}</tr>`;
+  const zoneHdr=`<tr style="background:#7c3aed">${th(_rayaValSize?'Zone ('+_rayaValSize+')':'Zone')}${th(M2+' Qty',true)}${M1?th(M1+' Qty',true):''}${th('Δ Qty',true)}${th('Share')}${th(M2+' Value',true)}${M1?th(M1+' Value',true):''}${th('Δ Value',true)}${th(M2+' Avg/Ship',true)}${M1?th(M1+' Avg/Ship',true):''}${M1?th('Δ Avg',true):''}</tr>`;
 
   el.innerHTML=`
   <div style="border-radius:12px;overflow:hidden;box-shadow:0 2px 12px rgba(0,0,0,.1);border:1px solid #e5e7eb;margin-top:6px">
