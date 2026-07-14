@@ -3166,6 +3166,7 @@ function renderAnalytics(){
     </div>
     ${zoneSizeTable(rayaData.filter(r=>r.tier&&r.category), r=>String(r.tier||'').trim(), r=>normSize(r.category), ['Size S','Size M','Size L'])}
     ${acpsBridge(rayaData, r=>r.uploadMonth||r.month, r=>String(r.zone||r.tier||'').trim(), r=>normSize(r.category), r=>r.totalBilled||0, true, [
+      {icon:'🚗',label:'Pickup Cost',color:'#0891b2',getVal:r=>r.pickupCost||0},
       {icon:'💳',label:'COD Fees',color:'#b45309',getVal:r=>r.codFees||0},
       {icon:'🛡️',label:'Insurance Fees',color:'#7c3aed',getVal:r=>r.insFees||0},
       {icon:'🔁',label:'Extra Attempts',color:'#dc2626',getVal:r=>r.extraCost||0},
