@@ -2908,7 +2908,7 @@ function renderAnalytics(){
   const bostaSizes = [...new Set(bostaData.map(r=>r.pkgSize).filter(Boolean))].sort();
 
   /* ---- ACPS Bridge Analysis (MoM decomposition) ---- */
-  function acpsBridge(rows, getMonth, getZone, getSize, getCost, hasZone, extraFactors){
+  function acpsBridge(rows, getMonth, getZone, getSize, getCost, hasZone, extraFactors, rateCompare){
     const months=[...new Set(rows.map(getMonth).filter(Boolean))].sort();
     if(months.length<2) return '<div style="color:var(--muted);font-size:.78rem;padding:10px 0;font-style:italic">Upload 2+ months with Data Month set to enable bridge analysis.</div>';
     const M1=months[months.length-2], M2=months[months.length-1];
@@ -3044,6 +3044,50 @@ function renderAnalytics(){
         ${shiftTbl(sShare1,sShare2,r1.length,r2.length,allSizes,'SIZE DISTRIBUTION')}
         ${hasZone&&getZone?shiftTbl(zShare1,zShare2,r1.length,r2.length,allZones,'ZONE DISTRIBUTION'):''}
       </div>
+      ${(()=>{
+        if(!rateCompare) return '';
+        const {getContractVal, getBilledVal} = rateCompare;
+        const avgContract1=avgArr(r1.map(getContractVal)), avgContract2=avgArr(r2.map(getContractVal));
+        const avgBilled1=avgArr(r1.map(getBilledVal)), avgBilled2=avgArr(r2.map(getBilledVal));
+        const gap1=avgBilled1-avgContract1, gap2=avgBilled2-avgContract2;
+        const gapDelta=gap2-gap1;
+        const billedDelta=avgBilled2-avgBilled1;
+        const contractDelta=avgContract2-avgContract1;
+        const thS='background:#0f172a;color:#94a3b8;font-size:.68rem;font-weight:700;letter-spacing:.04em;padding:8px 14px;text-align:right;white-space:nowrap';
+        const thL='background:#0f172a;color:#94a3b8;font-size:.68rem;font-weight:700;letter-spacing:.04em;padding:8px 14px;text-align:left';
+        const td='padding:10px 14px;font-size:.8rem;text-align:right;border-bottom:1px solid #f1f5f9;font-variant-numeric:tabular-nums';
+        const tdL='padding:10px 14px;font-size:.8rem;text-align:left;border-bottom:1px solid #f1f5f9;font-weight:600';
+        const dB=(v)=>{ const up=v>0.05; const dn=v<-0.05;
+          const bc=up?'#fee2e2':dn?'#dcfce7':'#f8fafc';
+          const tc=up?'#dc2626':dn?'#16a34a':'#64748b';
+          const ar=up?'▲':dn?'▼':'→';
+          return `<span style="background:${bc};color:${tc};border-radius:6px;padding:3px 9px;font-size:.75rem;font-weight:700">${ar} ${Math.abs(v).toFixed(2)}</span>`; };
+        const rows=[
+          {label:'📋 Contract Rate (per contract file)', v1:avgContract1, v2:avgContract2, delta:contractDelta, color:'#0369a1', bg:'#eff6ff'},
+          {label:'💸 Billed by Raya (actual DL charge)', v1:avgBilled1, v2:avgBilled2, delta:billedDelta, color:'#7c3aed', bg:'#faf5ff'},
+          {label:'⚠️ Gap (Billed − Contract)', v1:gap1, v2:gap2, delta:gapDelta, color:Math.abs(gap2)>0.5?'#dc2626':'#16a34a', bg:Math.abs(gap2)>0.5?'#fff5f5':'#f0fdf4', bold:true},
+        ];
+        return `<div style="margin-top:14px;border-radius:10px;overflow:hidden;border:1px solid #e2e8f0">
+          <div style="background:#1e293b;padding:8px 14px;display:flex;align-items:center;gap:8px">
+            <span style="color:#fff;font-weight:700;font-size:.8rem">📊 Contract Rate vs Actual Billing Comparison</span>
+            <span style="color:#94a3b8;font-size:.72rem">avg per shipment</span>
+          </div>
+          <table style="width:100%;border-collapse:collapse">
+            <thead><tr>
+              <th style="${thL}">Metric</th>
+              <th style="${thS}">${M1} Avg</th>
+              <th style="${thS}">${M2} Avg</th>
+              <th style="${thS}">Change M1→M2</th>
+            </tr></thead>
+            <tbody>${rows.map(r=>`<tr style="background:${r.bg}">
+              <td style="${tdL};color:${r.color};border-left:4px solid ${r.color}">${r.label}</td>
+              <td style="${td};color:#374151">${r.v1.toFixed(2)} EGP</td>
+              <td style="${td};color:#374151;font-weight:${r.bold?700:400}">${r.v2.toFixed(2)} EGP</td>
+              <td style="${td}">${dB(r.delta)}</td>
+            </tr>`).join('')}</tbody>
+          </table>
+        </div>`;
+      })()}
     </div>`;
   }
 
@@ -3125,7 +3169,7 @@ function renderAnalytics(){
       {icon:'💳',label:'COD Fees',color:'#b45309',getVal:r=>r.codFees||0},
       {icon:'🛡️',label:'Insurance Fees',color:'#7c3aed',getVal:r=>r.insFees||0},
       {icon:'🔁',label:'Extra Attempts',color:'#dc2626',getVal:r=>r.extraCost||0},
-    ])}
+    ], {getContractVal:r=>r.contractPrice||0, getBilledVal:r=>r.billedPrice||0})}
     <div id="raya-value-dash" style="margin-top:18px"></div>`
   );
 
