@@ -2985,16 +2985,17 @@ function renderAnalytics(){
     function wBar2(val){ const pct=Math.min(Math.abs(val)/maxEff*100,100).toFixed(1); const c=val>0.05?'#22c55e':val<-0.05?'#ef4444':'#94a3b8'; return `<div style="background:#f1f5f9;border-radius:6px;height:12px;overflow:hidden;min-width:100px;max-width:200px"><div style="width:${pct}%;height:100%;background:${c};border-radius:6px"></div></div>`; }
     const rowStyle='border-bottom:1px solid #f1f5f9;background:#fff';
     const tdL='padding:12px 14px;font-size:.8rem;vertical-align:middle';
+    const fmV=v=>v!==null?v.toFixed(2)+' EGP':`<span style="color:#9ca3af">—</span>`;
     const factors=[
-      {icon:'📦',num:'①',label:'Size Mix',color:'#dc2626',val:sizeEffect,
+      {icon:'📦',num:'①',label:'Size Mix',color:'#dc2626',val:sizeEffect,m1:null,m2:null,
        desc:Math.abs(sizeEffect)<0.05?'No size mix change':sizeEffect>0?`Size mix shifted to more expensive sizes`:`Size mix shifted to cheaper sizes`},
-      ...(hasZone&&getZone?[{icon:'🗺️',num:'②',label:'Zone Mix',color:'#2563eb',val:zoneEffect,
+      ...(hasZone&&getZone?[{icon:'🗺️',num:'②',label:'Zone Mix',color:'#2563eb',val:zoneEffect,m1:null,m2:null,
        desc:Math.abs(zoneEffect)<0.05?'No zone mix change':zoneEffect>0?`More shipments to distant zones → higher cost`:`More shipments to closer zones → lower cost`}]:[]),
-      {icon:'⚡',num:hasZone&&getZone?'③':'②',label:extraRows.length?'Contract Rate':'Rate / Other',color:'#d97706',val:extraRows.length?pureRate:residual,
+      {icon:'⚡',num:hasZone&&getZone?'③':'②',label:extraRows.length?'Contract Rate':'Rate / Other',color:'#d97706',val:extraRows.length?pureRate:residual,m1:null,m2:null,
        desc:extraRows.length?`${Math.abs(pureRate).toFixed(2)} EGP — pure contract rate ${pureRate<0?'reduction':'increase'}`:`${Math.abs(residual).toFixed(2)} EGP unexplained ← possible rate ${residual<0?'reduction':'increase'}`},
-      ...extraRows.map((f,i)=>({icon:f.icon,num:String.fromCharCode(9312+(hasZone&&getZone?3:2)+i),label:f.label,color:f.color,val:f.val,
+      ...extraRows.map((f,i)=>({icon:f.icon,num:String.fromCharCode(9312+(hasZone&&getZone?3:2)+i),label:f.label,color:f.color,val:f.val,m1:f.avg1,m2:f.avg2,
        desc:`Avg ${f.label}: ${f.avg1.toFixed(2)} EGP → ${f.avg2.toFixed(2)} EGP`})),
-      {icon:'📊',num:String.fromCharCode(9312+(hasZone&&getZone?3:2)+extraRows.length),label:'Volume',color:'#9ca3af',val:null,
+      {icon:'📊',num:String.fromCharCode(9312+(hasZone&&getZone?3:2)+extraRows.length),label:'Volume',color:'#9ca3af',val:null,m1:r1.length,m2:r2.length,isCount:true,
        desc:`${volChange>=0?'+':''}${fm(Math.abs(volChange))} shipments (${volChange>=0?'+':''}${volPct}%) — impacts total spend, not cost-per-shipment`},
     ];
     const factorRows=factors.map(f=>`<tr style="${rowStyle}">
@@ -3003,9 +3004,10 @@ function renderAnalytics(){
         <span style="color:#6b7280;font-size:.72rem;margin-right:4px">${f.num}</span>
         <span style="font-weight:600;color:#374151">${f.label}</span>
       </td>
+      <td style="${tdL};text-align:right;color:#374151;font-variant-numeric:tabular-nums">${f.m1!==null?(f.isCount?fm(f.m1):f.m1.toFixed(2)+' EGP'):`<span style="color:#9ca3af">—</span>`}</td>
+      <td style="${tdL};text-align:right;color:#374151;font-variant-numeric:tabular-nums">${f.m2!==null?(f.isCount?fm(f.m2):f.m2.toFixed(2)+' EGP'):`<span style="color:#9ca3af">—</span>`}</td>
       <td style="${tdL};text-align:center">${f.val!==null?impactBadge(f.val):`<span style="color:#9ca3af">—</span>`}</td>
       <td style="${tdL}">${f.val!==null?wBar2(f.val):''}</td>
-      <td style="${tdL};color:#6b7280;font-size:.78rem">${f.desc}</td>
     </tr>`).join('');
     return `<div style="margin-top:18px;border-radius:12px;overflow:hidden;box-shadow:0 2px 12px rgba(126,0,225,.10)">
       <!-- Top summary bar -->
@@ -3015,11 +3017,12 @@ function renderAnalytics(){
         <span style="background:rgba(255,255,255,.10);color:#bbf7d0;border:1px solid rgba(255,255,255,.2);border-radius:20px;padding:3px 12px;font-size:.75rem;font-weight:600">${volChange>=0?'+':''}${fm(Math.abs(volChange))} shipments (${volChange>=0?'+':''}${volPct}%) volume</span>
       </div>
       <!-- Column headers -->
-      <div style="background:#7E00E1;display:grid;grid-template-columns:2fr 1fr 1fr 2fr;padding:8px 14px;gap:8px">
+      <div style="background:#7E00E1;display:grid;grid-template-columns:2fr 1fr 1fr 1fr 1fr;padding:8px 14px;gap:8px">
         <span style="color:#fff;font-size:.72rem;font-weight:700">Driver</span>
-        <span style="color:#fff;font-size:.72rem;font-weight:700;text-align:center">Impact (EGP/shipment)</span>
-        <span style="color:#fff;font-size:.72rem;font-weight:700">← Cost Down | <span style="color:#fca5a5">Cost Up</span> →</span>
-        <span style="color:#fff;font-size:.72rem;font-weight:700">What drove this</span>
+        <span style="color:#fff;font-size:.72rem;font-weight:700;text-align:right">${M1}</span>
+        <span style="color:#fff;font-size:.72rem;font-weight:700;text-align:right">${M2}</span>
+        <span style="color:#fff;font-size:.72rem;font-weight:700;text-align:center">Δ Change</span>
+        <span style="color:#fff;font-size:.72rem;font-weight:700">← Down | <span style="color:#fca5a5">Up</span> →</span>
       </div>
       <!-- Baseline row -->
       <div style="background:linear-gradient(90deg,#faf5ff,#f5f3ff);padding:12px 14px;display:grid;grid-template-columns:2fr 1fr 1fr 2fr;gap:8px;align-items:center;border-bottom:1px solid #e9d5ff">
