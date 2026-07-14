@@ -2908,7 +2908,7 @@ function renderAnalytics(){
   const bostaSizes = [...new Set(bostaData.map(r=>r.pkgSize).filter(Boolean))].sort();
 
   /* ---- ACPS Bridge Analysis (MoM decomposition) ---- */
-  function acpsBridge(rows, getMonth, getZone, getSize, getCost, hasZone){
+  function acpsBridge(rows, getMonth, getZone, getSize, getCost, hasZone, extraFactors){
     const months=[...new Set(rows.map(getMonth).filter(Boolean))].sort();
     if(months.length<2) return '<div style="color:var(--muted);font-size:.78rem;padding:10px 0;font-style:italic">Upload 2+ months with Data Month set to enable bridge analysis.</div>';
     const M1=months[months.length-2], M2=months[months.length-1];
@@ -2931,7 +2931,18 @@ function renderAnalytics(){
       zoneEffect=mixEff(zShare2,avgByZone1,r2.length,acps1);
       allZones=[...new Set([...Object.keys(zShare1),...Object.keys(zShare2)])].sort((a,b)=>a.localeCompare(b,undefined,{numeric:true}));
     }
+    // decompose extra factors (e.g. COD, insurance, extra attempts) from residual
+    let extraRows=[], extraTotal=0;
+    if(extraFactors&&extraFactors.length){
+      extraFactors.forEach(f=>{
+        const avg1=avgArr(r1.map(f.getVal)), avg2=avgArr(r2.map(f.getVal));
+        const eff=avg2-avg1;
+        extraRows.push({...f,val:eff,avg1,avg2});
+        extraTotal+=eff;
+      });
+    }
     const residual=totalChange-sizeEffect-zoneEffect;
+    const pureRate=residual-extraTotal;
     const volChange=r2.length-r1.length;
     const volPct=r1.length>0?((volChange/r1.length)*100).toFixed(1):'0';
     const thB='background:#0f172a;color:#94a3b8;font-size:.68rem;padding:7px 12px;font-weight:700;letter-spacing:.04em;white-space:nowrap';
@@ -2939,7 +2950,7 @@ function renderAnalytics(){
     const clr=v=>v>0.05?'#4ade80':v<-0.05?'#f87171':'var(--muted)';
     const arr=v=>v>0.05?'↑':v<-0.05?'↓':'→';
     const fmD=v=>(v>=0?'+':'')+v.toFixed(2);
-    const maxEff=Math.max(Math.abs(sizeEffect),Math.abs(zoneEffect),Math.abs(residual),0.01);
+    const maxEff=Math.max(Math.abs(sizeEffect),Math.abs(zoneEffect),Math.abs(pureRate),...extraRows.map(f=>Math.abs(f.val)),0.01);
     function wBar(val){ const pct=Math.min(Math.abs(val)/maxEff*100,100).toFixed(1); const c=val>0.05?'#f87171':val<-0.05?'#4ade80':'#475569'; return `<div style="background:rgba(255,255,255,.1);border-radius:4px;height:10px;overflow:hidden;min-width:90px"><div style="width:${pct}%;height:100%;background:${c};border-radius:4px"></div></div>`; }
     function shiftTbl(sh1,sh2,n1,n2,keys,label){
       const rows=keys.map((k,ki)=>{
@@ -2979,9 +2990,11 @@ function renderAnalytics(){
        desc:Math.abs(sizeEffect)<0.05?'No size mix change':sizeEffect>0?`Size mix shifted to more expensive sizes`:`Size mix shifted to cheaper sizes`},
       ...(hasZone&&getZone?[{icon:'🗺️',num:'②',label:'Zone Mix',color:'#2563eb',val:zoneEffect,
        desc:Math.abs(zoneEffect)<0.05?'No zone mix change':zoneEffect>0?`More shipments to distant zones → higher cost`:`More shipments to closer zones → lower cost`}]:[]),
-      {icon:'⚡',num:hasZone&&getZone?'③':'②',label:'Rate / Other',color:'#d97706',val:residual,
-       desc:`${Math.abs(residual).toFixed(2)} EGP unexplained ← possible rate ${residual<0?'reduction':'increase'}`},
-      {icon:'📊',num:hasZone&&getZone?'④':'③',label:'Volume',color:'#9ca3af',val:null,
+      {icon:'⚡',num:hasZone&&getZone?'③':'②',label:extraRows.length?'Contract Rate':'Rate / Other',color:'#d97706',val:extraRows.length?pureRate:residual,
+       desc:extraRows.length?`${Math.abs(pureRate).toFixed(2)} EGP — pure contract rate ${pureRate<0?'reduction':'increase'}`:`${Math.abs(residual).toFixed(2)} EGP unexplained ← possible rate ${residual<0?'reduction':'increase'}`},
+      ...extraRows.map((f,i)=>({icon:f.icon,num:String.fromCharCode(9312+(hasZone&&getZone?3:2)+i),label:f.label,color:f.color,val:f.val,
+       desc:`Avg ${f.label}: ${f.avg1.toFixed(2)} EGP → ${f.avg2.toFixed(2)} EGP`})),
+      {icon:'📊',num:String.fromCharCode(9312+(hasZone&&getZone?3:2)+extraRows.length),label:'Volume',color:'#9ca3af',val:null,
        desc:`${volChange>=0?'+':''}${fm(Math.abs(volChange))} shipments (${volChange>=0?'+':''}${volPct}%) — impacts total spend, not cost-per-shipment`},
     ];
     const factorRows=factors.map(f=>`<tr style="${rowStyle}">
@@ -3108,7 +3121,11 @@ function renderAnalytics(){
       ${bar(t.invoice,RA.totalBill,RA.totalBill,'var(--red)')}${bar(t.kenzzCalc,RA.totalCalc,RA.totalBill,'var(--green2)')}
     </div>
     ${zoneSizeTable(rayaData.filter(r=>r.tier&&r.category), r=>String(r.tier||'').trim(), r=>normSize(r.category), ['Size S','Size M','Size L'])}
-    ${acpsBridge(rayaData, r=>r.uploadMonth||r.month, r=>String(r.zone||r.tier||'').trim(), r=>normSize(r.category), r=>r.totalBilled||0, true)}
+    ${acpsBridge(rayaData, r=>r.uploadMonth||r.month, r=>String(r.zone||r.tier||'').trim(), r=>normSize(r.category), r=>r.totalBilled||0, true, [
+      {icon:'💳',label:'COD Fees',color:'#b45309',getVal:r=>r.codFees||0},
+      {icon:'🛡️',label:'Insurance Fees',color:'#7c3aed',getVal:r=>r.insFees||0},
+      {icon:'🔁',label:'Extra Attempts',color:'#dc2626',getVal:r=>r.extraCost||0},
+    ])}
     <div id="raya-value-dash" style="margin-top:18px"></div>`
   );
 
