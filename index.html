@@ -2875,6 +2875,126 @@ function renderAnalytics(){
       </table></div>
     </div>`;
   }
+  /* ---- Raya Contract Discrepancy Table (Zone × Size, billed vs contract) ---- */
+  function rayaContractDiscrepancy(rows){
+    if(!rows.length) return '';
+    const _moOrd=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+    const _moK=s=>{ const p=s.split("'"); const yr=p.length>1?(+p[1]||0):0; const mi=_moOrd.indexOf(p[0]); return yr*12+(mi>=0?mi:0); };
+    const months=[...new Set(rows.map(r=>r.uploadMonth||r.month).filter(Boolean))].sort((a,b)=>_moK(a)-_moK(b));
+    if(!months.length) return '';
+    const M1=months.length>=2?months[months.length-2]:null;
+    const M2=months[months.length-1];
+
+    const stKey='_rayaCDSt';
+    if(!window[stKey]) window[stKey]='all';
+    window['_setRayaCDSt']=v=>{ window[stKey]=v; renderAnalytics(); };
+    const stFilter=window[stKey];
+
+    const matchSt=r=>{
+      const s=String(r.status||'').toLowerCase();
+      if(stFilter==='delivered') return !s.includes('return')&&!s.includes('cancel');
+      if(stFilter==='returned') return s.includes('return');
+      return true;
+    };
+
+    const sizes=['Small','Medium','Large'];
+    const zones=[...new Set(rows.map(r=>String(r.tier||r.zone||'').trim()).filter(Boolean))].sort((a,b)=>a.localeCompare(b,undefined,{numeric:true}));
+
+    // Build aggregates: zone|size|month → {billedSum, contractSum, count, discrepancyCount}
+    const agg={};
+    rows.filter(matchSt).forEach(r=>{
+      const mo=r.uploadMonth||r.month||''; if(!mo) return;
+      const z=String(r.tier||r.zone||'').trim(); if(!z) return;
+      const sz=r.category||''; if(!sz) return;
+      const k=`${z}|${sz}|${mo}`;
+      if(!agg[k]) agg[k]={billed:0,contract:0,count:0,discCount:0};
+      agg[k].billed   += r.billedPrice||0;
+      agg[k].contract += r.contractPrice||0;
+      agg[k].count++;
+      if(Math.abs((r.billedPrice||0)-(r.contractPrice||0))>0.5) agg[k].discCount++;
+    });
+
+    const get=(z,sz,mo)=>agg[`${z}|${sz}|${mo}`]||{billed:0,contract:0,count:0,discCount:0};
+
+    const THRESH=0.5;
+    const hasContract=rows.some(r=>r.contractPrice>0);
+    if(!hasContract) return `<div style="margin-top:14px;padding:10px 14px;background:#fef9c3;border-radius:8px;font-size:.8rem;color:#854d0e">⚠️ No contract file loaded — upload a contract file to see discrepancy analysis.</div>`;
+
+    const EGP=v=>v.toLocaleString('en',{maximumFractionDigits:0})+' EGP';
+    const dBadge=diff=>{
+      if(Math.abs(diff)<THRESH) return `<span style="color:#9ca3af;font-size:.75rem">✓ Match</span>`;
+      const over=diff>0;
+      const bc=over?'#fee2e2':'#dcfce7'; const tc=over?'#dc2626':'#16a34a';
+      return `<span style="background:${bc};color:${tc};border-radius:6px;padding:2px 8px;font-size:.73rem;font-weight:700">${over?'▲':'▼'} ${EGP(Math.abs(diff))}</span>`;
+    };
+
+    const thS='background:#0f172a;color:#94a3b8;font-size:.68rem;font-weight:700;letter-spacing:.04em;padding:7px 10px;text-align:right;border:1px solid #1e293b;white-space:nowrap';
+    const thL='background:#0f172a;color:#94a3b8;font-size:.68rem;font-weight:700;letter-spacing:.04em;padding:7px 10px;text-align:left;border:1px solid #1e293b';
+    const tdR=(v,bold,clr)=>`<td style="padding:7px 10px;font-size:.8rem;text-align:right;border:1px solid #e2e8f0;font-variant-numeric:tabular-nums;${bold?'font-weight:700;':''}${clr?'color:'+clr+';':''}">${v}</td>`;
+    const tdLc=(v,sub)=>`<td style="padding:7px 10px;font-size:.8rem;text-align:left;border:1px solid #e2e8f0"><span style="font-weight:600;color:#1e293b">${v}</span>${sub?`<span style="display:block;font-size:.7rem;color:#6b7280;font-weight:400">${sub}</span>`:''}</td>`;
+
+    // Only include rows where at least one month has a discrepancy
+    let bodyHtml=''; let gt={b1:0,c1:0,b2:0,c2:0,cnt1:0,cnt2:0};
+    zones.forEach(z=>{
+      let zoneBody=''; let zb={b1:0,c1:0,b2:0,c2:0,cnt1:0,cnt2:0};
+      sizes.forEach(sz=>{
+        const d1=M1?get(z,sz,M1):{billed:0,contract:0,count:0,discCount:0};
+        const d2=get(z,sz,M2);
+        if(!d1.count&&!d2.count) return;
+        const diff1=d1.billed-d1.contract, diff2=d2.billed-d2.contract;
+        zb.b1+=d1.billed; zb.c1+=d1.contract; zb.b2+=d2.billed; zb.c2+=d2.contract;
+        zb.cnt1+=d1.count; zb.cnt2+=d2.count;
+        zoneBody+=`<tr style="background:#fff">
+          ${tdLc(sz,`${d1.count}→${d2.count} shipments`)}
+          ${M1?`${tdR(d1.count?EGP(d1.billed):'—',false,'')}${tdR(d1.count?EGP(d1.contract):'—',false,'')}${`<td style="padding:7px 10px;text-align:right;border:1px solid #e2e8f0">${d1.count?dBadge(diff1):'—'}</td>`}`:''}
+          ${tdR(d2.count?EGP(d2.billed):'—',false,'')}
+          ${tdR(d2.count?EGP(d2.contract):'—',false,'')}
+          <td style="padding:7px 10px;text-align:right;border:1px solid #e2e8f0">${d2.count?dBadge(diff2):'—'}</td>
+        </tr>`;
+      });
+      if(!zoneBody) return;
+      gt.b1+=zb.b1; gt.c1+=zb.c1; gt.b2+=zb.b2; gt.c2+=zb.c2; gt.cnt1+=zb.cnt1; gt.cnt2+=zb.cnt2;
+      const zd1=zb.b1-zb.c1, zd2=zb.b2-zb.c2;
+      bodyHtml+=`<tr style="background:#eff6ff">
+        <td style="padding:8px 10px;font-size:.82rem;font-weight:700;color:#0369a1;border:1px solid #bfdbfe">Zone ${z} <span style="font-weight:400;color:#6b7280;font-size:.72rem">(${zb.cnt1}→${zb.cnt2} ships)</span></td>
+        ${M1?`${tdR(EGP(zb.b1),true,'')}${tdR(EGP(zb.c1),true,'')}<td style="padding:7px 10px;text-align:right;border:1px solid #bfdbfe">${dBadge(zd1)}</td>`:''}
+        ${tdR(EGP(zb.b2),true,'')}${tdR(EGP(zb.c2),true,'')}
+        <td style="padding:7px 10px;text-align:right;border:1px solid #bfdbfe">${dBadge(zd2)}</td>
+      </tr>${zoneBody}`;
+    });
+
+    const totDiff1=gt.b1-gt.c1, totDiff2=gt.b2-gt.c2;
+    const totRow=`<tr style="background:linear-gradient(90deg,#0369a1,#0284c7)">
+      <td style="padding:10px;font-weight:700;color:#fff;font-size:.88rem;border:1px solid #0369a1">GRAND TOTAL</td>
+      ${M1?`${tdR(EGP(gt.b1),true,'#fff')}${tdR(EGP(gt.c1),true,'#fff')}<td style="padding:7px 10px;text-align:right;border:1px solid #0369a1">${dBadge(totDiff1)}</td>`:''}
+      ${tdR(EGP(gt.b2),true,'#fff')}${tdR(EGP(gt.c2),true,'#fff')}
+      <td style="padding:7px 10px;text-align:right;border:1px solid #0369a1">${dBadge(totDiff2)}</td>
+    </tr>`;
+
+    const filterBtns=['all','delivered','returned'].map(v=>{
+      const active=window[stKey]===v;
+      return `<button onclick="window._setRayaCDSt('${v}')" style="padding:5px 14px;border-radius:20px;border:1.5px solid ${active?'#fff':'rgba(255,255,255,.4)'};background:${active?'#fff':'transparent'};color:${active?'#0369a1':'#fff'};font-size:.78rem;font-weight:600;cursor:pointer">${v==='all'?'All':v==='delivered'?'✅ Delivered':'🔄 Returned'}</button>`;
+    }).join('');
+
+    const M1cols=M1?`<th style="${thS}">${M1} Billed</th><th style="${thS}">${M1} Contract</th><th style="${thS}">${M1} Diff</th>`:'';
+
+    return `<div style="margin-top:18px;border-radius:12px;overflow:hidden;box-shadow:0 2px 12px rgba(3,105,161,.12)">
+      <div style="background:linear-gradient(135deg,#0369a1,#0284c7);padding:10px 16px;display:flex;align-items:center;gap:12px;flex-wrap:wrap">
+        <span style="color:#fff;font-weight:700;font-size:.88rem">📋 Billing vs Contract — Discrepancy by Zone & Size</span>
+        <div style="display:flex;gap:6px;margin-left:auto">${filterBtns}</div>
+      </div>
+      <div style="overflow-x:auto"><table style="width:100%;border-collapse:collapse;min-width:${M1?'820':'480'}px">
+        <thead><tr>
+          <th style="${thL}">Zone / Size</th>${M1cols}
+          <th style="${thS}">${M2} Billed</th><th style="${thS}">${M2} Contract</th><th style="${thS}">${M2} Diff</th>
+        </tr></thead>
+        <tbody>${bodyHtml}${totRow}</tbody>
+      </table></div>
+      <div style="padding:8px 14px;background:#f8fafc;font-size:.72rem;color:#6b7280;font-style:italic">
+        ▲ red = Raya billed above contract &nbsp;|&nbsp; ▼ green = Raya billed below contract &nbsp;|&nbsp; ✓ Match = within 0.50 EGP
+      </div>
+    </div>`;
+  }
   /* ---- Raya Contract vs Breakdown Comparison Table ---- */
   function rayaContractTable(rows){
     const _moOrd2=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
@@ -3295,11 +3415,13 @@ function renderAnalytics(){
     </div>
     ${zoneSizeTable(rayaData.filter(r=>r.tier&&r.category), r=>String(r.tier||'').trim(), r=>normSize(r.category), ['Size S','Size M','Size L'])}
     ${acpsBridge(rayaData, r=>r.uploadMonth||r.month, r=>String(r.zone||r.tier||'').trim(), r=>normSize(r.category), r=>r.totalBilled||0, true, [
+      {icon:'📋',label:'DL Rate vs Contract',color:'#dc2626',getVal:r=>(r.billedPrice||0)-(r.contractPrice||0)},
       {icon:'🚗',label:'Pickup Cost',color:'#0891b2',getVal:r=>r.pickupCost||0},
       {icon:'💳',label:'COD Fees',color:'#b45309',getVal:r=>r.codFees||0},
       {icon:'🛡️',label:'Insurance Fees',color:'#7c3aed',getVal:r=>r.insFees||0},
       {icon:'🔁',label:'Extra Attempts',color:'#dc2626',getVal:r=>r.extraCost||0},
     ], {getContractVal:r=>r.contractPrice||0, getBilledVal:r=>r.billedPrice||0})}
+    ${rayaContractDiscrepancy(rayaData)}
     <div id="raya-value-dash" style="margin-top:18px"></div>`
   );
 
