@@ -3273,6 +3273,13 @@ function renderAnalytics(){
         });
       });
       if(drillRows){
+        const tot1=M1?avgArr(r1.map(contractDisc.getVal)):null;
+        const tot2=avgArr(r2.map(contractDisc.getVal));
+        const totDelta=(tot1!==null)?tot2-tot1:null;
+        const totRow=`<tr style="background:#1e293b">
+          <td style="padding:8px 12px;font-size:.8rem;font-weight:700;color:#fff;border:1px solid #334155">All Shipments (overall avg)</td>
+          ${M1?tdCD(tot1,true):''}${tdCD(tot2,true)}${tdCDdelta(totDelta)}
+        </tr>`;
         cdDrillTable=`<div style="margin-top:10px;border-radius:10px;overflow:hidden;border:1px solid #fed7aa">
           <div style="background:#b45309;padding:8px 14px;display:flex;align-items:center;gap:8px">
             <span style="color:#fff;font-weight:700;font-size:.8rem">⚡ Contract Rate Discrepancy — by Zone & Size</span>
@@ -3285,9 +3292,9 @@ function renderAnalytics(){
               <th style="${thCD}">${M2}</th>
               <th style="${thCD}">Δ Change</th>
             </tr></thead>
-            <tbody>${drillRows}</tbody>
+            <tbody>${drillRows}${totRow}</tbody>
           </table></div>
-          <div style="padding:6px 14px;background:#fffbeb;font-size:.7rem;color:#92400e;font-style:italic">▲ green = discrepancy increased &nbsp;|&nbsp; ▼ red = discrepancy decreased &nbsp;|&nbsp; only rows with >0.50 EGP gap shown</div>
+          <div style="padding:6px 14px;background:#fffbeb;font-size:.7rem;color:#92400e;font-style:italic">▲ green = discrepancy increased &nbsp;|&nbsp; ▼ red = discrepancy decreased &nbsp;|&nbsp; only rows with >0.50 EGP gap shown &nbsp;|&nbsp; "All Shipments" row matches the Contract Rate line above</div>
         </div>`;
       }
     }
