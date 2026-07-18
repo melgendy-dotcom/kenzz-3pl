@@ -2204,7 +2204,9 @@ function processRaya({rawRows, contract, THRESH}){
     const rateTable = (isReturned ? (contract.returns||{}) : (contract.delivery||{}));
     const zoneKey = String(zone).trim().replace(/^zone\s*/i,'');
     const rates = rateTable[zoneKey] || {};
-    const unitPrice = rates[category] || 0;
+    // If Raya billed 0 for delivery and no size QTY is set, skip contract rate (free/gratis shipment)
+    const noQty = !Object.keys(row).some(k=>k.includes('QTY')&&(parseFloat(row[k])||0)>0);
+    const unitPrice = (billedPrice===0 && noQty) ? 0 : (rates[category] || 0);
     const contractPrice = Math.round(unitPrice * 1000) / 1000;
 
     // diff = Raya's Price (col W) vs our contract rate — delivery charge comparison only
