@@ -3152,7 +3152,7 @@ function renderAnalytics(){
   const bostaSizes = [...new Set(bostaData.map(r=>r.pkgSize).filter(Boolean))].sort();
 
   /* ---- ACPS Bridge Analysis (MoM decomposition) ---- */
-  function acpsBridge(rows, getMonth, getZone, getSize, getCost, hasZone, extraFactors, rateCompare){
+  function acpsBridge(rows, getMonth, getZone, getSize, getCost, hasZone, extraFactors, rateCompare, contractDisc){
     const _moOrd=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
     const _moK=s=>{ const p=s.split("'"); const yr=p.length>1?(+p[1]||0):0; const mi=_moOrd.indexOf(p[0]); return yr*12+(mi>=0?mi:0); };
     const months=[...new Set(rows.map(getMonth).filter(Boolean))].sort((a,b)=>_moK(a)-_moK(b));
@@ -3237,8 +3237,13 @@ function renderAnalytics(){
        desc:Math.abs(sizeEffect)<0.05?'No size mix change':sizeEffect>0?`Size mix shifted to more expensive sizes`:`Size mix shifted to cheaper sizes`},
       ...(hasZone&&getZone?[{icon:'🗺️',num:'②',label:'Zone Mix',color:'#2563eb',val:zoneEffect,m1:null,m2:null,
        desc:Math.abs(zoneEffect)<0.05?'No zone mix change':zoneEffect>0?`More shipments to distant zones → higher cost`:`More shipments to closer zones → lower cost`}]:[]),
-      {icon:'⚡',num:hasZone&&getZone?'③':'②',label:extraRows.length?'Contract Rate':'Rate / Other',color:'#d97706',val:extraRows.length?pureRate:residual,m1:null,m2:null,
-       desc:extraRows.length?`${Math.abs(pureRate).toFixed(2)} EGP — pure contract rate ${pureRate<0?'reduction':'increase'}`:`${Math.abs(residual).toFixed(2)} EGP unexplained ← possible rate ${residual<0?'reduction':'increase'}`},
+      {icon:'⚡',num:hasZone&&getZone?'③':'②',label:'Contract Rate',color:'#d97706',
+       val: contractDisc ? (avgArr(r2.map(contractDisc.getVal)) - avgArr(r1.map(contractDisc.getVal))) : (extraRows.length?pureRate:residual),
+       m1: contractDisc ? avgArr(r1.map(contractDisc.getVal)) : null,
+       m2: contractDisc ? avgArr(r2.map(contractDisc.getVal)) : null,
+       desc: contractDisc
+         ? (()=>{ const a1=avgArr(r1.map(contractDisc.getVal)), a2=avgArr(r2.map(contractDisc.getVal)); return `Avg discrepancy (Billed − Contract): ${a1.toFixed(2)} EGP → ${a2.toFixed(2)} EGP`; })()
+         : (extraRows.length?`${Math.abs(pureRate).toFixed(2)} EGP — pure contract rate ${pureRate<0?'reduction':'increase'}`:`${Math.abs(residual).toFixed(2)} EGP unexplained`)},
       ...extraRows.map((f,i)=>({icon:f.icon,num:String.fromCharCode(9312+(hasZone&&getZone?3:2)+i),label:f.label,color:f.color,val:f.val,m1:f.avg1,m2:f.avg2,
        desc:`Avg ${f.label}: ${f.avg1.toFixed(2)} EGP → ${f.avg2.toFixed(2)} EGP`})),
       {icon:'📊',num:String.fromCharCode(9312+(hasZone&&getZone?3:2)+extraRows.length),label:'Volume',color:'#9ca3af',val:null,m1:r1.length,m2:r2.length,isCount:true,
@@ -3419,7 +3424,7 @@ function renderAnalytics(){
       {icon:'💳',label:'COD Fees',color:'#b45309',getVal:r=>r.codFees||0},
       {icon:'🛡️',label:'Insurance Fees',color:'#7c3aed',getVal:r=>r.insFees||0},
       {icon:'🔁',label:'Extra Attempts',color:'#dc2626',getVal:r=>r.extraCost||0},
-    ])}
+    ], null, {getVal:r=>(r.billedPrice||0)-(r.contractPrice||0)})}
     <div id="raya-value-dash" style="margin-top:18px"></div>`
   );
 
