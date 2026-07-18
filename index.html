@@ -3249,14 +3249,17 @@ function renderAnalytics(){
       {icon:'📊',num:String.fromCharCode(9312+(hasZone&&getZone?3:2)+extraRows.length),label:'Volume',color:'#9ca3af',val:null,m1:r1.length,m2:r2.length,isCount:true,
        desc:`${volChange>=0?'+':''}${fm(Math.abs(volChange))} shipments (${volChange>=0?'+':''}${volPct}%) — impacts total spend, not cost-per-shipment`},
     ];
-    // Build contract discrepancy drill-down sub-table (zone × category)
-    let cdDrillHtml='';
+    // Build contract discrepancy drill-down (rendered as separate table after ACPS)
+    let cdDrillTable='';
     if(contractDisc && getZone && getSize){
       const zones2=[...new Set([...r1,...r2].map(r=>getZone(r)).filter(Boolean))].sort((a,b)=>a.localeCompare(b,undefined,{numeric:true}));
       const sizes2=[...new Set([...r1,...r2].map(r=>getSize(r)).filter(Boolean))].sort();
       const cdAgg=(arr,z,s)=>{ const sub=arr.filter(r=>getZone(r)===z&&getSize(r)===s); return sub.length?avgArr(sub.map(contractDisc.getVal)):null; };
-      const thCD='padding:5px 10px;font-size:.67rem;font-weight:700;color:#92400e;background:#fef3c7;letter-spacing:.04em;white-space:nowrap;border:1px solid #fde68a';
-      const tdCD=(v,bold)=>{ if(v===null) return `<td style="padding:5px 10px;font-size:.75rem;text-align:right;border:1px solid #fde68a;color:#d1d5db">—</td>`; const pos=v>0.5,neg=v<-0.5; return `<td style="padding:5px 10px;font-size:.75rem;text-align:right;border:1px solid #fde68a;font-weight:${bold?700:400};color:${pos?'#dc2626':neg?'#16a34a':'#6b7280'};font-variant-numeric:tabular-nums">${pos?'▲':neg?'▼':''}${Math.abs(v).toFixed(2)}</td>`; };
+      const thCD='padding:7px 12px;font-size:.7rem;font-weight:700;color:#fff;background:#b45309;letter-spacing:.04em;white-space:nowrap;border:1px solid #92400e;text-align:right';
+      const valClr=v=>v>0.5?'#16a34a':v<-0.5?'#dc2626':'#6b7280';
+      const valPfx=v=>v>0.5?'▲':v<-0.5?'▼':'';
+      const tdCD=(v)=>{ if(v===null) return `<td style="padding:7px 12px;font-size:.78rem;text-align:right;border:1px solid #e2e8f0;color:#d1d5db">—</td>`; return `<td style="padding:7px 12px;font-size:.78rem;text-align:right;border:1px solid #e2e8f0;font-weight:600;color:${valClr(v)};font-variant-numeric:tabular-nums">${valPfx(v)} ${Math.abs(v).toFixed(2)} EGP</td>`; };
+      const tdCDdelta=(v)=>{ if(v===null) return `<td style="padding:7px 12px;font-size:.78rem;text-align:right;border:1px solid #e2e8f0;color:#d1d5db">—</td>`; const bc=v>0.5?'#dcfce7':v<-0.5?'#fee2e2':'#f8fafc'; const tc=v>0.5?'#16a34a':v<-0.5?'#dc2626':'#6b7280'; return `<td style="padding:7px 12px;font-size:.78rem;text-align:right;border:1px solid #e2e8f0"><span style="background:${bc};color:${tc};border-radius:6px;padding:2px 8px;font-size:.73rem;font-weight:700">${v>0.5?'▲':v<-0.5?'▼':''}${Math.abs(v).toFixed(2)} EGP</span></td>`; };
       let drillRows='';
       zones2.forEach(z=>{
         sizes2.forEach(s=>{
@@ -3265,24 +3268,30 @@ function renderAnalytics(){
           const delta=(v2!==null&&v1!==null)?v2-v1:null;
           const hasDisc=(v1!==null&&Math.abs(v1)>0.5)||(v2!==null&&Math.abs(v2)>0.5);
           if(!hasDisc) return;
-          drillRows+=`<tr><td style="padding:5px 10px;font-size:.75rem;border:1px solid #fde68a;color:#374151">Zone ${z} / ${s}</td>${M1?tdCD(v1,false):''}${tdCD(v2,false)}${tdCD(delta,true)}</tr>`;
+          drillRows+=`<tr style="background:#fff;border-bottom:1px solid #f1f5f9"><td style="padding:7px 12px;font-size:.78rem;border:1px solid #e2e8f0;color:#374151;font-weight:600">Zone ${z} / ${s}</td>${M1?tdCD(v1):''}${tdCD(v2)}${tdCDdelta(delta)}</tr>`;
         });
       });
       if(drillRows){
-        cdDrillHtml=`<tr style="background:#fffbeb"><td colspan="5" style="padding:0">
-          <div style="padding:8px 16px 10px 40px">
-            <div style="font-size:.7rem;color:#92400e;font-weight:700;margin-bottom:5px;letter-spacing:.04em">DISCREPANCY BREAKDOWN — avg (Billed − Contract) per shipment</div>
-            <table style="border-collapse:collapse;font-family:Arial,sans-serif">
-              <thead><tr><th style="${thCD};text-align:left">Zone / Size</th>${M1?`<th style="${thCD}">${M1}</th>`:''}
-              <th style="${thCD}">${M2}</th><th style="${thCD}">Δ Change</th></tr></thead>
-              <tbody>${drillRows}</tbody>
-            </table>
+        cdDrillTable=`<div style="margin-top:10px;border-radius:10px;overflow:hidden;border:1px solid #fed7aa">
+          <div style="background:#b45309;padding:8px 14px;display:flex;align-items:center;gap:8px">
+            <span style="color:#fff;font-weight:700;font-size:.8rem">⚡ Contract Rate Discrepancy — by Zone & Size</span>
+            <span style="color:#fde68a;font-size:.72rem">avg (Billed − Contract) per shipment</span>
           </div>
-        </td></tr>`;
+          <div style="overflow-x:auto"><table style="width:100%;border-collapse:collapse">
+            <thead><tr>
+              <th style="${thCD};text-align:left">Zone / Size</th>
+              ${M1?`<th style="${thCD}">${M1}</th>`:''}
+              <th style="${thCD}">${M2}</th>
+              <th style="${thCD}">Δ Change</th>
+            </tr></thead>
+            <tbody>${drillRows}</tbody>
+          </table></div>
+          <div style="padding:6px 14px;background:#fffbeb;font-size:.7rem;color:#92400e;font-style:italic">▲ green = discrepancy increased &nbsp;|&nbsp; ▼ red = discrepancy decreased &nbsp;|&nbsp; only rows with >0.50 EGP gap shown</div>
+        </div>`;
       }
     }
 
-    const factorRows=factors.map((f,fi)=>`<tr style="${rowStyle}">
+    const factorRows=factors.map(f=>`<tr style="${rowStyle}">
       <td style="${tdL};border-left:4px solid ${f.color}">
         <span style="margin-right:6px">${f.icon}</span>
         <span style="color:#6b7280;font-size:.72rem;margin-right:4px">${f.num}</span>
@@ -3292,7 +3301,7 @@ function renderAnalytics(){
       <td style="${tdL};text-align:right;color:#374151;font-variant-numeric:tabular-nums">${f.m2!==null?(f.isCount?fm(f.m2):f.m2.toFixed(2)+' EGP'):`<span style="color:#9ca3af">—</span>`}</td>
       <td style="${tdL};text-align:center">${f.val!==null?impactBadge(f.val):`<span style="color:#9ca3af">—</span>`}</td>
       <td style="${tdL}">${f.val!==null?wBar2(f.val):''}</td>
-    </tr>${f.label==='Contract Rate'&&cdDrillHtml?cdDrillHtml:''}`).join('');
+    </tr>`).join('');
     return `<div style="margin-top:18px;border-radius:12px;overflow:hidden;box-shadow:0 2px 12px rgba(126,0,225,.10)">
       <!-- Top summary bar -->
       <div style="background:linear-gradient(135deg,#7E00E1,#5a00a3);padding:10px 16px;display:flex;align-items:center;gap:12px;flex-wrap:wrap">
@@ -3375,7 +3384,7 @@ function renderAnalytics(){
           </table>
         </div>`;
       })()}
-    </div>`;
+    </div>${cdDrillTable}`;
   }
 
   let html = '';
