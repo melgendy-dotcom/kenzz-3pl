@@ -3268,7 +3268,8 @@ function renderAnalytics(){
           const delta=(v2!==null&&v1!==null)?v2-v1:null;
           const hasDisc=(v1!==null&&Math.abs(v1)>0.5)||(v2!==null&&Math.abs(v2)>0.5);
           if(!hasDisc) return;
-          drillRows+=`<tr style="background:#fff;border-bottom:1px solid #f1f5f9"><td style="padding:7px 12px;font-size:.78rem;border:1px solid #e2e8f0;color:#374151;font-weight:600">Zone ${z} / ${s}</td>${M1?tdCD(v1):''}${tdCD(v2)}${tdCDdelta(delta)}</tr>`;
+          const zLabel=String(z).toLowerCase().startsWith('zone')?z:`Zone ${z}`;
+          drillRows+=`<tr style="background:#fff;border-bottom:1px solid #f1f5f9"><td style="padding:7px 12px;font-size:.78rem;border:1px solid #e2e8f0;color:#374151;font-weight:600">${zLabel} / ${s}</td>${M1?tdCD(v1):''}${tdCD(v2)}${tdCDdelta(delta)}</tr>`;
         });
       });
       if(drillRows){
