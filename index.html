@@ -2227,7 +2227,7 @@ async function processRayaPage(){
   await new Promise(r=>setTimeout(r,30));
   try{
     const rwb = XLSX.read(await readBuf(rayaReportFile), {type:'array'});
-    const rawRows = XLSX.utils.sheet_to_json(rwb.Sheets[rwb.SheetNames[0]], {defval:''});
+    const rawRows = XLSX.utils.sheet_to_json(rwb.Sheets[rwb.SheetNames[rwb.SheetNames.length-1]], {defval:''});
     let contract = {};
     if(rayaContractFile){
       const cwb = XLSX.read(await readBuf(rayaContractFile), {type:'array'});
