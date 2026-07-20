@@ -2780,11 +2780,11 @@ function renderAnalytics(){
   })() : null;
 
   const BO = bostaData.length ? (() => {
-    const byLabel={};
-    bostaData.forEach(r=>{ byLabel[r.breakdownLabel]=(byLabel[r.breakdownLabel]||0)+1; });
-    return { total:bostaData.length,
-      totalBill:bostaData.reduce((s,r)=>s+r.priceBAV,0),
-      overCount:bostaData.filter(r=>r.isOver).length, byLabel };
+    const totalBill = bostaData.reduce((s,r)=>s+r.priceBAV,0);
+    const totalCalc = bostaData.reduce((s,r)=>s+(r.calcPrice||0),0);
+    return { total:bostaData.length, totalBill, totalCalc,
+      flagCount:bostaData.filter(r=>r.isOver).length,
+      overchargeEGP:Math.round(totalBill-totalCalc) };
   })() : null;
 
   const RA = rayaData.length ? (() => {
@@ -3417,21 +3417,13 @@ function renderAnalytics(){
     '✈️ Aramex',
     `<div class="an-kpi-row">
       ${kpiCard(t.totalShipments, fm(AR.total), '', 'var(--purple)')}
-      ${kpiCard(t.delivered, fm(AR.del), (AR.del/AR.total*100).toFixed(1)+'%', 'var(--green2)')}
-      ${kpiCard(t.returned, fm(AR.ret), (AR.ret/AR.total*100).toFixed(1)+'%', 'var(--red)')}
-      ${kpiCard(t.pending, fm(AR.pend), '', 'var(--amber)')}
-      ${kpiCard(t.invoice, fm(AR.totalBill), t.egp, '#0369a1')}
-      ${kpiCard(t.kenzzCalc, fm(AR.totalCalc), t.egp, '#0f766e')}
-      ${kpiCard(t.differences, fm(AR.overchargeEGP)+' '+t.egp, AR.flagCount+(lang==='ar'?' شحنة مخالفة':' flagged'), 'var(--red)')}
+      ${kpiCard(t.invoice, fm(AR.totalBill), t.egp, 'var(--red)')}
+      ${kpiCard(t.kenzzCalc, fm(AR.totalCalc), t.egp, 'var(--green2)')}
+      ${kpiCard(t.differences, fm(AR.overchargeEGP)+' '+t.egp, AR.flagCount+(lang==='ar'?' شحنة مخالفة':' flagged'), 'var(--amber)')}
     </div>
     ${overviewTable(auditData, r=>r.uploadMonth||null, r=>r.statusBucket==='DELIVERED', r=>r.statusBucket==='RETURNED', null, r=>(r.baseCharge||0)+(r.otherCharge||0), false)}
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:16px">
-      <div><div class="sbar-title">${t.an_statusDist}</div>
-        ${bar(t.delivered,AR.del,AR.total,'var(--green2)')}${bar(t.returned,AR.ret,AR.total,'var(--red)')}${bar(t.pending,AR.pend,AR.total,'var(--amber)')}
-      </div>
-      <div><div class="sbar-title">${t.an_costComp}</div>
-        ${bar(t.an_actualInvoice,AR.totalBill,AR.totalBill,'var(--red)')}${bar(t.kenzzCalc,AR.totalCalc,AR.totalBill,'var(--green2)')}
-      </div>
+    <div style="margin-top:12px"><div class="sbar-title">${t.an_costComp}</div>
+      ${bar(t.invoice,AR.totalBill,AR.totalBill,'var(--red)')}${bar(t.kenzzCalc,AR.totalCalc,AR.totalBill,'var(--green2)')}
     </div>
     ${zoneSizeTable(auditData.filter(r=>r.destZone), r=>String(r.destZone||'').trim(), aramexSize, ['Size S','Size M','Size L','Size XL'])}
     ${acpsBridge(auditData, r=>r.uploadMonth, r=>String(r.destZone||'').trim(), aramexSize, r=>(r.baseCharge||0)+(r.otherCharge||0), auditData.some(r=>r.destZone))}
@@ -3444,12 +3436,13 @@ function renderAnalytics(){
     '📦 Bosta',
     `<div class="an-kpi-row">
       ${kpiCard(t.totalShipments, fm(BO.total), '', 'var(--green2)')}
-      ${kpiCard(t.invoice, fm(BO.totalBill), t.egp, '#0369a1')}
-      ${kpiCard(t.differences, fm(BO.overCount), (BO.overCount/BO.total*100).toFixed(1)+'%', 'var(--red)')}
+      ${kpiCard(t.invoice, fm(BO.totalBill), t.egp, 'var(--red)')}
+      ${kpiCard(t.kenzzCalc, fm(BO.totalCalc), t.egp, 'var(--green2)')}
+      ${kpiCard(t.differences, fm(BO.overchargeEGP)+' '+t.egp, BO.flagCount+(lang==='ar'?' شحنة مخالفة':' flagged'), 'var(--amber)')}
     </div>
     ${overviewTable(bostaData, r=>r.uploadMonth||null, r=>r.breakdownLabel==='Delivered', r=>r.breakdownLabel==='RTN'||r.breakdownLabel==='RTO', null, r=>r.priceBAV||0, false)}
-    <div style="margin-top:12px"><div class="sbar-title">${t.an_byLabel}</div>
-      ${Object.entries(BO.byLabel).map(([lbl,cnt])=>bar(lbl,cnt,BO.total,'var(--green2)')).join('')}
+    <div style="margin-top:12px"><div class="sbar-title">${t.an_costComp}</div>
+      ${bar(t.invoice,BO.totalBill,BO.totalBill,'var(--red)')}${bar(t.kenzzCalc,BO.totalCalc,BO.totalBill,'var(--green2)')}
     </div>
     ${bostaSizes.length>0 ? zoneSizeTable(bostaData.filter(r=>r.zone&&r.pkgSize), r=>String(r.zone||'').trim(), r=>r.pkgSize, bostaSizes) : ''}
     ${acpsBridge(bostaData, r=>r.uploadMonth, r=>String(r.zone||'').trim(), r=>r.pkgSize||'?', r=>r.priceBAV||0, bostaData.some(r=>r.zone))}
