@@ -3426,7 +3426,7 @@ function renderAnalytics(){
       ${bar(t.invoice,AR.totalBill,AR.totalBill,'var(--red)')}${bar(t.kenzzCalc,AR.totalCalc,AR.totalBill,'var(--green2)')}
     </div>
     ${zoneSizeTable(auditData.filter(r=>r.destZone), r=>String(r.destZone||'').trim(), aramexSize, ['Size S','Size M','Size L','Size XL'])}
-    ${acpsBridge(auditData, r=>r.uploadMonth, r=>String(r.destZone||'').trim(), aramexSize, r=>(r.baseCharge||0)+(r.otherCharge||0), auditData.some(r=>r.destZone))}
+    ${acpsBridge(auditData, r=>r.uploadMonth, r=>String(r.destZone||'').trim(), aramexSize, r=>(r.baseCharge||0)+(r.otherCharge||0), auditData.some(r=>r.destZone), null, null, {getVal:r=>r.colRResult||0})}
     <div id="ar-value-dash" style="margin-top:18px"></div>`
   );
 
@@ -3445,7 +3445,7 @@ function renderAnalytics(){
       ${bar(t.invoice,BO.totalBill,BO.totalBill,'var(--red)')}${bar(t.kenzzCalc,BO.totalCalc,BO.totalBill,'var(--green2)')}
     </div>
     ${bostaSizes.length>0 ? zoneSizeTable(bostaData.filter(r=>r.zone&&r.pkgSize), r=>String(r.zone||'').trim(), r=>r.pkgSize, bostaSizes) : ''}
-    ${acpsBridge(bostaData, r=>r.uploadMonth, r=>String(r.zone||'').trim(), r=>r.pkgSize||'?', r=>r.priceBAV||0, bostaData.some(r=>r.zone))}
+    ${acpsBridge(bostaData, r=>r.uploadMonth, r=>String(r.zone||'').trim(), r=>r.pkgSize||'?', r=>r.priceBAV||0, bostaData.some(r=>r.zone), null, null, {getVal:r=>r.diff||0})}
     <div id="bo-value-dash" style="margin-top:18px"></div>`
   );
 
@@ -3488,7 +3488,11 @@ function renderAnalytics(){
       ${bar(t.invoice,MQ.totalBill,MQ.totalBill,'var(--red)')}${bar(t.kenzzCalc,MQ.totalCalc,MQ.totalBill,'var(--green2)')}
     </div>
     ${zoneSizeTable(mqData.filter(r=>r.destZone&&r.size), r=>String(r.destZone||'').trim(), r=>normSize(r.size), ['Size S','Size M','Size L'])}
-    ${acpsBridge(mqData, r=>r.uploadMonth||r.month, r=>String(r.destZone||'').trim(), r=>normSize(r.size), r=>r.totalBilled||0, mqData.some(r=>r.destZone))}
+    ${acpsBridge(mqData, r=>r.uploadMonth||r.month, r=>String(r.destZone||'').trim(), r=>normSize(r.size), r=>r.totalBilled||0, mqData.some(r=>r.destZone), [
+      {icon:'🚗',label:'Pickup Cost',color:'#0891b2',getVal:r=>r.actualPickup||0},
+      {icon:'💳',label:'COD Fees',color:'#b45309',getVal:r=>r.actualCODFees||0},
+      {icon:'🛡️',label:'Insurance Fees',color:'#7c3aed',getVal:r=>r.actualIns||0},
+    ], null, {getVal:r=>(r.actualCharge||0)-(r.calcLM||0)})}
     <div id="mq-value-dash" style="margin-top:18px"></div>`
   );
 
