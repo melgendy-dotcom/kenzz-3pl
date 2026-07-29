@@ -1223,6 +1223,8 @@ function showApp(){
 }
 
 /* ---------- tabs ---------- */
+let _analyticsDirty = true;
+function markAnalyticsDirty(){ _analyticsDirty = true; }
 function switchTab(name){
   document.querySelectorAll('.tab-btn').forEach(b=>b.classList.toggle('active', b.dataset.tab===name));
   document.getElementById('panel-bosta').style.display = name==='bosta' ? 'block' : 'none';
@@ -1231,7 +1233,7 @@ function switchTab(name){
   document.getElementById('panel-raya').style.display = name==='raya' ? 'block' : 'none';
   document.getElementById('panel-breakdown').style.display = name==='breakdown' ? 'block' : 'none';
   document.getElementById('panel-analytics').style.display = name==='analytics' ? 'block' : 'none';
-  if(name==='analytics') renderAnalytics();
+  if(name==='analytics' && _analyticsDirty){ renderAnalytics(); _analyticsDirty=false; }
   if(name==='breakdown') renderBreakdown();
 }
 
@@ -1284,7 +1286,7 @@ async function processBosta(){
   }
 }
 
-function renderBosta(){
+function renderBosta(){ markAnalyticsDirty();
   const hasData = bostaData.length > 0;
   document.getElementById('bo-results').style.display = hasData ? 'block' : 'none';
   document.getElementById('bo-empty').style.display = hasData ? 'none' : 'block';
@@ -1666,7 +1668,7 @@ async function processAramex(){
   }
 }
 
-function renderAramex(){
+function renderAramex(){ markAnalyticsDirty();
   const hasData = auditData.length > 0;
   document.getElementById('ar-results').style.display = hasData ? 'block' : 'none';
   document.getElementById('ar-empty').style.display = hasData ? 'none' : 'block';
@@ -2010,7 +2012,7 @@ async function processMashreq(){
     hideLoading();
   }
 }
-function renderMashreq(){
+function renderMashreq(){ markAnalyticsDirty();
   const hasData = mqData.length > 0;
   document.getElementById('mq-results').style.display = hasData ? 'block' : 'none';
   document.getElementById('mq-empty').style.display = hasData ? 'none' : 'block';
@@ -2265,7 +2267,7 @@ async function processRayaPage(){
     hideLoading();
   }
 }
-function renderRayaPage(){
+function renderRayaPage(){ markAnalyticsDirty();
   const hasData = rayaData.length > 0;
   document.getElementById('ra-results').style.display = hasData ? 'block' : 'none';
   document.getElementById('ra-empty').style.display = hasData ? 'none' : 'block';
