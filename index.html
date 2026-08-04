@@ -1933,13 +1933,13 @@ function processMQ({rawReport, raw2nd, rates, INS_PCT, COD_PCT, THRESH}){
 
   return rawReport.map((row, idx)=>{
     const awb = normAWB(mqCol(row,'AWB'));
-    const goodsVal = parseFloat(mqCol(row,'Goods Value','GoodsValue')||0)||0;
+    const goodsVal = parseFloat(mqCol(row,'Goods Value','GoodsValue','Value of goods','ValueOfGoods')||0)||0;
     const month = String(mqCol(row,'Month')||'').trim();
     const status = String(mqCol(row,'Status','State')||'').trim();
     const destCity = String(mqCol(row,'DestCity','Dest City','destination city')||'').trim();
     const origCity = String(mqCol(row,'OriginCity','Origin City')||'').trim();
     const destZone = parseInt(mqCol(row,'DestCityZone','Dest Zone','destination zone')||1)||1;
-    const origZone = parseInt(mqCol(row,'OriginCityZone','Origin Zone','pickup zone')||1)||1;
+    const origZone = parseInt(mqCol(row,'OriginCityZone','Origin Zone','pickup zone','Zone')||1)||1;
     const codValue = parseFloat(mqCol(row,'CODValue','COD Value')||0)||0;
 
     const actualCharge = parseFloat(mqCol(row,'Charge')||0)||0;
