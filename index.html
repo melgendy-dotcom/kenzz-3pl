@@ -2019,7 +2019,7 @@ function renderMashreq(){ markAnalyticsDirty();
   if(!hasData) return;
   const base = mqMonthSel!=='ALL' ? mqData.filter(r=>(r.uploadMonth||null)===mqMonthSel) : mqData;
   const totalBilled = Math.round((base.reduce((s,r)=>s+r.totalBilled,0) + (mqSecondTotal||0))*100)/100;
-  const totalCalc = Math.round(base.reduce((s,r)=>s+r.totalCalc,0)*100)/100;
+  const totalCalc = Math.round((base.reduce((s,r)=>s+r.totalCalc,0) + (mqSecondTotal||0))*100)/100;
   const overCount = base.filter(r=>r.isOver).length;
   const diffEGP = Math.round((totalCalc-totalBilled)*100)/100;
   document.getElementById('mq-kpi-total').textContent = fm(base.length);
