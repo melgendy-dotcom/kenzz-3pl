@@ -1956,10 +1956,11 @@ function processMQ({rawReport, raw2nd, rates, INS_PCT, COD_PCT, THRESH}){
     const lmTable = rates.lastmile[size] || {};
     const puTable = rates.pickup[size] || {};
     const lmFull = lmTable[destZone] || 0;
-    const calcLM = isCancelOnFloor ? Math.round(lmFull*0.5*qty*100)/100 : Math.round(lmFull*qty*100)/100;
-    const calcPickup = Math.round((puTable[origZone]||0)*qty*100)/100;
-    const calcIns = Math.round(goodsVal*INS_PCT*100)/100;
-    const calcCOD = isDelivered ? Math.round(codValue*COD_PCT*100)/100 : 0;
+    // Cancel on floor: Kenzz pays 50% of Charge column only, no other fees
+    const calcLM = isCancelOnFloor ? Math.round(actualCharge*0.5*100)/100 : Math.round(lmFull*qty*100)/100;
+    const calcPickup = isCancelOnFloor ? 0 : Math.round((puTable[origZone]||0)*qty*100)/100;
+    const calcIns = isCancelOnFloor ? 0 : Math.round(goodsVal*INS_PCT*100)/100;
+    const calcCOD = isCancelOnFloor ? 0 : (isDelivered ? Math.round(codValue*COD_PCT*100)/100 : 0);
 
     const totalBilled = actualCharge + actualPickup + actualIns + actualCODFees;
     const totalCalc = calcLM + calcPickup + calcIns + calcCOD;
