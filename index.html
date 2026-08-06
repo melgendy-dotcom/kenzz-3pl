@@ -673,7 +673,7 @@ html[dir=ltr] #login-eye{right:12px}
             <table class="data-table">
               <thead>
                 <tr>
-                  <th>#</th><th class="th-lft">AWB</th><th>Status</th><th>Tier</th><th>Category</th>
+                  <th>#</th><th class="th-lft">AWB</th><th>Status</th><th>Tier</th><th>Category</th><th>Qty</th>
                   <th class="th-raya-dl">DL Cost</th><th class="th-raya-pu">Pickup</th>
                   <th class="th-ins">Insurance</th><th class="th-cod">COD</th><th>Extra</th>
                   <th class="th-raya-k">Contract</th>
@@ -2241,7 +2241,7 @@ function processRaya({rawRows, contract, THRESH}){
 
     return { idx:idx+1, awb, status, zone, tier: zoneKey, category, month, city,
       billedPrice, pickupCost, codFees, insFees, extraCost, totalBilled,
-      contractPrice, isReturned, diff, isOver, isUnder };
+      contractPrice, isReturned, diff, isOver, isUnder, totalQty };
   });
 }
 
@@ -2313,6 +2313,7 @@ function renderRayaTable(){
       <td><span style="background:${r.status==='Delivered'?'#dcfce7':'#fee2e2'};color:${r.status==='Delivered'?'#15803d':'#b91c1c'};border-radius:4px;padding:2px 7px;font-size:.68rem;font-weight:700">${r.status}</span></td>
       <td><span class="raya-tier">${r.tier}</span></td>
       <td><span class="${rayaCatBadge(r.category)}">${r.category}</span></td>
+      <td style="text-align:center;font-weight:600">${r.totalQty||1}</td>
       <td class="td-raya-dl">${fm(r.billedPrice)}</td>
       <td class="td-raya-pu">${fm(r.pickupCost)}</td>
       <td class="td-ins">${fm(r.insFees)}</td>
@@ -2325,8 +2326,8 @@ function renderRayaTable(){
 }
 function exportRayaPage(){
   const filtered = getFilteredRaya();
-  const headers = ['#','AWB','Status','Zone','Category','Raya Price','Pickup Cost','Insurance','COD Fees','Extra Attempts','Contract Price','Total Billed','Diff'];
-  exportCSV(headers, filtered.map(r=>[r.idx,r.awb,r.status,r.zone,r.category,r.billedPrice,r.pickupCost,r.insFees,r.codFees,r.extraCost,r.contractPrice,r.totalBilled,r.diff]), 'raya_audit.csv');
+  const headers = ['#','AWB','Status','Zone','Category','Qty','Raya Price','Pickup Cost','Insurance','COD Fees','Extra Attempts','Contract Price','Total Billed','Diff'];
+  exportCSV(headers, filtered.map(r=>[r.idx,r.awb,r.status,r.zone,r.category,r.totalQty||1,r.billedPrice,r.pickupCost,r.insFees,r.codFees,r.extraCost,r.contractPrice,r.totalBilled,r.diff]), 'raya_audit.csv');
 }
 async function saveRayaPage(){
   const btn = document.getElementById('ra-save-btn');
@@ -2564,15 +2565,16 @@ function bdAddMonth({store,monthName,sources}){
     const ra=_bdFilter(rayaData);
     const delivered=ra.filter(r=>r.status==='Delivered');
     const returned=ra.filter(r=>r.status==='Returned'||r.status==='Cancel on floor');
-    bdSetSlot(co['SEND'],'qty',delivered.length,mi);
+    const raQty=arr=>arr.reduce((s,r)=>s+(r.totalQty||1),0);
+    bdSetSlot(co['SEND'],'qty',raQty(delivered),mi);
     bdSetSlot(co['SEND'],'value',Math.round(sum(delivered,'totalBilled')*100)/100,mi);
-    bdSetSlot(co['SEND'],'rate',delivered.length?Math.round(sum(delivered,'totalBilled')/delivered.length*100)/100:0,mi);
-    bdSetSlot(co['Returns-RTO'],'qty',returned.length,mi);
+    bdSetSlot(co['SEND'],'rate',raQty(delivered)?Math.round(sum(delivered,'totalBilled')/raQty(delivered)*100)/100:0,mi);
+    bdSetSlot(co['Returns-RTO'],'qty',raQty(returned),mi);
     bdSetSlot(co['Returns-RTO'],'value',Math.round(sum(returned,'totalBilled')*100)/100,mi);
-    bdSetSlot(co['Returns-RTO'],'rate',returned.length?Math.round(sum(returned,'totalBilled')/returned.length*100)/100:0,mi);
+    bdSetSlot(co['Returns-RTO'],'rate',raQty(returned)?Math.round(sum(returned,'totalBilled')/raQty(returned)*100)/100:0,mi);
     bdSetSlot(co['COD'],'value',Math.round(sum(ra,'codFees')*100)/100,mi);
     bdSetSlot(co['Insurance'],'value',Math.round(sum(ra,'insFees')*100)/100,mi);
-    const totQty=delivered.length+returned.length;
+    const totQty=raQty(delivered)+raQty(returned);
     const totVal=Math.round(sum(ra,'totalBilled')*100)/100;
     bdSetSlot(co['Total'],'qty',totQty,mi); bdSetSlot(co['Total'],'value',totVal,mi);
     bdSetSlot(co['Total'],'rate',totQty?Math.round(totVal/totQty*100)/100:0,mi);
@@ -3147,12 +3149,12 @@ function renderAnalytics(){
       </div>
     </div>`;
   }
-  function zoneSizeTable(rows, getZone, getSize, sizeLabels){
+  function zoneSizeTable(rows, getZone, getSize, sizeLabels, getQty){
     const zones=[...new Set(rows.map(getZone).filter(Boolean))].sort((a,b)=>a.localeCompare(b,undefined,{numeric:true}));
     if(!zones.length) return '';
     const matrix={};
     zones.forEach(z=>{ matrix[z]={}; sizeLabels.forEach(s=>{ matrix[z][s]=0; }); });
-    rows.forEach(r=>{ const z=getZone(r),s=getSize(r); if(z&&s&&matrix[z]&&matrix[z][s]!==undefined) matrix[z][s]++; });
+    rows.forEach(r=>{ const z=getZone(r),s=getSize(r); if(z&&s&&matrix[z]&&matrix[z][s]!==undefined) matrix[z][s]+=(getQty?getQty(r):1); });
     const thS='background:#1e3a5f;color:#7dd3fc;font-size:.7rem;padding:5px 10px;text-align:center;white-space:nowrap';
     const tdS='text-align:center;padding:4px 10px;font-size:.75rem;border-bottom:1px solid rgba(255,255,255,.06)';
     return `<div style="margin-top:16px">
@@ -3489,7 +3491,7 @@ function renderAnalytics(){
     <div style="margin-top:12px"><div class="sbar-title">${t.an_costComp}</div>
       ${bar(t.invoice,RA.totalBill,RA.totalBill,'var(--red)')}${bar(t.kenzzCalc,RA.totalCalc,RA.totalBill,'var(--green2)')}
     </div>
-    ${zoneSizeTable(rayaData.filter(r=>r.tier&&r.category), r=>String(r.tier||'').trim(), r=>normSize(r.category), ['Size S','Size M','Size L'])}
+    ${zoneSizeTable(rayaData.filter(r=>r.tier&&r.category), r=>String(r.tier||'').trim(), r=>normSize(r.category), ['Size S','Size M','Size L'], r=>r.totalQty||1)}
     ${acpsBridge(rayaData, r=>r.uploadMonth||r.month, r=>String(r.zone||r.tier||'').trim(), r=>normSize(r.category), r=>r.totalBilled||0, true, [
       {icon:'🚗',label:'Pickup Cost',color:'#0891b2',getVal:r=>r.pickupCost||0},
       {icon:'💳',label:'COD Fees',color:'#b45309',getVal:r=>r.codFees||0},
