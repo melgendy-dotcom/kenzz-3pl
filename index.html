@@ -2224,15 +2224,22 @@ function processRaya({rawRows, contract, THRESH}){
     const rates = rateTable[zoneKey] || {};
     // If Raya billed 0 for delivery and no size QTY is set, skip contract rate (free/gratis shipment)
     const noQty = !Object.keys(row).some(k=>k.includes('QTY')&&(parseFloat(row[k])||0)>0);
-    const unitPrice = (billedPrice===0 && noQty) ? 0 : (rates[category] || 0);
-    // Use category-specific QTY when available (July+ format: Large/Medium/Small QTY separate from Total QTY)
+    // Per-size quantities (July+ format has separate Large/Medium/Small QTY columns)
     const largeQtyRaw = parseInt(rg(row,'Large QTY','LargeQTY')||0)||0;
     const mediumQtyRaw = parseInt(rg(row,'Medium QTY','MediumQTY')||0)||0;
     const smallQtyRaw = parseInt(rg(row,'Small QTY','SmallQTY')||0)||0;
-    const catQty = category==='Large' ? largeQtyRaw : category==='Medium' ? mediumQtyRaw : smallQtyRaw;
-    const totalQty = Math.max(1, catQty || parseInt(rg(row,'Total QTY','TotalQTY')||1)||1);
+    const itemQtySum = largeQtyRaw + mediumQtyRaw + smallQtyRaw;
+    const totalQty = Math.max(1, itemQtySum || parseInt(rg(row,'Total QTY','TotalQTY')||1)||1);
     const applyRayaQty = !isReturned || status.toLowerCase().includes('return');
-    const contractPrice = Math.round(unitPrice * (applyRayaQty ? totalQty : 1) * 1000) / 1000;
+    // Contract = sum across all sizes in this order (handles mixed-size orders: e.g. 2 Large + 1 Medium)
+    let contractPrice;
+    if(billedPrice===0 && noQty){
+      contractPrice = 0;
+    } else if(itemQtySum > 0 && applyRayaQty){
+      contractPrice = Math.round(((rates['Large']||0)*largeQtyRaw + (rates['Medium']||0)*mediumQtyRaw + (rates['Small']||0)*smallQtyRaw)*1000)/1000;
+    } else {
+      contractPrice = Math.round((rates[category]||0) * (applyRayaQty ? totalQty : 1) * 1000) / 1000;
+    }
 
     // diff = Raya's Price (col W) vs our contract rate — delivery charge comparison only
     const diff = Math.round((billedPrice - contractPrice)*100)/100;
