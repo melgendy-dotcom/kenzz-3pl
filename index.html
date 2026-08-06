@@ -2225,7 +2225,12 @@ function processRaya({rawRows, contract, THRESH}){
     // If Raya billed 0 for delivery and no size QTY is set, skip contract rate (free/gratis shipment)
     const noQty = !Object.keys(row).some(k=>k.includes('QTY')&&(parseFloat(row[k])||0)>0);
     const unitPrice = (billedPrice===0 && noQty) ? 0 : (rates[category] || 0);
-    const totalQty = Math.max(1, parseInt(rg(row,'Total QTY','TotalQTY')||1)||1);
+    // Use category-specific QTY when available (July+ format: Large/Medium/Small QTY separate from Total QTY)
+    const largeQtyRaw = parseInt(rg(row,'Large QTY','LargeQTY')||0)||0;
+    const mediumQtyRaw = parseInt(rg(row,'Medium QTY','MediumQTY')||0)||0;
+    const smallQtyRaw = parseInt(rg(row,'Small QTY','SmallQTY')||0)||0;
+    const catQty = category==='Large' ? largeQtyRaw : category==='Medium' ? mediumQtyRaw : smallQtyRaw;
+    const totalQty = Math.max(1, catQty || parseInt(rg(row,'Total QTY','TotalQTY')||1)||1);
     const applyRayaQty = !isReturned || status.toLowerCase().includes('return');
     const contractPrice = Math.round(unitPrice * (applyRayaQty ? totalQty : 1) * 1000) / 1000;
 
