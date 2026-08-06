@@ -2267,7 +2267,19 @@ async function processRayaPage(){
   await new Promise(r=>setTimeout(r,30));
   try{
     const rwb = XLSX.read(await readBuf(rayaReportFile), {type:'array'});
-    const rawRows = XLSX.utils.sheet_to_json(rwb.Sheets[rwb.SheetNames[0]], {defval:''});
+    // Auto-detect best sheet: pick the sheet with the most non-zero DL Cost / Price values
+    const dlCols = ['DL Cost','DLCost','Price','Raya Price','RayaPrice','Delivery Cost'];
+    let bestSheet = rwb.SheetNames[0], bestCount = -1;
+    for(const sn of rwb.SheetNames){
+      const rows = XLSX.utils.sheet_to_json(rwb.Sheets[sn], {defval:''});
+      if(!rows.length) continue;
+      const hdr = Object.keys(rows[0]);
+      const dlCol = hdr.find(h => dlCols.some(d => h.replace(/\s/g,'').toLowerCase() === d.replace(/\s/g,'').toLowerCase()));
+      if(!dlCol) continue;
+      const nonZero = rows.filter(r => parseFloat(r[dlCol]||0) > 0).length;
+      if(nonZero > bestCount){ bestCount = nonZero; bestSheet = sn; }
+    }
+    const rawRows = XLSX.utils.sheet_to_json(rwb.Sheets[bestSheet], {defval:''});
     let contract = {};
     if(rayaContractFile){
       const cwb = XLSX.read(await readBuf(rayaContractFile), {type:'array'});
