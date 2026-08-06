@@ -2211,7 +2211,7 @@ function processRaya({rawRows, contract, THRESH}){
 
     const category = rayaCategory(row);
 
-    const billedPrice = Math.round((parseFloat(rg(row,'Price')||0)||0)*1000)/1000;
+    const billedPrice = Math.round((parseFloat(rg(row,'Price','DL Cost','DLCost','Delivery Cost','DeliveryCost','DL price','DLPrice')||0)||0)*1000)/1000;
     const pickupCost = parseFloat(rg(row,'Pickup Cost','PickupCost')||0)||0;
     const codFees = parseFloat(rg(row,'COD Fees','CODFees')||0)||0;
     const insFees = parseFloat(rg(row,'Insurace Fees','Insurance Fees','InsuranceFees')||0)||0;
