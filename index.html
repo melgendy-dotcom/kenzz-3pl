@@ -2634,7 +2634,10 @@ let bdFile  = null;
   try{ const s=localStorage.getItem(BD_STORAGE); if(s) bdStore=JSON.parse(s); }catch(e){}
 })();
 
-function bdSave(){ cloudSave('breakdown', JSON.stringify(bdStore)).catch(e=>console.warn('bdSave failed:',e)); }
+function bdSave(){
+  try{ localStorage.setItem(BD_STORAGE, JSON.stringify(bdStore)); }catch(e){}
+  cloudSave('breakdown', JSON.stringify(bdStore)).catch(e=>console.warn('bdSave failed:',e));
+}
 
 function bdShowToast(msg){ const t=document.getElementById('bd-toast'); t.textContent=msg; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),3200); }
 
