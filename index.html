@@ -2345,6 +2345,17 @@ async function saveRayaPage(){
     const merged = months.size ? [..._rayaPersisted.filter(r=>!months.has(r.uploadMonth)), ...rayaData] : rayaData;
     rayaData = merged; _rayaPersisted = [...merged];
     renderRayaPage();
+    // Auto-refresh breakdown for each saved month
+    if(bdStore && months.size){
+      let bdBase = JSON.parse(JSON.stringify(bdStore));
+      for(const mo of months){
+        const {store} = bdAddMonth({store:bdBase, monthName:mo, sources:{raya:true,bosta:false,aramex:false,mashreq:false}});
+        bdBase = store;
+      }
+      bdStore = bdBase;
+      bdSave();
+      renderBreakdown();
+    }
     await cloudSave('raya', JSON.stringify({data: merged, saved: new Date().toISOString()}));
     const t=document.getElementById('ra-toast'); t.classList.add('show'); setTimeout(()=>t.classList.remove('show'), 3000);
   }catch(e){
