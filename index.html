@@ -2211,12 +2211,18 @@ function processRaya({rawRows, contract, THRESH}){
 
     const category = rayaCategory(row);
 
-    const billedPrice = Math.round((parseFloat(rg(row,'Price','DL Cost','DLCost','Delivery Cost','DeliveryCost','DL price','DLPrice')||0)||0)*1000)/1000;
+    let billedPrice = Math.round((parseFloat(rg(row,'Price','DL Cost','DLCost','Delivery Cost','DeliveryCost','DL price','DLPrice','Raya Price','RayaPrice')||0)||0)*1000)/1000;
     const pickupCost = parseFloat(rg(row,'Pickup Cost','PickupCost')||0)||0;
     const codFees = parseFloat(rg(row,'COD Fees','CODFees')||0)||0;
     const insFees = parseFloat(rg(row,'Insurace Fees','Insurance Fees','InsuranceFees')||0)||0;
     const extraCost = parseFloat(rg(row,'EXtra Attempets Cost1','EXtra Attempets Cost','Extra Attempts Cost','ExtraAttemptsCost')||0)||0;
-    const totalBilled = Math.round((parseFloat(rg(row,'Total')||0)||0)*1000)/1000;
+    const totalBilledRaw = Math.round((parseFloat(rg(row,'Total','Total Billed','TotalBilled')||0)||0)*1000)/1000;
+    // If DL Cost is 0 but Total Billed is populated, back-calculate DL Cost from the total
+    if(billedPrice === 0 && totalBilledRaw > 0){
+      const implied = Math.round((totalBilledRaw - pickupCost - codFees - insFees - extraCost)*1000)/1000;
+      if(implied > 0) billedPrice = implied;
+    }
+    const totalBilled = totalBilledRaw || Math.round((billedPrice + pickupCost + codFees + insFees + extraCost)*1000)/1000;
 
     const isReturned = status.toLowerCase().includes('return') || status.toLowerCase().includes('cancel');
     const rateTable = (isReturned ? (contract.returns||{}) : (contract.delivery||{}));
@@ -2229,7 +2235,7 @@ function processRaya({rawRows, contract, THRESH}){
     const mediumQtyRaw = parseInt(rg(row,'Medium QTY','MediumQTY')||0)||0;
     const smallQtyRaw = parseInt(rg(row,'Small QTY','SmallQTY')||0)||0;
     const itemQtySum = largeQtyRaw + mediumQtyRaw + smallQtyRaw;
-    const totalQty = Math.max(1, itemQtySum || parseInt(rg(row,'Total QTY','TotalQTY')||1)||1);
+    const totalQty = Math.max(1, itemQtySum || parseInt(rg(row,'Total QTY','TotalQTY','Qty')||1)||1);
     const applyRayaQty = !isReturned || status.toLowerCase().includes('return');
     // Contract = sum across all sizes in this order (handles mixed-size orders: e.g. 2 Large + 1 Medium)
     let contractPrice;
