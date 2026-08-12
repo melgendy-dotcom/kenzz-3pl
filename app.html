@@ -1225,6 +1225,8 @@ function showApp(){
 /* ---------- tabs ---------- */
 let _analyticsDirty = true;
 function markAnalyticsDirty(){ _analyticsDirty = true; }
+const _tabDirty = {bosta:false, aramex:false, mashreq:false, raya:false};
+function _markDirty(tab){ _tabDirty[tab]=true; }
 function switchTab(name){
   document.querySelectorAll('.tab-btn').forEach(b=>b.classList.toggle('active', b.dataset.tab===name));
   document.getElementById('panel-bosta').style.display = name==='bosta' ? 'block' : 'none';
@@ -1233,6 +1235,10 @@ function switchTab(name){
   document.getElementById('panel-raya').style.display = name==='raya' ? 'block' : 'none';
   document.getElementById('panel-breakdown').style.display = name==='breakdown' ? 'block' : 'none';
   document.getElementById('panel-analytics').style.display = name==='analytics' ? 'block' : 'none';
+  if(name==='bosta' && _tabDirty.bosta){ renderBosta(); _tabDirty.bosta=false; }
+  if(name==='aramex' && _tabDirty.aramex){ renderAramex(); _tabDirty.aramex=false; }
+  if(name==='mashreq' && _tabDirty.mashreq){ renderMashreq(); _tabDirty.mashreq=false; }
+  if(name==='raya' && _tabDirty.raya){ renderRayaPage(); _tabDirty.raya=false; }
   if(name==='analytics' && _analyticsDirty){ renderAnalytics(); _analyticsDirty=false; }
   if(name==='breakdown') renderBreakdown();
 }
@@ -3886,7 +3892,7 @@ async function cloudLoadAll(){
     if(bSnap?.data?.length){
       bostaData = bSnap.data; _bostaPersisted = [...bostaData];
       document.getElementById('bo-save-btn').disabled = false;
-      renderBosta();
+      _markDirty('bosta');
     }
     if(aSnap?.data?.length){
       auditData = aSnap.data; _aramexPersisted = [...auditData];
@@ -3898,17 +3904,17 @@ async function cloudLoadAll(){
         document.getElementById('ar-cfg-fuelpct').value   = aSnap.cfg.FUEL_PCT;
         document.getElementById('ar-cfg-overthresh').value= aSnap.cfg.OVER_THRESH;
       }
-      renderAramex();
+      _markDirty('aramex');
     }
     if(mSnap?.data?.length){
       mqData = mSnap.data; _mqPersisted = [...mqData];
       document.getElementById('mq-save-btn').disabled = false;
-      renderMashreq();
+      _markDirty('mashreq');
     }
     if(rSnap?.data?.length){
       rayaData = rSnap.data; _rayaPersisted = [...rayaData];
       document.getElementById('ra-save-btn').disabled = false;
-      renderRayaPage();
+      _markDirty('raya');
     }
     if(bdSnap){
       try{ bdStore = typeof bdSnap === 'string' ? JSON.parse(bdSnap) : bdSnap; renderBreakdown(); }catch(e){}
