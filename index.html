@@ -1110,12 +1110,17 @@ function processBostaData({rawRows, contract, thresh}){
 
     let kShip1 = BOSTA_SPECIAL.has(commentRaw) ? priceBAV : bostaShipFee(contract, type, zone);
     let kShip2 = BOSTA_SPECIAL.has(commentRaw) ? 0 : bostaPkgFee(contract, pkgSize, zone);
-    let diff = BOSTA_SPECIAL.has(commentRaw) ? 0 : priceBAV - kShip1 - kShip2 - insurFee;
+    // When Bosta hasn't populated Price Before VAT (pre-invoice file), use Kenzz contract rate
+    let effectiveBAV = priceBAV;
+    if(effectiveBAV === 0 && !BOSTA_SPECIAL.has(commentRaw) && (kShip1 > 0 || kShip2 > 0)){
+      effectiveBAV = Math.round((kShip1 + kShip2 + insurFee)*100)/100;
+    }
+    let diff = BOSTA_SPECIAL.has(commentRaw) ? 0 : effectiveBAV - kShip1 - kShip2 - insurFee;
     diff = Math.round(diff*100)/100;
     const isOver = Math.abs(diff) > thresh;
 
     return { idx: idx+1, tracking, type, pkgSize, zone, state, commentRaw, breakdownLabel,
-      insurFee, priceBAV, kShip1, kShip2, insurance: insurFee, diff, isOver, thresh };
+      insurFee, priceBAV: effectiveBAV, kShip1, kShip2, insurance: insurFee, diff, isOver, thresh };
   }).filter(Boolean);
 }
 
