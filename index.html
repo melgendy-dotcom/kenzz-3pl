@@ -1106,7 +1106,10 @@ function processBostaData({rawRows, contract, thresh}){
     const commentRaw = String(row['Comments'] || row['comments'] || type).trim();
 
     const breakdownLabel = BOSTA_LABEL[commentRaw] || BOSTA_LABEL[type] || commentRaw;
+    // Exclude non-delivery rows: credits (Damaged/Lost/Free Orders) and packaging sales
     if(commentRaw==='COD Charges') return null;
+    if(commentRaw==='Damaged' || commentRaw==='Lost' || commentRaw==='Free Orders' || commentRaw==='Settlements') return null;
+    if(commentRaw.startsWith('Sales (') || type.startsWith('Sales (')) return null;
 
     let kShip1 = BOSTA_SPECIAL.has(commentRaw) ? priceBAV : bostaShipFee(contract, type, zone);
     let kShip2 = BOSTA_SPECIAL.has(commentRaw) ? 0 : bostaPkgFee(contract, pkgSize, zone);
