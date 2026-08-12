@@ -1274,12 +1274,19 @@ async function processBosta(){
     const rwb = XLSX.read(await readBuf(reportFile), {type:'array'});
     const boSheet = rwb.Sheets[rwb.SheetNames[0]];
     let rawRows = XLSX.utils.sheet_to_json(boSheet, {defval:''});
-    // Bosta portal files have ~11 rows of invoice metadata before the actual headers
+    // Bosta portal files have invoice metadata rows before the actual headers
     // Detect by checking if any row has 'Tracking Number' as a key
     if(!rawRows.length || !Object.keys(rawRows[0]||{}).some(k=>k.replace(/\s/g,'').toLowerCase()==='trackingnumber')){
       const arrRows = XLSX.utils.sheet_to_json(boSheet, {header:1, defval:''});
       const hdrIdx = arrRows.findIndex(r=>r.some(c=>String(c||'').trim()==='Tracking Number'));
-      if(hdrIdx >= 0) rawRows = XLSX.utils.sheet_to_json(boSheet, {defval:'', range: hdrIdx});
+      if(hdrIdx >= 0){
+        const headers = arrRows[hdrIdx];
+        rawRows = arrRows.slice(hdrIdx+1).map(row => {
+          const obj = {};
+          headers.forEach((h,i) => { if(h) obj[String(h).trim()] = row[i] !== undefined ? row[i] : ''; });
+          return obj;
+        });
+      }
     }
     let contract = {zones:[], shipping:{}, pkg:{}};
     if(contractFile){
