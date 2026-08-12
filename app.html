@@ -2389,7 +2389,7 @@ async function saveRayaPage(){
         renderBreakdown();
       }
     }
-    await cloudSave('raya', JSON.stringify({data: merged, saved: new Date().toISOString()}));
+    await cloudSaveChunked('raya', merged);
     const t=document.getElementById('ra-toast'); t.classList.add('show'); setTimeout(()=>t.classList.remove('show'), 3000);
   }catch(e){
     console.error('saveRaya failed:',e);
@@ -3860,6 +3860,41 @@ async function _ungz(b64){
   return await new Response(stream).text();
 }
 
+const CHUNK_SIZE = 2000; // rows per Firestore doc
+async function cloudSaveChunked(key, rows){
+  const db = _getDb(); if(!db) throw new Error('Firebase not ready');
+  const chunks = [];
+  for(let i=0; i<rows.length; i+=CHUNK_SIZE) chunks.push(rows.slice(i,i+CHUNK_SIZE));
+  const saves = chunks.map((chunk, ci)=>
+    cloudSave(`${key}_${ci}`, JSON.stringify({data: chunk, saved: new Date().toISOString()}))
+  );
+  // Delete any old extra chunks beyond current count
+  const deletes = [];
+  for(let ci=chunks.length; ci<chunks.length+5; ci++)
+    deletes.push(db.collection('kenzz3pl').doc(`${key}_${ci}`).delete().catch(()=>{}));
+  await Promise.all([...saves, ...deletes]);
+  // Also delete the old single-doc format if it exists
+  db.collection('kenzz3pl').doc(key).delete().catch(()=>{});
+}
+async function cloudLoadChunked(db, key){
+  const snaps = await Promise.all(
+    Array.from({length:10},(_,ci)=>db.collection('kenzz3pl').doc(`${key}_${ci}`).get())
+  );
+  let rows = [];
+  for(const snap of snaps){
+    if(!snap.exists) break;
+    const d = snap.data();
+    const parsed = d.gz ? JSON.parse(await _ungz(d.gz)) : (d.data ? JSON.parse(d.data) : null);
+    if(!parsed?.data?.length) break;
+    rows = rows.concat(parsed.data);
+  }
+  // Fallback: try old single-doc format
+  if(!rows.length){
+    const old = await cloudLoadOne(db, key);
+    if(old?.data?.length) rows = old.data;
+  }
+  return rows.length ? {data: rows} : null;
+}
 async function cloudSave(key, value){
   const db = _getDb(); if(!db) throw new Error('Firebase not ready');
   const gz = await _gz(value);
@@ -3886,7 +3921,7 @@ async function cloudLoadAll(){
     // Load all carriers in parallel
     const [bSnap, aSnap, mSnap, rSnap, bdSnap] = await Promise.all([
       cloudLoadOne(db,'bosta'), cloudLoadOne(db,'aramex'),
-      cloudLoadOne(db,'mashreq'), cloudLoadOne(db,'raya'), cloudLoadOne(db,'breakdown')
+      cloudLoadOne(db,'mashreq'), cloudLoadChunked(db,'raya'), cloudLoadOne(db,'breakdown')
     ]);
 
     if(bSnap?.data?.length){
