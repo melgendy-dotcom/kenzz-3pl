@@ -1356,7 +1356,7 @@ async function saveBosta(){
     const months = new Set(bostaData.map(r=>r.uploadMonth).filter(Boolean));
     const merged = months.size ? [..._bostaPersisted.filter(r=>!months.has(r.uploadMonth)), ...bostaData] : bostaData;
     bostaData = merged; _bostaPersisted = [...merged];
-    await cloudSave('bosta', JSON.stringify({data: merged, saved: new Date().toISOString()}));
+    await cloudSaveChunked('bosta', merged);
     renderBosta();
     showToast();
   }catch(e){
@@ -1765,7 +1765,7 @@ async function saveAramex(){
     const months = new Set(auditData.map(r=>r.uploadMonth).filter(Boolean));
     const merged = months.size ? [..._aramexPersisted.filter(r=>!months.has(r.uploadMonth)), ...auditData] : auditData;
     auditData = merged; _aramexPersisted = [...merged];
-    await cloudSave('aramex', JSON.stringify({data: merged, cfg: getAramexCfg(), saved: new Date().toISOString()}));
+    await Promise.all([cloudSaveChunked('aramex', merged), cloudSave('aramex_cfg', JSON.stringify(getAramexCfg()))]);
     renderAramex();
     const t=document.getElementById('ar-toast'); t.classList.add('show'); setTimeout(()=>t.classList.remove('show'), 3200);
   }catch(e){
@@ -2089,7 +2089,7 @@ async function saveMashreq(){
     const merged = months.size ? [..._mqPersisted.filter(r=>!months.has(r.uploadMonth)), ...mqData] : mqData;
     mqData = merged; _mqPersisted = [...merged];
     renderMashreq();
-    await cloudSave('mashreq', JSON.stringify({data: merged, saved: new Date().toISOString()}));
+    await cloudSaveChunked('mashreq', merged);
     const t=document.getElementById('mq-toast'); t.classList.add('show'); setTimeout(()=>t.classList.remove('show'), 3000);
   }catch(e){
     console.error('saveMashreq failed:',e);
@@ -3919,9 +3919,10 @@ async function cloudLoadAll(){
   const db = _getDb(); if(!db) return;
   try{
     // Load all carriers in parallel
-    const [bSnap, aSnap, mSnap, rSnap, bdSnap] = await Promise.all([
-      cloudLoadOne(db,'bosta'), cloudLoadOne(db,'aramex'),
-      cloudLoadOne(db,'mashreq'), cloudLoadChunked(db,'raya'), cloudLoadOne(db,'breakdown')
+    const [bSnap, aSnap, mSnap, rSnap, bdSnap, aCfgSnap] = await Promise.all([
+      cloudLoadChunked(db,'bosta'), cloudLoadChunked(db,'aramex'),
+      cloudLoadChunked(db,'mashreq'), cloudLoadChunked(db,'raya'),
+      cloudLoadOne(db,'breakdown'), cloudLoadOne(db,'aramex_cfg')
     ]);
 
     if(bSnap?.data?.length){
@@ -3932,12 +3933,13 @@ async function cloudLoadAll(){
     if(aSnap?.data?.length){
       auditData = aSnap.data; _aramexPersisted = [...auditData];
       document.getElementById('ar-save-btn').disabled = false;
-      if(aSnap.cfg){
-        document.getElementById('ar-cfg-codthresh').value = aSnap.cfg.COD_THRESH;
-        document.getElementById('ar-cfg-codpct').value    = aSnap.cfg.COD_PCT;
-        document.getElementById('ar-cfg-annualpct').value = aSnap.cfg.ANNUAL_PCT;
-        document.getElementById('ar-cfg-fuelpct').value   = aSnap.cfg.FUEL_PCT;
-        document.getElementById('ar-cfg-overthresh').value= aSnap.cfg.OVER_THRESH;
+      const cfg = aCfgSnap || aSnap.cfg;
+      if(cfg){
+        document.getElementById('ar-cfg-codthresh').value = cfg.COD_THRESH;
+        document.getElementById('ar-cfg-codpct').value    = cfg.COD_PCT;
+        document.getElementById('ar-cfg-annualpct').value = cfg.ANNUAL_PCT;
+        document.getElementById('ar-cfg-fuelpct').value   = cfg.FUEL_PCT;
+        document.getElementById('ar-cfg-overthresh').value= cfg.OVER_THRESH;
       }
       _markDirty('aramex');
     }
