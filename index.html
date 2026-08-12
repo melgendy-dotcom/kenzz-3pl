@@ -2748,14 +2748,16 @@ function renderBreakdown(){
   const thStyle='background:#2d0066;color:#e9d5ff;padding:6px 10px;font-size:.72rem;font-weight:700;white-space:nowrap;text-align:center';
   const thSubStyle='padding:5px 8px;font-size:.68rem;font-weight:700;white-space:nowrap;text-align:center';
   const tdStyle='padding:5px 10px;font-size:.76rem;text-align:center;border-bottom:1px solid var(--border)';
+  const stickyTh='position:sticky;left:0;z-index:3;box-shadow:2px 0 4px rgba(0,0,0,.15)';
+  const stickyTd='position:sticky;left:0;z-index:2;background:var(--bg);box-shadow:2px 0 4px rgba(0,0,0,.08)';
 
   let thead=`<tr>
-    <th style="${thStyle};text-align:left;min-width:130px">Category</th>
+    <th style="${thStyle};text-align:left;min-width:130px;${stickyTh}">Category</th>
     <th style="${thStyle};text-align:left;min-width:60px">Sub</th>
     ${months.map(m=>`<th colspan="3" style="${thStyle};min-width:200px;border-right:2px solid rgba(255,255,255,.2)">${m}</th>`).join('')}
   </tr>
   <tr>
-    <th style="${thSubStyle};background:#1a0038"></th><th style="${thSubStyle};background:#1a0038"></th>
+    <th style="${thSubStyle};background:#1a0038;${stickyTh}"></th><th style="${thSubStyle};background:#1a0038"></th>
     ${months.map(()=>`
       <th style="${thSubStyle};background:#1d4ed8;min-width:65px">Qty</th>
       <th style="${thSubStyle};background:#0f766e;min-width:85px">Value</th>
@@ -2769,7 +2771,7 @@ function renderBreakdown(){
     const rowBg=isTotal?'background:#f0fdf4;font-weight:800':is2nd?'background:#fffbeb':'';
     const cellBg=isTotal?'background:#dcfce7;color:#15803d;':is2nd?'color:#d97706;font-weight:700;':'';
     return `<tr style="${rowBg}">
-      <td style="${tdStyle};text-align:left;font-weight:${isTotal?800:600};color:${isTotal?'var(--green2)':is2nd?'#d97706':'var(--purple)'}">${rt}</td>
+      <td style="${tdStyle};text-align:left;font-weight:${isTotal?800:600};color:${isTotal?'var(--green2)':is2nd?'#d97706':'var(--purple)'};${stickyTd};${isTotal?'background:#f0fdf4':is2nd?'background:#fffbeb':''}">${rt}</td>
       <td style="${tdStyle}"></td>
       ${months.map((_,mi)=>`
         <td style="${tdStyle};${cellBg}">${fmVal(val(bdSelCo,rt,'qty',mi))}</td>
