@@ -2796,13 +2796,27 @@ function renderBreakdown(){
     </div>
     <div class="tbl-card" style="overflow:visible">
       <div class="card-hdr" style="border-radius:var(--r) var(--r) 0 0"><span><span class="dot"></span>Data Breakdown – ${bdSelCo}</span></div>
-      <div class="tbl-scroll" style="overflow-x:auto;overflow-y:auto;max-height:65vh;border-radius:0 0 var(--r) var(--r)">
+      <div id="bd-tbl-scroll" class="tbl-scroll" style="overflow-x:auto;overflow-y:auto;max-height:65vh;border-radius:0 0 var(--r) var(--r)">
         <table class="bd-table" style="width:100%;border-collapse:separate;border-spacing:0">
           <thead>${thead}</thead>
           <tbody>${tbody}</tbody>
         </table>
       </div>
     </div>`;
+  // JS-based column freeze: shift Category cells on scroll
+  requestAnimationFrame(()=>{
+    const scroller = document.getElementById('bd-tbl-scroll');
+    if(!scroller) return;
+    const freezeCells = ()=>{
+      const x = scroller.scrollLeft;
+      scroller.querySelectorAll('tr').forEach(tr=>{
+        const td = tr.cells[0];
+        if(td){ td.style.transform=`translateX(${x}px)`; td.style.zIndex='5'; td.style.position='relative'; }
+      });
+    };
+    scroller.addEventListener('scroll', freezeCells, {passive:true});
+    freezeCells();
+  });
 }
 
 function applyI18nBreakdown(){
