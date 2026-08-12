@@ -1272,7 +1272,15 @@ async function processBosta(){
   await new Promise(r=>setTimeout(r,30));
   try{
     const rwb = XLSX.read(await readBuf(reportFile), {type:'array'});
-    const rawRows = XLSX.utils.sheet_to_json(rwb.Sheets[rwb.SheetNames[0]], {defval:''});
+    const boSheet = rwb.Sheets[rwb.SheetNames[0]];
+    let rawRows = XLSX.utils.sheet_to_json(boSheet, {defval:''});
+    // Bosta portal files have ~11 rows of invoice metadata before the actual headers
+    // Detect by checking if any row has 'Tracking Number' as a key
+    if(!rawRows.length || !Object.keys(rawRows[0]||{}).some(k=>k.replace(/\s/g,'').toLowerCase()==='trackingnumber')){
+      const arrRows = XLSX.utils.sheet_to_json(boSheet, {header:1, defval:''});
+      const hdrIdx = arrRows.findIndex(r=>r.some(c=>String(c||'').trim()==='Tracking Number'));
+      if(hdrIdx >= 0) rawRows = XLSX.utils.sheet_to_json(boSheet, {defval:'', range: hdrIdx});
+    }
     let contract = {zones:[], shipping:{}, pkg:{}};
     if(contractFile){
       const cwb = XLSX.read(await readBuf(contractFile), {type:'array'});
