@@ -1284,6 +1284,7 @@ async function processBosta(){
     const fmMo = iso => { if(!iso) return ''; const [y,m]=iso.split('-'); return ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][+m-1]+"'"+y.slice(2); };
     bostaData = uploadMonth ? result.map(r=>({...r, uploadMonth: fmMo(uploadMonth)})) : result;
     document.getElementById('bo-save-btn').disabled = !bostaData.length;
+    boMonthSel = 'ALL';
     renderBosta();
   }catch(err){
     alert(T('errorPrefix') + err.message);
@@ -1664,6 +1665,7 @@ async function processAramex(){
     const fmMo = iso => { if(!iso) return ''; const [y,m]=iso.split('-'); return ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][+m-1]+"'"+y.slice(2); };
     auditData = uploadMonth ? result.map(r=>({...r, uploadMonth: fmMo(uploadMonth)})) : result;
     document.getElementById('ar-save-btn').disabled = !auditData.length;
+    arMonthSel = 'ALL';
     renderAramex();
   }catch(err){
     const msg = err?.message || String(err) || 'Unknown error';
@@ -2010,6 +2012,7 @@ async function processMashreq(){
     mqData = processMQ({ rawReport, raw2nd, rates, INS_PCT, COD_PCT, THRESH });
     if(mqUploadMonth) mqData.forEach(r=>{ r.uploadMonth = mqUploadMonth; });
     document.getElementById('mq-save-btn').disabled = !mqData.length;
+    mqMonthSel = 'ALL';
     renderMashreq();
   }catch(err){
     alert(T('errorPrefix') + err.message);
@@ -2297,6 +2300,7 @@ async function processRayaPage(){
     rayaData = processRaya({ rawRows, contract, THRESH });
     if(raUploadMonth) rayaData = rayaData.map(r=>({...r, uploadMonth: fmMo(raUploadMonth)}));
     document.getElementById('ra-save-btn').disabled = !rayaData.length;
+    raMonthSel = 'ALL';
     renderRayaPage();
   }catch(err){
     alert(T('errorPrefix') + err.message);
