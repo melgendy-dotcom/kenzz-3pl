@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
@@ -241,7 +241,7 @@ html[dir=ltr] #login-eye{right:12px}
       <div class="login-fld">
         <label id="login-pwd-label"></label>
         <input type="password" id="login-pwd" autocomplete="off">
-        <button type="button" id="login-eye" onclick="toggleShowPwd()">👁️</button>
+        <button type="button" id="login-eye" onclick="toggleShowPwd()">ðŸ‘ï¸</button>
       </div>
       <div id="login-error"></div>
       <button type="submit" id="login-submit"></button>
@@ -257,8 +257,8 @@ html[dir=ltr] #login-eye{right:12px}
       <div class="hd-title"><strong id="hd-title"></strong><small id="hd-sub"></small></div>
     </div>
     <div class="hd-right">
-      <button class="btn-lang" onclick="exportBackup()" title="Export all data as backup file" style="background:rgba(0,184,68,.15);border-color:rgba(0,184,68,.4);color:#00b844">💾 Backup</button>
-      <button class="btn-lang" onclick="document.getElementById('restore-inp').click()" title="Restore data from backup file" style="background:rgba(126,0,225,.15);border-color:rgba(126,0,225,.4);color:var(--purple)">📂 Restore</button>
+      <button class="btn-lang" onclick="exportBackup()" title="Export all data as backup file" style="background:rgba(0,184,68,.15);border-color:rgba(0,184,68,.4);color:#00b844">ðŸ’¾ Backup</button>
+      <button class="btn-lang" onclick="document.getElementById('restore-inp').click()" title="Restore data from backup file" style="background:rgba(126,0,225,.15);border-color:rgba(126,0,225,.4);color:var(--purple)">ðŸ“‚ Restore</button>
       <input type="file" id="restore-inp" accept=".json" style="display:none" onchange="importBackup(this)">
       <button class="btn-lang" onclick="toggleLang()" id="hd-lang-btn"></button>
       <button class="btn-lang" style="background:rgba(220,38,38,.2);border-color:rgba(220,38,38,.4)" onclick="logout()" id="hd-logout-btn"></button>
@@ -266,12 +266,12 @@ html[dir=ltr] #login-eye{right:12px}
   </header>
 
   <nav id="tab-nav">
-    <button class="tab-btn active" data-tab="bosta" onclick="switchTab('bosta')"><span>📦</span><span id="tab-bosta-lbl"></span></button>
-    <button class="tab-btn" data-tab="aramex" onclick="switchTab('aramex')"><span>✈️</span><span id="tab-aramex-lbl"></span></button>
-    <button class="tab-btn" data-tab="mashreq" onclick="switchTab('mashreq')"><span>🔄</span>Aramex Mashreq</button>
-    <button class="tab-btn" data-tab="raya" onclick="switchTab('raya')"><span>🚚</span>Raya Review</button>
-    <button class="tab-btn" data-tab="analytics" onclick="switchTab('analytics')"><span>📈</span>Analytics</button>
-    <button class="tab-btn" data-tab="breakdown" onclick="switchTab('breakdown')"><span>📊</span>Data Breakdown</button>
+    <button class="tab-btn active" data-tab="bosta" onclick="switchTab('bosta')"><span>ðŸ“¦</span><span id="tab-bosta-lbl"></span></button>
+    <button class="tab-btn" data-tab="aramex" onclick="switchTab('aramex')"><span>âœˆï¸</span><span id="tab-aramex-lbl"></span></button>
+    <button class="tab-btn" data-tab="mashreq" onclick="switchTab('mashreq')"><span>ðŸ”„</span>Aramex Mashreq</button>
+    <button class="tab-btn" data-tab="raya" onclick="switchTab('raya')"><span>ðŸšš</span>Raya Review</button>
+    <button class="tab-btn" data-tab="analytics" onclick="switchTab('analytics')"><span>ðŸ“ˆ</span>Analytics</button>
+    <button class="tab-btn" data-tab="breakdown" onclick="switchTab('breakdown')"><span>ðŸ“Š</span>Data Breakdown</button>
   </nav>
 
   <main>
@@ -354,7 +354,7 @@ html[dir=ltr] #login-eye{right:12px}
       </div>
 
       <div id="bo-empty" class="empty">
-        <div class="empty-icon">📦</div>
+        <div class="empty-icon">ðŸ“¦</div>
         <h3 id="bo-empty-title"></h3>
       </div>
     </div>
@@ -471,7 +471,7 @@ html[dir=ltr] #login-eye{right:12px}
       </div>
 
       <div id="ar-empty" class="empty">
-        <div class="empty-icon">📋</div>
+        <div class="empty-icon">ðŸ“‹</div>
         <h3 id="ar-empty-title"></h3>
         <p id="ar-empty-desc"></p>
       </div>
@@ -591,7 +591,7 @@ html[dir=ltr] #login-eye{right:12px}
       </div>
 
       <div id="mq-empty" class="empty">
-        <div class="empty-icon">🔄</div>
+        <div class="empty-icon">ðŸ”„</div>
         <h3 id="mq-empty-title"></h3>
       </div>
     </div>
@@ -688,7 +688,7 @@ html[dir=ltr] #login-eye{right:12px}
       </div>
 
       <div id="ra-empty" class="empty">
-        <div class="empty-icon">🚚</div>
+        <div class="empty-icon">ðŸšš</div>
         <h3 id="ra-empty-title"></h3>
       </div>
     </div>
@@ -698,7 +698,7 @@ html[dir=ltr] #login-eye{right:12px}
       <div class="audit-upload-grid" style="margin-bottom:16px">
         <div class="auc p">
           <h3 id="bd-file-title"></h3><p class="desc" id="bd-file-desc"></p>
-          <button class="afl p" onclick="document.getElementById('bd-file-inp').click()" id="bd-file-btn">📂</button>
+          <button class="afl p" onclick="document.getElementById('bd-file-inp').click()" id="bd-file-btn">ðŸ“‚</button>
           <input type="file" id="bd-file-inp" accept=".xlsx,.xls" style="display:none">
           <div class="aust" id="bd-file-status" style="display:none"></div>
           <button class="btn-save" style="margin-top:8px;width:100%" id="bd-load-btn" onclick="bdHandleLoadFile()" disabled></button>
@@ -720,7 +720,7 @@ html[dir=ltr] #login-eye{right:12px}
         </div>
       </div>
       <div class="process-row" style="margin-bottom:8px">
-        <button class="btn-save" id="bd-save-btn" onclick="bdHandleSave()">💾 Save Data</button>
+        <button class="btn-save" id="bd-save-btn" onclick="bdHandleSave()">ðŸ’¾ Save Data</button>
       </div>
       <div id="bd-toast" class="toast"></div>
       <div id="bd-content"></div>
@@ -728,7 +728,7 @@ html[dir=ltr] #login-eye{right:12px}
 
     <div id="panel-analytics" style="display:none">
       <div id="an-empty" class="coming-soon" style="display:none">
-        <div class="empty-icon">📈</div>
+        <div class="empty-icon">ðŸ“ˆ</div>
         <h3 id="an-empty-title"></h3>
         <p id="an-empty-desc" style="color:var(--muted);font-size:.85rem;margin-top:6px"></p>
       </div>
@@ -745,144 +745,144 @@ const STORAGE_KEY = 'kenzz3pl_bosta_v1';
 
 const I18N = {
   ar: {
-    hd:'محلل لوجستيات الشحن', hds:'تفاصيل تكاليف الشحن · الأرقام لا تشمل ضريبة القيمة المضافة',
-    lang:'🌐 English', logout:'خروج',
-    tBosta:'مراجعة بوسطة', tAramex:'مراجعة أرامكس',
-    note:'ℹ️ <strong>ملاحظة:</strong> جميع الأرقام لا تشمل ضريبة القيمة المضافة.',
-    loginTitle:'Kenzz 3PL', loginSubtitle:'أدخل كلمة المرور للوصول إلى النظام',
-    loginPwdLabel:'كلمة المرور', loginBtn:'دخول 🔐', loginError:'⚠️ كلمة المرور غير صحيحة، حاول مرة أخرى',
-    loginFooter:'محلل لوجستيات الشحن',
-    upload:'📂 رفع الملف', changeFile:'📂 تغيير الملف',
-    process:'⚡ معالجة وتحليل', saveResults:'💾 حفظ النتائج', clearData:'🗑️ مسح البيانات',
-    export:'⬇️ تصدير CSV', search:'بحث', all:'الكل',
-    overOnly:'عرض الفروقات فقط',
-    totalShipments:'إجمالي الشحنات', invoice:'إجمالي الفاتورة', differences:'فروقات', egp:'جنيه',
-    bo_file:'📦 تقرير بوسطة *', bo_fileDesc:'ملف الفاتورة الشهرية من بوسطة',
-    bo_contract:'📝 ملف العقد', bo_contractDesc:'جدول أسعار بوسطة (اختياري)',
-    bo_thresh:'⚙️ حد الفارق', bo_threshDesc:'الحد الأدنى لاعتبار الفارق (جنيه)',
-    bo_alertNoFile:'الرجاء رفع ملف التقرير',
-    bo_loadingMsg:'جارٍ معالجة بيانات بوسطة…',
-    bo_confirmClear:'مسح بيانات بوسطة؟',
-    bo_toast:'✅ تم حفظ بيانات بوسطة!',
-    bo_emptyTitle:'ارفع ملف تقرير بوسطة وابدأ المراجعة',
-    bo_resultsTitle:'نتائج مراجعة بوسطة',
-    bo_typeFilter:'النوع', bo_monthLbl:'شهر البيانات:',
-    errorPrefix:'خطأ: ', soonTitle:'هذا القسم قيد التطوير',
-    allStatuses:'جميع الحالات', delivered:'تم التسليم', returned:'مُعادة', pending:'معلقة',
-    ar_file:'📋 ملف أرامكس *', ar_fileDesc:'الملف الشهري من بوابة أرامكس (Excel)',
-    ar_odoo:'🏦 ملف Odoo', ar_odooDesc:'لتحديد طريقة الدفع وقيمة COD',
-    ar_zones:'🗺️ ملف المناطق', ar_zonesDesc:'ملف مناطق المدن (اختياري)',
-    ar_status:'📡 ملف الحالات', ar_statusDesc:'ملف تتبع الشحنات (اختياري)',
-    ar_cfgTitle:'⚙️ إعدادات حساب التكلفة',
-    ar_codThresh:'حد COD (جنيه)', ar_codThreshHint:'الحد الأدنى لتطبيق عمولة COD',
-    ar_codPct:'نسبة COD', ar_codPctHint:'مثال: 0.005 = 0.5%',
-    ar_annualPct:'الزيادة السنوية', ar_annualPctHint:'مثال: 0.125 = 12.5%',
-    ar_fuelPct:'رسوم الوقود', ar_fuelPctHint:'مثال: 0.38 = 38%',
-    ar_overThresh:'حد الفارق (جنيه)', ar_overThreshHint:'الحد الأدنى لاعتبار الفارق',
-    ar_alertNoFile:'الرجاء رفع ملف أرامكس أولاً',
-    ar_loadingMsg:'جارٍ معالجة بيانات أرامكس…',
-    ar_confirmClear:'هل تريد مسح نتائج المراجعة المحفوظة؟',
-    ar_toast:'✅ تم حفظ نتائج المراجعة!',
-    ar_emptyTitle:'ارفع ملفات أرامكس وابدأ المراجعة',
-    ar_emptyDesc:'ارفع ملف أرامكس وOdoo على الأقل ثم اضغط "معالجة"',
-    ar_resultsTitle:'نتائج مراجعة أرامكس',
-    ar_kpiDiffTot:'إجمالي الفارق', ar_kpiFlagBase:'Base فروقات', ar_kpiFlagOther:'Other فروقات',
-    ar_statusFilter:'الحالة', ar_monthLbl:'شهر البيانات:',
-    allSizes:'جميع الأحجام', kenzzCalc:'إجمالي Kenzz',
-    mq_monthLbl:'شهر البيانات:', ra_monthLbl:'شهر البيانات:',
-    mq_file:'📋 تقرير Aramex Mashreq *', mq_fileDesc:'ملف التقرير الشهري',
-    mq_rates:'📝 ملف الأسعار', mq_ratesDesc:'جدول أسعار Last Mile & Pickup',
-    mq_second:'2️⃣ ملف المحاولة الثانية', mq_secondDesc:'تقرير المحاولات الثانية (اختياري)',
-    mq_settings:'⚙️ الإعدادات', mq_settingsDesc:'نسب التأمين والـ COD وحد الفارق',
-    mq_insPct:'تأمين %', mq_codPct:'COD %', mq_thresh:'حد الفارق',
-    mq_alertNoFile:'الرجاء رفع ملف التقرير',
-    mq_loadingMsg:'جارٍ معالجة Mashreq…',
-    mq_confirmClear:'مسح بيانات Mashreq؟',
-    mq_toast:'✅ تم حفظ بيانات Mashreq!',
-    mq_emptyTitle:'ارفع ملف تقرير Mashreq وابدأ المراجعة',
-    mq_resultsTitle:'نتائج Aramex Mashreq',
-    mq_sizeFilter:'الحجم',
-    ra_file:'🚚 تقرير Raya *', ra_fileDesc:'ملف التقرير الشهري من Raya',
-    ra_contract:'📝 ملف العقد', ra_contractDesc:'جدول أسعار Raya حسب الـ Tier',
-    ra_thresh:'⚙️ حد الفارق', ra_threshDesc:'الحد الأدنى للفارق المقبول (جنيه)',
-    ra_alertNoFile:'الرجاء رفع ملف التقرير',
-    ra_loadingMsg:'جارٍ معالجة Raya…',
-    ra_confirmClear:'مسح بيانات Raya؟',
-    ra_toast:'✅ تم حفظ بيانات Raya!',
-    ra_emptyTitle:'ارفع ملف تقرير Raya وابدأ المراجعة',
-    ra_resultsTitle:'نتائج Raya Review',
-    ra_catFilter:'الفئة',
-    bd_fileTitle:'📂 ملف التفاصيل', bd_fileDesc:'ملف Excel بتفاصيل تكاليف الناقلين',
-    bd_addTitle:'➕ إضافة شهر', bd_addDesc:'أضف بيانات الشهر الحالي من ملفات المراجعة المحملة',
-    bd_clearTitle:'🗑️ مسح البيانات', bd_clearDesc:'مسح جميع بيانات التفاصيل المحفوظة',
-    bd_loadBtn:'⬆️ تحميل الملف', bd_addBtn:'➕ إضافة الشهر',
-    bd_clearBtn:'🗑️ مسح الكل', bd_carrier:'الناقل',
-    bd_monthPlaceholder:'مثال: يناير-2025',
-    bd_alertNoFile:'الرجاء رفع ملف التفاصيل',
-    bd_alertNoMonth:'الرجاء إدخال اسم الشهر',
-    bd_alertNoData:'لا توجد بيانات مراجعة محملة',
-    bd_loadingFile:'جارٍ تحميل ملف التفاصيل…',
-    bd_loadingMonth:'جارٍ إضافة بيانات الشهر…',
-    bd_confirmClear:'مسح جميع بيانات التفاصيل؟',
-    bd_successFile:'✅ تم تحميل ملف التفاصيل بنجاح',
-    bd_emptyTitle:'لا توجد بيانات تفاصيل بعد',
-    bd_emptyDesc:'قم بتحميل ملف التفاصيل أو أضف شهراً من بيانات المراجعة',
-    an_grand:'📊 ملخص شامل لجميع الناقلين',
-    an_fromCarriers:'ناقل',
-    an_distribution:'توزيع الشحنات حسب الناقل',
-    an_statusDist:'توزيع الحالات',
-    an_costComp:'مقارنة التكلفة',
-    an_actualInvoice:'الفاتورة الفعلية',
-    an_byLabel:'توزيع حسب النوع',
-    an_emptyTitle:'لا توجد بيانات بعد',
-    an_emptyDesc:'قم بمعالجة بيانات أي ناقل لعرض التحليلات هنا',
-    an_sec1:'القسم 1 — نظرة عامة ومعدلات النجاح',
-    an_sec4:'القسم 4 — تأثير المنطقة والحجم على التكلفة',
-    an_metric:'المقياس', an_notes:'ملاحظات',
-    an_cancelFloor:'ملغاة على الأرض', an_cancelRate:'معدل الإلغاء',
-    an_delRate:'معدل التسليم', an_retRate:'معدل الإعادة',
-    an_revDel:'إجمالي الإيراد — تسليم', an_costRet:'إجمالي التكلفة — إعادة',
-    an_chgCan:'إجمالي تكلفة الملغاة', an_retPct:'% الإعادة من الفاتورة',
+    hd:'Ù…Ø­Ù„Ù„ Ù„ÙˆØ¬Ø³ØªÙŠØ§Øª Ø§Ù„Ø´Ø­Ù†', hds:'ØªÙØ§ØµÙŠÙ„ ØªÙƒØ§Ù„ÙŠÙ Ø§Ù„Ø´Ø­Ù† Â· Ø§Ù„Ø£Ø±Ù‚Ø§Ù… Ù„Ø§ ØªØ´Ù…Ù„ Ø¶Ø±ÙŠØ¨Ø© Ø§Ù„Ù‚ÙŠÙ…Ø© Ø§Ù„Ù…Ø¶Ø§ÙØ©',
+    lang:'ðŸŒ English', logout:'Ø®Ø±ÙˆØ¬',
+    tBosta:'Ù…Ø±Ø§Ø¬Ø¹Ø© Ø¨ÙˆØ³Ø·Ø©', tAramex:'Ù…Ø±Ø§Ø¬Ø¹Ø© Ø£Ø±Ø§Ù…ÙƒØ³',
+    note:'â„¹ï¸ <strong>Ù…Ù„Ø§Ø­Ø¸Ø©:</strong> Ø¬Ù…ÙŠØ¹ Ø§Ù„Ø£Ø±Ù‚Ø§Ù… Ù„Ø§ ØªØ´Ù…Ù„ Ø¶Ø±ÙŠØ¨Ø© Ø§Ù„Ù‚ÙŠÙ…Ø© Ø§Ù„Ù…Ø¶Ø§ÙØ©.',
+    loginTitle:'Kenzz 3PL', loginSubtitle:'Ø£Ø¯Ø®Ù„ ÙƒÙ„Ù…Ø© Ø§Ù„Ù…Ø±ÙˆØ± Ù„Ù„ÙˆØµÙˆÙ„ Ø¥Ù„Ù‰ Ø§Ù„Ù†Ø¸Ø§Ù…',
+    loginPwdLabel:'ÙƒÙ„Ù…Ø© Ø§Ù„Ù…Ø±ÙˆØ±', loginBtn:'Ø¯Ø®ÙˆÙ„ ðŸ”', loginError:'âš ï¸ ÙƒÙ„Ù…Ø© Ø§Ù„Ù…Ø±ÙˆØ± ØºÙŠØ± ØµØ­ÙŠØ­Ø©ØŒ Ø­Ø§ÙˆÙ„ Ù…Ø±Ø© Ø£Ø®Ø±Ù‰',
+    loginFooter:'Ù…Ø­Ù„Ù„ Ù„ÙˆØ¬Ø³ØªÙŠØ§Øª Ø§Ù„Ø´Ø­Ù†',
+    upload:'ðŸ“‚ Ø±ÙØ¹ Ø§Ù„Ù…Ù„Ù', changeFile:'ðŸ“‚ ØªØºÙŠÙŠØ± Ø§Ù„Ù…Ù„Ù',
+    process:'âš¡ Ù…Ø¹Ø§Ù„Ø¬Ø© ÙˆØªØ­Ù„ÙŠÙ„', saveResults:'ðŸ’¾ Ø­ÙØ¸ Ø§Ù„Ù†ØªØ§Ø¦Ø¬', clearData:'ðŸ—‘ï¸ Ù…Ø³Ø­ Ø§Ù„Ø¨ÙŠØ§Ù†Ø§Øª',
+    export:'â¬‡ï¸ ØªØµØ¯ÙŠØ± CSV', search:'Ø¨Ø­Ø«', all:'Ø§Ù„ÙƒÙ„',
+    overOnly:'Ø¹Ø±Ø¶ Ø§Ù„ÙØ±ÙˆÙ‚Ø§Øª ÙÙ‚Ø·',
+    totalShipments:'Ø¥Ø¬Ù…Ø§Ù„ÙŠ Ø§Ù„Ø´Ø­Ù†Ø§Øª', invoice:'Ø¥Ø¬Ù…Ø§Ù„ÙŠ Ø§Ù„ÙØ§ØªÙˆØ±Ø©', differences:'ÙØ±ÙˆÙ‚Ø§Øª', egp:'Ø¬Ù†ÙŠÙ‡',
+    bo_file:'ðŸ“¦ ØªÙ‚Ø±ÙŠØ± Ø¨ÙˆØ³Ø·Ø© *', bo_fileDesc:'Ù…Ù„Ù Ø§Ù„ÙØ§ØªÙˆØ±Ø© Ø§Ù„Ø´Ù‡Ø±ÙŠØ© Ù…Ù† Ø¨ÙˆØ³Ø·Ø©',
+    bo_contract:'ðŸ“ Ù…Ù„Ù Ø§Ù„Ø¹Ù‚Ø¯', bo_contractDesc:'Ø¬Ø¯ÙˆÙ„ Ø£Ø³Ø¹Ø§Ø± Ø¨ÙˆØ³Ø·Ø© (Ø§Ø®ØªÙŠØ§Ø±ÙŠ)',
+    bo_thresh:'âš™ï¸ Ø­Ø¯ Ø§Ù„ÙØ§Ø±Ù‚', bo_threshDesc:'Ø§Ù„Ø­Ø¯ Ø§Ù„Ø£Ø¯Ù†Ù‰ Ù„Ø§Ø¹ØªØ¨Ø§Ø± Ø§Ù„ÙØ§Ø±Ù‚ (Ø¬Ù†ÙŠÙ‡)',
+    bo_alertNoFile:'Ø§Ù„Ø±Ø¬Ø§Ø¡ Ø±ÙØ¹ Ù…Ù„Ù Ø§Ù„ØªÙ‚Ø±ÙŠØ±',
+    bo_loadingMsg:'Ø¬Ø§Ø±Ù Ù…Ø¹Ø§Ù„Ø¬Ø© Ø¨ÙŠØ§Ù†Ø§Øª Ø¨ÙˆØ³Ø·Ø©â€¦',
+    bo_confirmClear:'Ù…Ø³Ø­ Ø¨ÙŠØ§Ù†Ø§Øª Ø¨ÙˆØ³Ø·Ø©ØŸ',
+    bo_toast:'âœ… ØªÙ… Ø­ÙØ¸ Ø¨ÙŠØ§Ù†Ø§Øª Ø¨ÙˆØ³Ø·Ø©!',
+    bo_emptyTitle:'Ø§Ø±ÙØ¹ Ù…Ù„Ù ØªÙ‚Ø±ÙŠØ± Ø¨ÙˆØ³Ø·Ø© ÙˆØ§Ø¨Ø¯Ø£ Ø§Ù„Ù…Ø±Ø§Ø¬Ø¹Ø©',
+    bo_resultsTitle:'Ù†ØªØ§Ø¦Ø¬ Ù…Ø±Ø§Ø¬Ø¹Ø© Ø¨ÙˆØ³Ø·Ø©',
+    bo_typeFilter:'Ø§Ù„Ù†ÙˆØ¹', bo_monthLbl:'Ø´Ù‡Ø± Ø§Ù„Ø¨ÙŠØ§Ù†Ø§Øª:',
+    errorPrefix:'Ø®Ø·Ø£: ', soonTitle:'Ù‡Ø°Ø§ Ø§Ù„Ù‚Ø³Ù… Ù‚ÙŠØ¯ Ø§Ù„ØªØ·ÙˆÙŠØ±',
+    allStatuses:'Ø¬Ù…ÙŠØ¹ Ø§Ù„Ø­Ø§Ù„Ø§Øª', delivered:'ØªÙ… Ø§Ù„ØªØ³Ù„ÙŠÙ…', returned:'Ù…ÙØ¹Ø§Ø¯Ø©', pending:'Ù…Ø¹Ù„Ù‚Ø©',
+    ar_file:'ðŸ“‹ Ù…Ù„Ù Ø£Ø±Ø§Ù…ÙƒØ³ *', ar_fileDesc:'Ø§Ù„Ù…Ù„Ù Ø§Ù„Ø´Ù‡Ø±ÙŠ Ù…Ù† Ø¨ÙˆØ§Ø¨Ø© Ø£Ø±Ø§Ù…ÙƒØ³ (Excel)',
+    ar_odoo:'ðŸ¦ Ù…Ù„Ù Odoo', ar_odooDesc:'Ù„ØªØ­Ø¯ÙŠØ¯ Ø·Ø±ÙŠÙ‚Ø© Ø§Ù„Ø¯ÙØ¹ ÙˆÙ‚ÙŠÙ…Ø© COD',
+    ar_zones:'ðŸ—ºï¸ Ù…Ù„Ù Ø§Ù„Ù…Ù†Ø§Ø·Ù‚', ar_zonesDesc:'Ù…Ù„Ù Ù…Ù†Ø§Ø·Ù‚ Ø§Ù„Ù…Ø¯Ù† (Ø§Ø®ØªÙŠØ§Ø±ÙŠ)',
+    ar_status:'ðŸ“¡ Ù…Ù„Ù Ø§Ù„Ø­Ø§Ù„Ø§Øª', ar_statusDesc:'Ù…Ù„Ù ØªØªØ¨Ø¹ Ø§Ù„Ø´Ø­Ù†Ø§Øª (Ø§Ø®ØªÙŠØ§Ø±ÙŠ)',
+    ar_cfgTitle:'âš™ï¸ Ø¥Ø¹Ø¯Ø§Ø¯Ø§Øª Ø­Ø³Ø§Ø¨ Ø§Ù„ØªÙƒÙ„ÙØ©',
+    ar_codThresh:'Ø­Ø¯ COD (Ø¬Ù†ÙŠÙ‡)', ar_codThreshHint:'Ø§Ù„Ø­Ø¯ Ø§Ù„Ø£Ø¯Ù†Ù‰ Ù„ØªØ·Ø¨ÙŠÙ‚ Ø¹Ù…ÙˆÙ„Ø© COD',
+    ar_codPct:'Ù†Ø³Ø¨Ø© COD', ar_codPctHint:'Ù…Ø«Ø§Ù„: 0.005 = 0.5%',
+    ar_annualPct:'Ø§Ù„Ø²ÙŠØ§Ø¯Ø© Ø§Ù„Ø³Ù†ÙˆÙŠØ©', ar_annualPctHint:'Ù…Ø«Ø§Ù„: 0.125 = 12.5%',
+    ar_fuelPct:'Ø±Ø³ÙˆÙ… Ø§Ù„ÙˆÙ‚ÙˆØ¯', ar_fuelPctHint:'Ù…Ø«Ø§Ù„: 0.38 = 38%',
+    ar_overThresh:'Ø­Ø¯ Ø§Ù„ÙØ§Ø±Ù‚ (Ø¬Ù†ÙŠÙ‡)', ar_overThreshHint:'Ø§Ù„Ø­Ø¯ Ø§Ù„Ø£Ø¯Ù†Ù‰ Ù„Ø§Ø¹ØªØ¨Ø§Ø± Ø§Ù„ÙØ§Ø±Ù‚',
+    ar_alertNoFile:'Ø§Ù„Ø±Ø¬Ø§Ø¡ Ø±ÙØ¹ Ù…Ù„Ù Ø£Ø±Ø§Ù…ÙƒØ³ Ø£ÙˆÙ„Ø§Ù‹',
+    ar_loadingMsg:'Ø¬Ø§Ø±Ù Ù…Ø¹Ø§Ù„Ø¬Ø© Ø¨ÙŠØ§Ù†Ø§Øª Ø£Ø±Ø§Ù…ÙƒØ³â€¦',
+    ar_confirmClear:'Ù‡Ù„ ØªØ±ÙŠØ¯ Ù…Ø³Ø­ Ù†ØªØ§Ø¦Ø¬ Ø§Ù„Ù…Ø±Ø§Ø¬Ø¹Ø© Ø§Ù„Ù…Ø­ÙÙˆØ¸Ø©ØŸ',
+    ar_toast:'âœ… ØªÙ… Ø­ÙØ¸ Ù†ØªØ§Ø¦Ø¬ Ø§Ù„Ù…Ø±Ø§Ø¬Ø¹Ø©!',
+    ar_emptyTitle:'Ø§Ø±ÙØ¹ Ù…Ù„ÙØ§Øª Ø£Ø±Ø§Ù…ÙƒØ³ ÙˆØ§Ø¨Ø¯Ø£ Ø§Ù„Ù…Ø±Ø§Ø¬Ø¹Ø©',
+    ar_emptyDesc:'Ø§Ø±ÙØ¹ Ù…Ù„Ù Ø£Ø±Ø§Ù…ÙƒØ³ ÙˆOdoo Ø¹Ù„Ù‰ Ø§Ù„Ø£Ù‚Ù„ Ø«Ù… Ø§Ø¶ØºØ· "Ù…Ø¹Ø§Ù„Ø¬Ø©"',
+    ar_resultsTitle:'Ù†ØªØ§Ø¦Ø¬ Ù…Ø±Ø§Ø¬Ø¹Ø© Ø£Ø±Ø§Ù…ÙƒØ³',
+    ar_kpiDiffTot:'Ø¥Ø¬Ù…Ø§Ù„ÙŠ Ø§Ù„ÙØ§Ø±Ù‚', ar_kpiFlagBase:'Base ÙØ±ÙˆÙ‚Ø§Øª', ar_kpiFlagOther:'Other ÙØ±ÙˆÙ‚Ø§Øª',
+    ar_statusFilter:'Ø§Ù„Ø­Ø§Ù„Ø©', ar_monthLbl:'Ø´Ù‡Ø± Ø§Ù„Ø¨ÙŠØ§Ù†Ø§Øª:',
+    allSizes:'Ø¬Ù…ÙŠØ¹ Ø§Ù„Ø£Ø­Ø¬Ø§Ù…', kenzzCalc:'Ø¥Ø¬Ù…Ø§Ù„ÙŠ Kenzz',
+    mq_monthLbl:'Ø´Ù‡Ø± Ø§Ù„Ø¨ÙŠØ§Ù†Ø§Øª:', ra_monthLbl:'Ø´Ù‡Ø± Ø§Ù„Ø¨ÙŠØ§Ù†Ø§Øª:',
+    mq_file:'ðŸ“‹ ØªÙ‚Ø±ÙŠØ± Aramex Mashreq *', mq_fileDesc:'Ù…Ù„Ù Ø§Ù„ØªÙ‚Ø±ÙŠØ± Ø§Ù„Ø´Ù‡Ø±ÙŠ',
+    mq_rates:'ðŸ“ Ù…Ù„Ù Ø§Ù„Ø£Ø³Ø¹Ø§Ø±', mq_ratesDesc:'Ø¬Ø¯ÙˆÙ„ Ø£Ø³Ø¹Ø§Ø± Last Mile & Pickup',
+    mq_second:'2ï¸âƒ£ Ù…Ù„Ù Ø§Ù„Ù…Ø­Ø§ÙˆÙ„Ø© Ø§Ù„Ø«Ø§Ù†ÙŠØ©', mq_secondDesc:'ØªÙ‚Ø±ÙŠØ± Ø§Ù„Ù…Ø­Ø§ÙˆÙ„Ø§Øª Ø§Ù„Ø«Ø§Ù†ÙŠØ© (Ø§Ø®ØªÙŠØ§Ø±ÙŠ)',
+    mq_settings:'âš™ï¸ Ø§Ù„Ø¥Ø¹Ø¯Ø§Ø¯Ø§Øª', mq_settingsDesc:'Ù†Ø³Ø¨ Ø§Ù„ØªØ£Ù…ÙŠÙ† ÙˆØ§Ù„Ù€ COD ÙˆØ­Ø¯ Ø§Ù„ÙØ§Ø±Ù‚',
+    mq_insPct:'ØªØ£Ù…ÙŠÙ† %', mq_codPct:'COD %', mq_thresh:'Ø­Ø¯ Ø§Ù„ÙØ§Ø±Ù‚',
+    mq_alertNoFile:'Ø§Ù„Ø±Ø¬Ø§Ø¡ Ø±ÙØ¹ Ù…Ù„Ù Ø§Ù„ØªÙ‚Ø±ÙŠØ±',
+    mq_loadingMsg:'Ø¬Ø§Ø±Ù Ù…Ø¹Ø§Ù„Ø¬Ø© Mashreqâ€¦',
+    mq_confirmClear:'Ù…Ø³Ø­ Ø¨ÙŠØ§Ù†Ø§Øª MashreqØŸ',
+    mq_toast:'âœ… ØªÙ… Ø­ÙØ¸ Ø¨ÙŠØ§Ù†Ø§Øª Mashreq!',
+    mq_emptyTitle:'Ø§Ø±ÙØ¹ Ù…Ù„Ù ØªÙ‚Ø±ÙŠØ± Mashreq ÙˆØ§Ø¨Ø¯Ø£ Ø§Ù„Ù…Ø±Ø§Ø¬Ø¹Ø©',
+    mq_resultsTitle:'Ù†ØªØ§Ø¦Ø¬ Aramex Mashreq',
+    mq_sizeFilter:'Ø§Ù„Ø­Ø¬Ù…',
+    ra_file:'ðŸšš ØªÙ‚Ø±ÙŠØ± Raya *', ra_fileDesc:'Ù…Ù„Ù Ø§Ù„ØªÙ‚Ø±ÙŠØ± Ø§Ù„Ø´Ù‡Ø±ÙŠ Ù…Ù† Raya',
+    ra_contract:'ðŸ“ Ù…Ù„Ù Ø§Ù„Ø¹Ù‚Ø¯', ra_contractDesc:'Ø¬Ø¯ÙˆÙ„ Ø£Ø³Ø¹Ø§Ø± Raya Ø­Ø³Ø¨ Ø§Ù„Ù€ Tier',
+    ra_thresh:'âš™ï¸ Ø­Ø¯ Ø§Ù„ÙØ§Ø±Ù‚', ra_threshDesc:'Ø§Ù„Ø­Ø¯ Ø§Ù„Ø£Ø¯Ù†Ù‰ Ù„Ù„ÙØ§Ø±Ù‚ Ø§Ù„Ù…Ù‚Ø¨ÙˆÙ„ (Ø¬Ù†ÙŠÙ‡)',
+    ra_alertNoFile:'Ø§Ù„Ø±Ø¬Ø§Ø¡ Ø±ÙØ¹ Ù…Ù„Ù Ø§Ù„ØªÙ‚Ø±ÙŠØ±',
+    ra_loadingMsg:'Ø¬Ø§Ø±Ù Ù…Ø¹Ø§Ù„Ø¬Ø© Rayaâ€¦',
+    ra_confirmClear:'Ù…Ø³Ø­ Ø¨ÙŠØ§Ù†Ø§Øª RayaØŸ',
+    ra_toast:'âœ… ØªÙ… Ø­ÙØ¸ Ø¨ÙŠØ§Ù†Ø§Øª Raya!',
+    ra_emptyTitle:'Ø§Ø±ÙØ¹ Ù…Ù„Ù ØªÙ‚Ø±ÙŠØ± Raya ÙˆØ§Ø¨Ø¯Ø£ Ø§Ù„Ù…Ø±Ø§Ø¬Ø¹Ø©',
+    ra_resultsTitle:'Ù†ØªØ§Ø¦Ø¬ Raya Review',
+    ra_catFilter:'Ø§Ù„ÙØ¦Ø©',
+    bd_fileTitle:'ðŸ“‚ Ù…Ù„Ù Ø§Ù„ØªÙØ§ØµÙŠÙ„', bd_fileDesc:'Ù…Ù„Ù Excel Ø¨ØªÙØ§ØµÙŠÙ„ ØªÙƒØ§Ù„ÙŠÙ Ø§Ù„Ù†Ø§Ù‚Ù„ÙŠÙ†',
+    bd_addTitle:'âž• Ø¥Ø¶Ø§ÙØ© Ø´Ù‡Ø±', bd_addDesc:'Ø£Ø¶Ù Ø¨ÙŠØ§Ù†Ø§Øª Ø§Ù„Ø´Ù‡Ø± Ø§Ù„Ø­Ø§Ù„ÙŠ Ù…Ù† Ù…Ù„ÙØ§Øª Ø§Ù„Ù…Ø±Ø§Ø¬Ø¹Ø© Ø§Ù„Ù…Ø­Ù…Ù„Ø©',
+    bd_clearTitle:'ðŸ—‘ï¸ Ù…Ø³Ø­ Ø§Ù„Ø¨ÙŠØ§Ù†Ø§Øª', bd_clearDesc:'Ù…Ø³Ø­ Ø¬Ù…ÙŠØ¹ Ø¨ÙŠØ§Ù†Ø§Øª Ø§Ù„ØªÙØ§ØµÙŠÙ„ Ø§Ù„Ù…Ø­ÙÙˆØ¸Ø©',
+    bd_loadBtn:'â¬†ï¸ ØªØ­Ù…ÙŠÙ„ Ø§Ù„Ù…Ù„Ù', bd_addBtn:'âž• Ø¥Ø¶Ø§ÙØ© Ø§Ù„Ø´Ù‡Ø±',
+    bd_clearBtn:'ðŸ—‘ï¸ Ù…Ø³Ø­ Ø§Ù„ÙƒÙ„', bd_carrier:'Ø§Ù„Ù†Ø§Ù‚Ù„',
+    bd_monthPlaceholder:'Ù…Ø«Ø§Ù„: ÙŠÙ†Ø§ÙŠØ±-2025',
+    bd_alertNoFile:'Ø§Ù„Ø±Ø¬Ø§Ø¡ Ø±ÙØ¹ Ù…Ù„Ù Ø§Ù„ØªÙØ§ØµÙŠÙ„',
+    bd_alertNoMonth:'Ø§Ù„Ø±Ø¬Ø§Ø¡ Ø¥Ø¯Ø®Ø§Ù„ Ø§Ø³Ù… Ø§Ù„Ø´Ù‡Ø±',
+    bd_alertNoData:'Ù„Ø§ ØªÙˆØ¬Ø¯ Ø¨ÙŠØ§Ù†Ø§Øª Ù…Ø±Ø§Ø¬Ø¹Ø© Ù…Ø­Ù…Ù„Ø©',
+    bd_loadingFile:'Ø¬Ø§Ø±Ù ØªØ­Ù…ÙŠÙ„ Ù…Ù„Ù Ø§Ù„ØªÙØ§ØµÙŠÙ„â€¦',
+    bd_loadingMonth:'Ø¬Ø§Ø±Ù Ø¥Ø¶Ø§ÙØ© Ø¨ÙŠØ§Ù†Ø§Øª Ø§Ù„Ø´Ù‡Ø±â€¦',
+    bd_confirmClear:'Ù…Ø³Ø­ Ø¬Ù…ÙŠØ¹ Ø¨ÙŠØ§Ù†Ø§Øª Ø§Ù„ØªÙØ§ØµÙŠÙ„ØŸ',
+    bd_successFile:'âœ… ØªÙ… ØªØ­Ù…ÙŠÙ„ Ù…Ù„Ù Ø§Ù„ØªÙØ§ØµÙŠÙ„ Ø¨Ù†Ø¬Ø§Ø­',
+    bd_emptyTitle:'Ù„Ø§ ØªÙˆØ¬Ø¯ Ø¨ÙŠØ§Ù†Ø§Øª ØªÙØ§ØµÙŠÙ„ Ø¨Ø¹Ø¯',
+    bd_emptyDesc:'Ù‚Ù… Ø¨ØªØ­Ù…ÙŠÙ„ Ù…Ù„Ù Ø§Ù„ØªÙØ§ØµÙŠÙ„ Ø£Ùˆ Ø£Ø¶Ù Ø´Ù‡Ø±Ø§Ù‹ Ù…Ù† Ø¨ÙŠØ§Ù†Ø§Øª Ø§Ù„Ù…Ø±Ø§Ø¬Ø¹Ø©',
+    an_grand:'ðŸ“Š Ù…Ù„Ø®Øµ Ø´Ø§Ù…Ù„ Ù„Ø¬Ù…ÙŠØ¹ Ø§Ù„Ù†Ø§Ù‚Ù„ÙŠÙ†',
+    an_fromCarriers:'Ù†Ø§Ù‚Ù„',
+    an_distribution:'ØªÙˆØ²ÙŠØ¹ Ø§Ù„Ø´Ø­Ù†Ø§Øª Ø­Ø³Ø¨ Ø§Ù„Ù†Ø§Ù‚Ù„',
+    an_statusDist:'ØªÙˆØ²ÙŠØ¹ Ø§Ù„Ø­Ø§Ù„Ø§Øª',
+    an_costComp:'Ù…Ù‚Ø§Ø±Ù†Ø© Ø§Ù„ØªÙƒÙ„ÙØ©',
+    an_actualInvoice:'Ø§Ù„ÙØ§ØªÙˆØ±Ø© Ø§Ù„ÙØ¹Ù„ÙŠØ©',
+    an_byLabel:'ØªÙˆØ²ÙŠØ¹ Ø­Ø³Ø¨ Ø§Ù„Ù†ÙˆØ¹',
+    an_emptyTitle:'Ù„Ø§ ØªÙˆØ¬Ø¯ Ø¨ÙŠØ§Ù†Ø§Øª Ø¨Ø¹Ø¯',
+    an_emptyDesc:'Ù‚Ù… Ø¨Ù…Ø¹Ø§Ù„Ø¬Ø© Ø¨ÙŠØ§Ù†Ø§Øª Ø£ÙŠ Ù†Ø§Ù‚Ù„ Ù„Ø¹Ø±Ø¶ Ø§Ù„ØªØ­Ù„ÙŠÙ„Ø§Øª Ù‡Ù†Ø§',
+    an_sec1:'Ø§Ù„Ù‚Ø³Ù… 1 â€” Ù†Ø¸Ø±Ø© Ø¹Ø§Ù…Ø© ÙˆÙ…Ø¹Ø¯Ù„Ø§Øª Ø§Ù„Ù†Ø¬Ø§Ø­',
+    an_sec4:'Ø§Ù„Ù‚Ø³Ù… 4 â€” ØªØ£Ø«ÙŠØ± Ø§Ù„Ù…Ù†Ø·Ù‚Ø© ÙˆØ§Ù„Ø­Ø¬Ù… Ø¹Ù„Ù‰ Ø§Ù„ØªÙƒÙ„ÙØ©',
+    an_metric:'Ø§Ù„Ù…Ù‚ÙŠØ§Ø³', an_notes:'Ù…Ù„Ø§Ø­Ø¸Ø§Øª',
+    an_cancelFloor:'Ù…Ù„ØºØ§Ø© Ø¹Ù„Ù‰ Ø§Ù„Ø£Ø±Ø¶', an_cancelRate:'Ù…Ø¹Ø¯Ù„ Ø§Ù„Ø¥Ù„ØºØ§Ø¡',
+    an_delRate:'Ù…Ø¹Ø¯Ù„ Ø§Ù„ØªØ³Ù„ÙŠÙ…', an_retRate:'Ù…Ø¹Ø¯Ù„ Ø§Ù„Ø¥Ø¹Ø§Ø¯Ø©',
+    an_revDel:'Ø¥Ø¬Ù…Ø§Ù„ÙŠ Ø§Ù„Ø¥ÙŠØ±Ø§Ø¯ â€” ØªØ³Ù„ÙŠÙ…', an_costRet:'Ø¥Ø¬Ù…Ø§Ù„ÙŠ Ø§Ù„ØªÙƒÙ„ÙØ© â€” Ø¥Ø¹Ø§Ø¯Ø©',
+    an_chgCan:'Ø¥Ø¬Ù…Ø§Ù„ÙŠ ØªÙƒÙ„ÙØ© Ø§Ù„Ù…Ù„ØºØ§Ø©', an_retPct:'% Ø§Ù„Ø¥Ø¹Ø§Ø¯Ø© Ù…Ù† Ø§Ù„ÙØ§ØªÙˆØ±Ø©',
   },
   en: {
-    hd:'3PL Logistics Analyzer', hds:'Shipping Cost Breakdown · All figures exclude VAT',
-    lang:'🌐 العربية', logout:'Logout',
+    hd:'3PL Logistics Analyzer', hds:'Shipping Cost Breakdown Â· All figures exclude VAT',
+    lang:'ðŸŒ Ø§Ù„Ø¹Ø±Ø¨ÙŠØ©', logout:'Logout',
     tBosta:'Bosta Audit', tAramex:'Aramex Audit',
-    note:'ℹ️ <strong>Note:</strong> All figures exclude VAT.',
+    note:'â„¹ï¸ <strong>Note:</strong> All figures exclude VAT.',
     loginTitle:'Kenzz 3PL', loginSubtitle:'Enter password to access the system',
-    loginPwdLabel:'Password', loginBtn:'Sign In 🔐', loginError:'⚠️ Incorrect password, please try again',
+    loginPwdLabel:'Password', loginBtn:'Sign In ðŸ”', loginError:'âš ï¸ Incorrect password, please try again',
     loginFooter:'Shipping Logistics Analyzer',
-    upload:'📂 Upload File', changeFile:'📂 Change File',
-    process:'⚡ Process & Analyze', saveResults:'💾 Save Results', clearData:'🗑️ Clear Data',
-    export:'⬇️ Export CSV', search:'Search', all:'All',
+    upload:'ðŸ“‚ Upload File', changeFile:'ðŸ“‚ Change File',
+    process:'âš¡ Process & Analyze', saveResults:'ðŸ’¾ Save Results', clearData:'ðŸ—‘ï¸ Clear Data',
+    export:'â¬‡ï¸ Export CSV', search:'Search', all:'All',
     overOnly:'Show differences only',
     totalShipments:'Total Shipments', invoice:'Total Invoice', differences:'Differences', egp:'EGP',
-    bo_file:'📦 Bosta Report *', bo_fileDesc:'Monthly invoice file from Bosta',
-    bo_contract:'📝 Contract File', bo_contractDesc:'Bosta rate table (optional)',
-    bo_thresh:'⚙️ Difference Threshold', bo_threshDesc:'Minimum difference to flag (EGP)',
+    bo_file:'ðŸ“¦ Bosta Report *', bo_fileDesc:'Monthly invoice file from Bosta',
+    bo_contract:'ðŸ“ Contract File', bo_contractDesc:'Bosta rate table (optional)',
+    bo_thresh:'âš™ï¸ Difference Threshold', bo_threshDesc:'Minimum difference to flag (EGP)',
     bo_alertNoFile:'Please upload the report file',
-    bo_loadingMsg:'Processing Bosta data…',
+    bo_loadingMsg:'Processing Bosta dataâ€¦',
     bo_confirmClear:'Clear Bosta data?',
-    bo_toast:'✅ Bosta results saved!',
+    bo_toast:'âœ… Bosta results saved!',
     bo_emptyTitle:'Upload Bosta report to start audit',
     bo_resultsTitle:'Bosta Audit Results',
     bo_typeFilter:'Type', bo_monthLbl:'Data Month:',
     errorPrefix:'Error: ', soonTitle:'This section is coming soon',
     allStatuses:'All Statuses', delivered:'Delivered', returned:'Returned', pending:'Pending',
-    ar_file:'📋 Aramex File *', ar_fileDesc:'Monthly file from Aramex portal (Excel)',
-    ar_odoo:'🏦 Odoo File', ar_odooDesc:'For payment type and COD value',
-    ar_zones:'🗺️ Zones File', ar_zonesDesc:'City zones mapping file (optional)',
-    ar_status:'📡 Status File', ar_statusDesc:'Shipment tracking status file (optional)',
-    ar_cfgTitle:'⚙️ Cost Calculation Settings',
+    ar_file:'ðŸ“‹ Aramex File *', ar_fileDesc:'Monthly file from Aramex portal (Excel)',
+    ar_odoo:'ðŸ¦ Odoo File', ar_odooDesc:'For payment type and COD value',
+    ar_zones:'ðŸ—ºï¸ Zones File', ar_zonesDesc:'City zones mapping file (optional)',
+    ar_status:'ðŸ“¡ Status File', ar_statusDesc:'Shipment tracking status file (optional)',
+    ar_cfgTitle:'âš™ï¸ Cost Calculation Settings',
     ar_codThresh:'COD Threshold (EGP)', ar_codThreshHint:'Minimum for COD fee to apply',
     ar_codPct:'COD Rate', ar_codPctHint:'e.g. 0.005 = 0.5%',
     ar_annualPct:'Annual Increase', ar_annualPctHint:'e.g. 0.125 = 12.5%',
     ar_fuelPct:'Fuel Surcharge', ar_fuelPctHint:'e.g. 0.38 = 38%',
     ar_overThresh:'Diff. Threshold (EGP)', ar_overThreshHint:'Minimum gap to flag',
     ar_alertNoFile:'Please upload the Aramex file first',
-    ar_loadingMsg:'Processing Aramex data…',
+    ar_loadingMsg:'Processing Aramex dataâ€¦',
     ar_confirmClear:'Clear saved audit results?',
-    ar_toast:'✅ Audit results saved!',
+    ar_toast:'âœ… Audit results saved!',
     ar_emptyTitle:'Upload Aramex files to start the audit',
     ar_emptyDesc:'Upload at least the Aramex file then click Process',
     ar_resultsTitle:'Aramex Audit Results',
@@ -890,44 +890,44 @@ const I18N = {
     ar_statusFilter:'Status', ar_monthLbl:'Data Month:',
     allSizes:'All Sizes', kenzzCalc:'Kenzz Total',
     mq_monthLbl:'Data Month:', ra_monthLbl:'Data Month:',
-    mq_file:'📋 Aramex Mashreq Report *', mq_fileDesc:'Monthly report file',
-    mq_rates:'📝 Rates File', mq_ratesDesc:'Last Mile & Pickup rate table',
-    mq_second:'2️⃣ Second Attempt File', mq_secondDesc:'Second attempt report (optional)',
-    mq_settings:'⚙️ Settings', mq_settingsDesc:'Insurance, COD rates and threshold',
+    mq_file:'ðŸ“‹ Aramex Mashreq Report *', mq_fileDesc:'Monthly report file',
+    mq_rates:'ðŸ“ Rates File', mq_ratesDesc:'Last Mile & Pickup rate table',
+    mq_second:'2ï¸âƒ£ Second Attempt File', mq_secondDesc:'Second attempt report (optional)',
+    mq_settings:'âš™ï¸ Settings', mq_settingsDesc:'Insurance, COD rates and threshold',
     mq_insPct:'Insurance %', mq_codPct:'COD %', mq_thresh:'Diff. Threshold',
     mq_alertNoFile:'Please upload the report file',
-    mq_loadingMsg:'Processing Mashreq data…',
+    mq_loadingMsg:'Processing Mashreq dataâ€¦',
     mq_confirmClear:'Clear Mashreq data?',
-    mq_toast:'✅ Mashreq results saved!',
+    mq_toast:'âœ… Mashreq results saved!',
     mq_emptyTitle:'Upload Mashreq report to start audit',
     mq_resultsTitle:'Aramex Mashreq Results',
     mq_sizeFilter:'Size',
-    ra_file:'🚚 Raya Report *', ra_fileDesc:'Monthly report file from Raya',
-    ra_contract:'📝 Contract File', ra_contractDesc:'Raya rates by Tier',
-    ra_thresh:'⚙️ Difference Threshold', ra_threshDesc:'Acceptable difference threshold (EGP)',
+    ra_file:'ðŸšš Raya Report *', ra_fileDesc:'Monthly report file from Raya',
+    ra_contract:'ðŸ“ Contract File', ra_contractDesc:'Raya rates by Tier',
+    ra_thresh:'âš™ï¸ Difference Threshold', ra_threshDesc:'Acceptable difference threshold (EGP)',
     ra_alertNoFile:'Please upload the report file',
-    ra_loadingMsg:'Processing Raya data…',
+    ra_loadingMsg:'Processing Raya dataâ€¦',
     ra_confirmClear:'Clear Raya data?',
-    ra_toast:'✅ Raya results saved!',
+    ra_toast:'âœ… Raya results saved!',
     ra_emptyTitle:'Upload Raya report to start audit',
     ra_resultsTitle:'Raya Review Results',
     ra_catFilter:'Category',
-    bd_fileTitle:'📂 Breakdown File', bd_fileDesc:'Excel file with carrier cost breakdown data',
+    bd_fileTitle:'ðŸ“‚ Breakdown File', bd_fileDesc:'Excel file with carrier cost breakdown data',
     bd_addTitle:'âž• Add Month', bd_addDesc:'Add current month data from loaded audit files',
-    bd_clearTitle:'🗑️ Clear Data', bd_clearDesc:'Clear all saved breakdown data',
-    bd_loadBtn:'⬆️ Load File', bd_addBtn:'➕ Add Month',
-    bd_clearBtn:'🗑️ Clear All', bd_carrier:'Carrier',
+    bd_clearTitle:'ðŸ—‘ï¸ Clear Data', bd_clearDesc:'Clear all saved breakdown data',
+    bd_loadBtn:'â¬†ï¸ Load File', bd_addBtn:'âž• Add Month',
+    bd_clearBtn:'ðŸ—‘ï¸ Clear All', bd_carrier:'Carrier',
     bd_monthPlaceholder:'e.g. Jan-2025',
     bd_alertNoFile:'Please upload the breakdown file',
     bd_alertNoMonth:'Please enter a month name',
     bd_alertNoData:'No audit data loaded yet',
-    bd_loadingFile:'Loading breakdown file…',
-    bd_loadingMonth:'Adding month data…',
+    bd_loadingFile:'Loading breakdown fileâ€¦',
+    bd_loadingMonth:'Adding month dataâ€¦',
     bd_confirmClear:'Clear all breakdown data?',
-    bd_successFile:'✅ Breakdown file loaded successfully',
+    bd_successFile:'âœ… Breakdown file loaded successfully',
     bd_emptyTitle:'No breakdown data yet',
     bd_emptyDesc:'Load a breakdown file or add a month from audit data',
-    an_grand:'📊 Grand Summary — All Carriers',
+    an_grand:'ðŸ“Š Grand Summary â€” All Carriers',
     an_fromCarriers:'carrier(s)',
     an_distribution:'Shipment Distribution by Carrier',
     an_statusDist:'Status Distribution',
@@ -936,13 +936,13 @@ const I18N = {
     an_byLabel:'Distribution by Label',
     an_emptyTitle:'No data yet',
     an_emptyDesc:'Process any carrier data to view analytics here',
-    an_sec1:'SECTION 1 — OVERVIEW & SUCCESS METRICS',
-    an_sec4:'SECTION 4 — DESTINATION ZONE & SIZE IMPACT ON CHARGE',
+    an_sec1:'SECTION 1 â€” OVERVIEW & SUCCESS METRICS',
+    an_sec4:'SECTION 4 â€” DESTINATION ZONE & SIZE IMPACT ON CHARGE',
     an_metric:'METRIC', an_notes:'NOTES',
     an_cancelFloor:'Cancelled on Floor', an_cancelRate:'Cancel Rate',
     an_delRate:'Delivery Success Rate', an_retRate:'Return Rate',
-    an_revDel:'Total Revenue — Delivered', an_costRet:'Total Cost — Returned',
-    an_chgCan:'Total Charge — Cancelled', an_retPct:'% of Returned from Invoice',
+    an_revDel:'Total Revenue â€” Delivered', an_costRet:'Total Cost â€” Returned',
+    an_chgCan:'Total Charge â€” Cancelled', an_retPct:'% of Returned from Invoice',
   }
 };
 
@@ -959,11 +959,11 @@ function _paginate(filtered, page, totalAll, countElId, tbodyFn, tabPrefix){
   if(page >= pages) page = pages-1;
   const start = page*PAGE_SIZE, end = Math.min(start+PAGE_SIZE, total);
   document.getElementById(countElId).innerHTML =
-    `${start+1}–${end} / ${total} &nbsp;` +
+    `${start+1}â€“${end} / ${total} &nbsp;` +
     (pages>1 ? `<span style="display:inline-flex;gap:4px;vertical-align:middle">` +
-      `<button onclick="window['${tabPrefix}PageGo'](${page-1})" ${page===0?'disabled':''} style="border:1px solid var(--border);border-radius:4px;padding:1px 8px;cursor:pointer;background:var(--bg)">‹</button>` +
+      `<button onclick="window['${tabPrefix}PageGo'](${page-1})" ${page===0?'disabled':''} style="border:1px solid var(--border);border-radius:4px;padding:1px 8px;cursor:pointer;background:var(--bg)">â€¹</button>` +
       `<span style="font-size:.75rem;padding:0 4px">${page+1}/${pages}</span>` +
-      `<button onclick="window['${tabPrefix}PageGo'](${page+1})" ${page===pages-1?'disabled':''} style="border:1px solid var(--border);border-radius:4px;padding:1px 8px;cursor:pointer;background:var(--bg)">›</button>` +
+      `<button onclick="window['${tabPrefix}PageGo'](${page+1})" ${page===pages-1?'disabled':''} style="border:1px solid var(--border);border-radius:4px;padding:1px 8px;cursor:pointer;background:var(--bg)">â€º</button>` +
     `</span>` : '');
   tbodyFn(filtered.slice(start, end));
   return page;
@@ -992,16 +992,16 @@ let reportFile = null, contractFile = null;
 /* ---------- helpers ---------- */
 function rv(v){ if(v===''||v==null) return 0; const n=parseFloat(v); return isNaN(n)?0:n; }
 function fm(v){
-  if(v===''||v==null) return '–';
+  if(v===''||v==null) return 'â€“';
   const n=parseFloat(v);
-  if(isNaN(n)) return '–';
+  if(isNaN(n)) return 'â€“';
   if(n===0) return '0';
   return Math.abs(n)%1===0 ? n.toLocaleString('en-US') : n.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});
 }
 function exportCSV(headers, rows, filename){
   const csv=[headers, ...rows].map(row=>row.map(v=>'"'+String(v===null?'':v).replace(/"/g,'""')+'"').join(',')).join('\n');
   const a=document.createElement('a');
-  a.href=URL.createObjectURL(new Blob([''+csv],{type:'text/csv;charset=utf-8'}));
+  a.href=URL.createObjectURL(new Blob(['ï»¿'+csv],{type:'text/csv;charset=utf-8'}));
   a.download=filename; a.click();
 }
 
@@ -1159,7 +1159,7 @@ function applyI18n(){
   document.getElementById('hd-title').textContent = T('hd');
   document.getElementById('hd-sub').textContent = T('hds');
   document.getElementById('hd-lang-btn').textContent = T('lang');
-  document.getElementById('hd-logout-btn').textContent = '🔒 ' + T('logout');
+  document.getElementById('hd-logout-btn').textContent = 'ðŸ”’ ' + T('logout');
 
   document.getElementById('tab-bosta-lbl').textContent = T('tBosta');
   document.getElementById('tab-aramex-lbl').textContent = T('tAramex');
@@ -1215,7 +1215,7 @@ function toggleShowPwd(){
   showPwd = !showPwd;
   const inp = document.getElementById('login-pwd');
   inp.type = showPwd ? 'text' : 'password';
-  document.getElementById('login-eye').textContent = showPwd ? '🙈' : '👁️';
+  document.getElementById('login-eye').textContent = showPwd ? 'ðŸ™ˆ' : 'ðŸ‘ï¸';
 }
 function attemptLogin(e){
   e.preventDefault();
@@ -1271,11 +1271,11 @@ function hideLoading(){ document.getElementById('loading-overlay').classList.rem
 function showToast(){ const t=document.getElementById('bo-toast'); t.classList.add('show'); setTimeout(()=>t.classList.remove('show'), 3000); }
 
 document.getElementById('bo-report-inp').addEventListener('change', e=>{
-  if(e.target.files[0]){ reportFile = e.target.files[0]; document.getElementById('bo-report-status').textContent = '✅ ' + reportFile.name; applyI18n(); }
+  if(e.target.files[0]){ reportFile = e.target.files[0]; document.getElementById('bo-report-status').textContent = 'âœ… ' + reportFile.name; applyI18n(); }
   e.target.value = '';
 });
 document.getElementById('bo-contract-inp').addEventListener('change', e=>{
-  if(e.target.files[0]){ contractFile = e.target.files[0]; document.getElementById('bo-contract-status').textContent = '✅ ' + contractFile.name; applyI18n(); }
+  if(e.target.files[0]){ contractFile = e.target.files[0]; document.getElementById('bo-contract-status').textContent = 'âœ… ' + contractFile.name; applyI18n(); }
   e.target.value = '';
 });
 
@@ -1376,7 +1376,7 @@ function renderBostaTable(){
       <td class="td-ins">${fm(r.insurance)}</td>
       <td class="td-r">${fm(r.priceBAV)}</td>
       <td class="td-diff ${r.isOver?'fb-over':'fb-ok'}">${fm(r.diff)}</td>
-      <td><span class="${r.isOver?'fb-over':'fb-ok'}">${r.isOver?'▲ Over':'✓'}</span></td>
+      <td><span class="${r.isOver?'fb-over':'fb-ok'}">${r.isOver?'â–² Over':'âœ“'}</span></td>
     </tr>`).join('');
   }, 'bo');
 }
@@ -1390,7 +1390,7 @@ function exportBosta(){
 async function saveBosta(){
   const btn = document.getElementById('bo-save-btn');
   const origText = btn.innerHTML;
-  btn.disabled = true; btn.innerHTML = '⏳ Saving...';
+  btn.disabled = true; btn.innerHTML = 'â³ Saving...';
   try{
     const months = new Set(bostaData.map(r=>r.uploadMonth).filter(Boolean));
     const merged = months.size ? [..._bostaPersisted.filter(r=>!months.has(r.uploadMonth)), ...bostaData] : bostaData;
@@ -1426,8 +1426,8 @@ function loadPersisted(){
 
 /* ---------- Aramex engine (ported from aramexEngine.js) ---------- */
 const ARAMEX_STORAGE_KEY = 'kenzz3pl_aramex_v1';
-const STATUS_DELIVERED = new Set(['paid','delivered','successfully delivered','collected','delivery completed','shipment delivered','delivered to customer','تم التسليم','تم التوصيل','تسليم ناجح','مسلم','تسليم']);
-const STATUS_RETURNED = new Set(['returned','returned to shipper','rts','refused','cancelled','return','rejected','undelivered','return to shipper','could not deliver','مرتجع','إرجاع','رفض','ملغي','لم يتم التسليم']);
+const STATUS_DELIVERED = new Set(['paid','delivered','successfully delivered','collected','delivery completed','shipment delivered','delivered to customer','ØªÙ… Ø§Ù„ØªØ³Ù„ÙŠÙ…','ØªÙ… Ø§Ù„ØªÙˆØµÙŠÙ„','ØªØ³Ù„ÙŠÙ… Ù†Ø§Ø¬Ø­','Ù…Ø³Ù„Ù…','ØªØ³Ù„ÙŠÙ…']);
+const STATUS_RETURNED = new Set(['returned','returned to shipper','rts','refused','cancelled','return','rejected','undelivered','return to shipper','could not deliver','Ù…Ø±ØªØ¬Ø¹','Ø¥Ø±Ø¬Ø§Ø¹','Ø±ÙØ¶','Ù…Ù„ØºÙŠ','Ù„Ù… ÙŠØªÙ… Ø§Ù„ØªØ³Ù„ÙŠÙ…']);
 
 function normAWB(v){
   if(v===null||v===undefined||v==='') return '';
@@ -1450,17 +1450,17 @@ function classifyStatus(st){
   // Explicitly pending/in-progress states
   if(s.includes('out for')||s.includes('in transit')||s.includes('in warehouse')||
      s.includes('misrouted')||s.includes('processing')||s.includes('on hold')||
-     s.includes('exception')||s.includes('attempted')||s.includes('محاولة')||
-     s.includes('قيد')||s.includes('جاري')) return 'PENDING';
+     s.includes('exception')||s.includes('attempted')||s.includes('Ù…Ø­Ø§ÙˆÙ„Ø©')||
+     s.includes('Ù‚ÙŠØ¯')||s.includes('Ø¬Ø§Ø±ÙŠ')) return 'PENDING';
   // Delivered
   if(STATUS_DELIVERED.has(s)||s.includes('delivered')||s.includes('collected')||
      s.includes('handover')||s.includes('handed')||s.includes('received')||
-     s.includes('تسليم')||s.includes('تم التسليم')||s.includes('مسلم')) return 'DELIVERED';
+     s.includes('ØªØ³Ù„ÙŠÙ…')||s.includes('ØªÙ… Ø§Ù„ØªØ³Ù„ÙŠÙ…')||s.includes('Ù…Ø³Ù„Ù…')) return 'DELIVERED';
   // Returned
   if(STATUS_RETURNED.has(s)||s.includes('return')||s.includes('cancel')||
      s.includes('refus')||s.includes('reject')||s.includes('rts')||
      s.includes('unable')||s.includes('not available')||s.includes('not found')||
-     s.includes('address')||s.includes('مرتجع')||s.includes('إرجاع')||s.includes('رفض')) return 'RETURNED';
+     s.includes('address')||s.includes('Ù…Ø±ØªØ¬Ø¹')||s.includes('Ø¥Ø±Ø¬Ø§Ø¹')||s.includes('Ø±ÙØ¶')) return 'RETURNED';
   return 'PENDING';
 }
 function getCost(w,c5,c10,c15,c20,ca){
@@ -1535,8 +1535,8 @@ function parseOdooFile(raw){
 }
 function parseStatusFile(wb, XLSXref){
   const statusMap={};
-  const AWB_CANDS=['airway bill no','airway bill no.','awb','3pl tracking no','3pl tracking no.','tracking no','waybill','shipment number','airwaybill','air waybill','reference','tracking','شحنة','رقم الشحنة','بوليصة'];
-  const STS_CANDS=['status','shipment status','delivery status','state','current status','last status','final status','الحالة','حالة الشحنة','الوضع'];
+  const AWB_CANDS=['airway bill no','airway bill no.','awb','3pl tracking no','3pl tracking no.','tracking no','waybill','shipment number','airwaybill','air waybill','reference','tracking','Ø´Ø­Ù†Ø©','Ø±Ù‚Ù… Ø§Ù„Ø´Ø­Ù†Ø©','Ø¨ÙˆÙ„ÙŠØµØ©'];
+  const STS_CANDS=['status','shipment status','delivery status','state','current status','last status','final status','Ø§Ù„Ø­Ø§Ù„Ø©','Ø­Ø§Ù„Ø© Ø§Ù„Ø´Ø­Ù†Ø©','Ø§Ù„ÙˆØ¶Ø¹'];
 
   function storeAWB(map, rawAWB, st){
     const awb = normAWB(rawAWB);
@@ -1556,19 +1556,19 @@ function parseStatusFile(wb, XLSXref){
     // Try to find headers in first 20 rows
     for(let r=0;r<Math.min(raw.length,20);r++){
       const low=raw[r].map(c=>String(c||'').trim().toLowerCase());
-      const ai=low.findIndex(c=>AWB_CANDS.some(x=>c===x||c.replace(/[.\s]/g,'')===x.replace(/[.\s]/g,''))||c.includes('awb')||c.includes('airway')||c.includes('tracking')||c.includes('waybill')||c.includes('شحنة')||c.includes('بوليصة'));
-      const si=low.findIndex(c=>STS_CANDS.some(x=>c===x)||c.includes('status')||c.includes('state')||c.includes('الحالة')||c.includes('حالة'));
+      const ai=low.findIndex(c=>AWB_CANDS.some(x=>c===x||c.replace(/[.\s]/g,'')===x.replace(/[.\s]/g,''))||c.includes('awb')||c.includes('airway')||c.includes('tracking')||c.includes('waybill')||c.includes('Ø´Ø­Ù†Ø©')||c.includes('Ø¨ÙˆÙ„ÙŠØµØ©'));
+      const si=low.findIndex(c=>STS_CANDS.some(x=>c===x)||c.includes('status')||c.includes('state')||c.includes('Ø§Ù„Ø­Ø§Ù„Ø©')||c.includes('Ø­Ø§Ù„Ø©'));
       if(ai!==-1&&si!==-1){ hdrRow=r; awbCol=ai; stCol=si; break; }
     }
 
     let loaded=0;
     if(hdrRow!==-1){
-      // Header found — load rows below it
+      // Header found â€” load rows below it
       for(let r=hdrRow+1;r<raw.length;r++){
         if(storeAWB(statusMap, raw[r][awbCol], String(raw[r][stCol]||'').trim())) loaded++;
       }
     } else {
-      // No header found — assume Column A = AWB, Column B = Status (skip first row as possible header)
+      // No header found â€” assume Column A = AWB, Column B = Status (skip first row as possible header)
       for(let r=1;r<raw.length;r++){
         const st = String(raw[r][1]||'').trim(); // Column B
         if(storeAWB(statusMap, raw[r][0], st)) loaded++;
@@ -1606,7 +1606,7 @@ function processAudit({aramexRows, odooPayMap, odooTypeMap, zoneMap, statusMap, 
     let paymentType = awb ? (odooTypeMap[awb]||'') : '';
     if(!paymentType) paymentType=String(g(row,'comment','payment type','payment method')||'').trim();
 
-    // Status File takes priority — try multiple AWB formats to maximize match
+    // Status File takes priority â€” try multiple AWB formats to maximize match
     let statusRaw = '';
     if(awb && Object.keys(statusMap).length){
       statusRaw = statusMap[awb]
@@ -1651,10 +1651,10 @@ let auditData = [];
 let _aramexPersisted = [];
 let aramexFile=null, odooFile=null, zoneFile=null, statusFile=null;
 
-document.getElementById('ar-file-inp').addEventListener('change', e=>{ if(e.target.files[0]){ aramexFile=e.target.files[0]; document.getElementById('ar-file-status').textContent='✅ '+aramexFile.name; applyI18nAramex(); } e.target.value=''; });
-document.getElementById('ar-odoo-inp').addEventListener('change', e=>{ if(e.target.files[0]){ odooFile=e.target.files[0]; document.getElementById('ar-odoo-status').textContent='✅ '+odooFile.name; applyI18nAramex(); } e.target.value=''; });
-document.getElementById('ar-zones-inp').addEventListener('change', e=>{ if(e.target.files[0]){ zoneFile=e.target.files[0]; document.getElementById('ar-zones-status').textContent='✅ '+zoneFile.name; applyI18nAramex(); } e.target.value=''; });
-document.getElementById('ar-status-inp').addEventListener('change', e=>{ if(e.target.files[0]){ statusFile=e.target.files[0]; document.getElementById('ar-status-status').textContent='✅ '+statusFile.name; applyI18nAramex(); } e.target.value=''; });
+document.getElementById('ar-file-inp').addEventListener('change', e=>{ if(e.target.files[0]){ aramexFile=e.target.files[0]; document.getElementById('ar-file-status').textContent='âœ… '+aramexFile.name; applyI18nAramex(); } e.target.value=''; });
+document.getElementById('ar-odoo-inp').addEventListener('change', e=>{ if(e.target.files[0]){ odooFile=e.target.files[0]; document.getElementById('ar-odoo-status').textContent='âœ… '+odooFile.name; applyI18nAramex(); } e.target.value=''; });
+document.getElementById('ar-zones-inp').addEventListener('change', e=>{ if(e.target.files[0]){ zoneFile=e.target.files[0]; document.getElementById('ar-zones-status').textContent='âœ… '+zoneFile.name; applyI18nAramex(); } e.target.value=''; });
+document.getElementById('ar-status-inp').addEventListener('change', e=>{ if(e.target.files[0]){ statusFile=e.target.files[0]; document.getElementById('ar-status-status').textContent='âœ… '+statusFile.name; applyI18nAramex(); } e.target.value=''; });
 
 function getAramexCfg(){
   return {
@@ -1771,7 +1771,7 @@ function renderAramexTable(){
   const tbody = document.getElementById('ar-table-body');
   arPage = _paginate(filtered, arPage, auditData.length, 'ar-results-count', rows => {
     tbody.innerHTML = rows.map(r => {
-      const flagTxt = (r.flagBase&&r.flagOther) ? 'Both' : r.flagBase ? 'Base↑' : r.flagOther ? 'Other↓' : r.isPending ? 'Pend' : '✓';
+      const flagTxt = (r.flagBase&&r.flagOther) ? 'Both' : r.flagBase ? 'Baseâ†‘' : r.flagOther ? 'Otherâ†“' : r.isPending ? 'Pend' : 'âœ“';
       const flagCls = (r.flagBase||r.flagOther) ? 'fb-over' : r.isPending ? 'fb-pend' : 'fb-ok';
       return `
     <tr class="${aramexRowCls(r)}">
@@ -1802,7 +1802,7 @@ function exportAramex(){
 async function saveAramex(){
   const btn = document.getElementById('ar-save-btn');
   const origText = btn.innerHTML;
-  btn.disabled = true; btn.innerHTML = '⏳ Saving...';
+  btn.disabled = true; btn.innerHTML = 'â³ Saving...';
   try{
     const months = new Set(auditData.map(r=>r.uploadMonth).filter(Boolean));
     const merged = months.size ? [..._aramexPersisted.filter(r=>!months.has(r.uploadMonth)), ...auditData] : auditData;
@@ -1968,7 +1968,7 @@ function mqQty(row){
 }
 let mqSecondTotal = 0;
 function processMQ({rawReport, raw2nd, rates, INS_PCT, COD_PCT, THRESH}){
-  // Sum all second attempt charges as a flat total — same columns as main report totalBilled
+  // Sum all second attempt charges as a flat total â€” same columns as main report totalBilled
   mqSecondTotal = 0;
   (raw2nd||[]).forEach(row=>{
     const chg = parseFloat(mqCol(row,'Charge')||0)||0;
@@ -2022,9 +2022,9 @@ function processMQ({rawReport, raw2nd, rates, INS_PCT, COD_PCT, THRESH}){
   });
 }
 
-document.getElementById('mq-file-inp').addEventListener('change', e=>{ if(e.target.files[0]){ mqReportFile=e.target.files[0]; document.getElementById('mq-file-status').textContent='✅ '+mqReportFile.name; applyI18nMashreq(); } e.target.value=''; });
-document.getElementById('mq-rates-inp').addEventListener('change', e=>{ if(e.target.files[0]){ mqRatesFile=e.target.files[0]; document.getElementById('mq-rates-status').textContent='✅ '+mqRatesFile.name; applyI18nMashreq(); } e.target.value=''; });
-document.getElementById('mq-second-inp').addEventListener('change', e=>{ if(e.target.files[0]){ mqSecondFile=e.target.files[0]; document.getElementById('mq-second-status').textContent='✅ '+mqSecondFile.name; applyI18nMashreq(); } e.target.value=''; });
+document.getElementById('mq-file-inp').addEventListener('change', e=>{ if(e.target.files[0]){ mqReportFile=e.target.files[0]; document.getElementById('mq-file-status').textContent='âœ… '+mqReportFile.name; applyI18nMashreq(); } e.target.value=''; });
+document.getElementById('mq-rates-inp').addEventListener('change', e=>{ if(e.target.files[0]){ mqRatesFile=e.target.files[0]; document.getElementById('mq-rates-status').textContent='âœ… '+mqRatesFile.name; applyI18nMashreq(); } e.target.value=''; });
+document.getElementById('mq-second-inp').addEventListener('change', e=>{ if(e.target.files[0]){ mqSecondFile=e.target.files[0]; document.getElementById('mq-second-status').textContent='âœ… '+mqSecondFile.name; applyI18nMashreq(); } e.target.value=''; });
 
 async function processMashreq(){
   if(!mqReportFile){ alert(T('mq_alertNoFile')); return; }
@@ -2129,7 +2129,7 @@ function exportMashreq(){
 async function saveMashreq(){
   const btn = document.getElementById('mq-save-btn');
   const origText = btn.innerHTML;
-  btn.disabled = true; btn.innerHTML = '⏳ Saving...';
+  btn.disabled = true; btn.innerHTML = 'â³ Saving...';
   try{
     const months = new Set(mqData.map(r=>r.uploadMonth).filter(Boolean));
     const merged = months.size ? [..._mqPersisted.filter(r=>!months.has(r.uploadMonth)), ...mqData] : mqData;
@@ -2299,7 +2299,7 @@ function processRaya({rawRows, contract, THRESH}){
       contractPrice = Math.round((rates[category]||0) * (applyRayaQty ? totalQty : 1) * 1000) / 1000;
     }
 
-    // diff = Raya's Price (col W) vs our contract rate — delivery charge comparison only
+    // diff = Raya's Price (col W) vs our contract rate â€” delivery charge comparison only
     const diff = Math.round((billedPrice - contractPrice)*100)/100;
     const isOver = diff > THRESH;
     const isUnder = diff < -THRESH;
@@ -2310,8 +2310,8 @@ function processRaya({rawRows, contract, THRESH}){
   });
 }
 
-document.getElementById('ra-file-inp').addEventListener('change', e=>{ if(e.target.files[0]){ rayaReportFile=e.target.files[0]; document.getElementById('ra-file-status').textContent='✅ '+rayaReportFile.name; applyI18nRaya(); } e.target.value=''; });
-document.getElementById('ra-contract-inp').addEventListener('change', e=>{ if(e.target.files[0]){ rayaContractFile=e.target.files[0]; document.getElementById('ra-contract-status').textContent='✅ '+rayaContractFile.name; applyI18nRaya(); } e.target.value=''; });
+document.getElementById('ra-file-inp').addEventListener('change', e=>{ if(e.target.files[0]){ rayaReportFile=e.target.files[0]; document.getElementById('ra-file-status').textContent='âœ… '+rayaReportFile.name; applyI18nRaya(); } e.target.value=''; });
+document.getElementById('ra-contract-inp').addEventListener('change', e=>{ if(e.target.files[0]){ rayaContractFile=e.target.files[0]; document.getElementById('ra-contract-status').textContent='âœ… '+rayaContractFile.name; applyI18nRaya(); } e.target.value=''; });
 
 async function processRayaPage(){
   if(!rayaReportFile){ alert(T('ra_alertNoFile')); return; }
@@ -2413,7 +2413,7 @@ function exportRayaPage(){
 async function saveRayaPage(){
   const btn = document.getElementById('ra-save-btn');
   const origText = btn.innerHTML;
-  btn.disabled = true; btn.innerHTML = '⏳ Saving...';
+  btn.disabled = true; btn.innerHTML = 'â³ Saving...';
   try{
     const months = new Set(rayaData.map(r=>r.uploadMonth).filter(Boolean));
     const merged = months.size ? [..._rayaPersisted.filter(r=>!months.has(r.uploadMonth)), ...rayaData] : rayaData;
@@ -2725,7 +2725,7 @@ function bdSave(){
 function bdShowToast(msg){ const t=document.getElementById('bd-toast'); t.textContent=msg; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),3200); }
 
 document.getElementById('bd-file-inp').addEventListener('change',e=>{
-  if(e.target.files[0]){ bdFile=e.target.files[0]; const s=document.getElementById('bd-file-status'); s.textContent='✅ '+bdFile.name; s.style.display='block'; document.getElementById('bd-load-btn').disabled=false; }
+  if(e.target.files[0]){ bdFile=e.target.files[0]; const s=document.getElementById('bd-file-status'); s.textContent='âœ… '+bdFile.name; s.style.display='block'; document.getElementById('bd-load-btn').disabled=false; }
   e.target.value='';
 });
 
@@ -2763,13 +2763,13 @@ async function bdHandleAddMonth(){
     const {store,added}=bdAddMonth({store:JSON.parse(JSON.stringify(base)),monthName,sources});
     bdStore=store;
     bdSave();
-    bdShowToast('✅ '+monthName+' ('+added.join(', ')+')');
+    bdShowToast('âœ… '+monthName+' ('+added.join(', ')+')');
     renderBreakdown();
   }catch(err){ alert(T('errorPrefix')+err.message); }
   finally{ hideLoading(); }
 }
 
-function bdHandleSave(){ if(!bdStore) return; bdSave(); bdShowToast('✅ Breakdown saved!'); }
+function bdHandleSave(){ if(!bdStore) return; bdSave(); bdShowToast('âœ… Breakdown saved!'); }
 
 function bdHandleClear(){
   if(!confirm(T('bd_confirmClear'))) return;
@@ -2783,7 +2783,7 @@ function renderBreakdown(){
   applyI18nBreakdown();
   const content=document.getElementById('bd-content');
   if(!bdStore||!bdStore.months.length){
-    content.innerHTML=`<div class="coming-soon" style="display:flex"><div class="empty-icon">📊</div><h3>${T('bd_emptyTitle')}</h3><p style="color:var(--muted);font-size:.85rem;margin-top:6px">${T('bd_emptyDesc')}</p></div>`;
+    content.innerHTML=`<div class="coming-soon" style="display:flex"><div class="empty-icon">ðŸ“Š</div><h3>${T('bd_emptyTitle')}</h3><p style="color:var(--muted);font-size:.85rem;margin-top:6px">${T('bd_emptyDesc')}</p></div>`;
     return;
   }
   const allCos=[BD_GRAND,...BD_COMPANIES];
@@ -2791,7 +2791,7 @@ function renderBreakdown(){
   const _moKey=s=>{ const p=s.split("'"); const yr=p.length>1?(+p[1]||0):0; const mi=_moOrder.indexOf(p[0]); return yr*12+(mi>=0?mi:0); };
   const months=[...bdStore.months].sort((a,b)=>_moKey(a)-_moKey(b));
   const val=(co,rt,key,mi)=>{ const origMi=bdStore.months.indexOf(months[mi]); const v=bdStore?.companies?.[co]?.[rt]?.[key]?.[origMi]; return (v===null||v===undefined)?null:v; };
-  const fmVal=v=>v===null?'<span style="color:var(--muted);font-size:.72rem">–</span>':fm(v);
+  const fmVal=v=>v===null?'<span style="color:var(--muted);font-size:.72rem">â€“</span>':fm(v);
 
   // carrier filter chips
   const hasData=co=>BD_ROW_TYPES.some(rt=>bdStore.companies[co]?.[rt]?.value?.some(v=>v!==null&&v!==undefined));
@@ -2861,7 +2861,7 @@ function renderBreakdown(){
       </div>
     </div>
     <div class="tbl-card">
-      <div class="card-hdr"><span><span class="dot"></span>Data Breakdown – ${bdSelCo}</span></div>
+      <div class="card-hdr"><span><span class="dot"></span>Data Breakdown â€“ ${bdSelCo}</span></div>
       <div style="display:flex;overflow:hidden;max-height:65vh;border-radius:0 0 var(--r) var(--r)">
         <div style="flex-shrink:0;overflow:hidden;box-shadow:3px 0 6px rgba(0,0,0,.15);z-index:2">
           <table class="bd-table" style="border-collapse:collapse;table-layout:fixed">
@@ -2883,7 +2883,7 @@ function applyI18nBreakdown(){
   el('bd-note').innerHTML=t.note;
   el('bd-file-title').textContent=t.bd_fileTitle;
   el('bd-file-desc').textContent=t.bd_fileDesc;
-  el('bd-file-btn').textContent='📂 '+(bdFile?t.changeFile:t.upload);
+  el('bd-file-btn').textContent='ðŸ“‚ '+(bdFile?t.changeFile:t.upload);
   el('bd-load-btn').textContent=t.bd_loadBtn;
   el('bd-add-title').textContent=t.bd_addTitle;
   el('bd-add-desc').textContent=t.bd_addDesc;
@@ -2994,8 +2994,8 @@ function renderAnalytics(){
       return {total,del,ret,can,delCharge,retCharge,canCharge};
     }
     const cols = months.map(m=>({ label:m, d:colData(m==='All'?rows:rows.filter(r=>!getMonth||getMonth(r)===m)) }));
-    const pct=(n,d)=>d>0?Math.round((n/d)*100)+'%':'–';
-    const egp=v=>v?fm(Math.round(v)):'–';
+    const pct=(n,d)=>d>0?Math.round((n/d)*100)+'%':'â€“';
+    const egp=v=>v?fm(Math.round(v)):'â€“';
     const metrics = [
       {key:'total', label:t.totalShipments, fmt:d=>fm(d.total), bold:true},
       {key:'del', label:t.delivered, fmt:d=>fm(d.del)},
@@ -3027,7 +3027,7 @@ function renderAnalytics(){
       </table></div>
     </div>`;
   }
-  /* ---- Raya Contract Discrepancy Table (Zone × Size, billed vs contract) ---- */
+  /* ---- Raya Contract Discrepancy Table (Zone Ã— Size, billed vs contract) ---- */
   function rayaContractDiscrepancy(rows){
     if(!rows.length) return '';
     const _moOrd=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
@@ -3052,7 +3052,7 @@ function renderAnalytics(){
     const sizes=['Small','Medium','Large'];
     const zones=[...new Set(rows.map(r=>String(r.tier||r.zone||'').trim()).filter(Boolean))].sort((a,b)=>a.localeCompare(b,undefined,{numeric:true}));
 
-    // Build aggregates: zone|size|month → {billedSum, contractSum, count, discrepancyCount}
+    // Build aggregates: zone|size|month â†’ {billedSum, contractSum, count, discrepancyCount}
     const agg={};
     rows.filter(matchSt).forEach(r=>{
       const mo=r.uploadMonth||r.month||''; if(!mo) return;
@@ -3070,11 +3070,11 @@ function renderAnalytics(){
 
     const THRESH=0.5;
     const hasContract=rows.some(r=>r.contractPrice>0);
-    if(!hasContract) return `<div style="margin-top:14px;padding:10px 14px;background:#fef9c3;border-radius:8px;font-size:.8rem;color:#854d0e">⚠️ No contract file loaded — upload a contract file to see discrepancy analysis.</div>`;
+    if(!hasContract) return `<div style="margin-top:14px;padding:10px 14px;background:#fef9c3;border-radius:8px;font-size:.8rem;color:#854d0e">âš ï¸ No contract file loaded â€” upload a contract file to see discrepancy analysis.</div>`;
 
     const EGP=v=>v.toLocaleString('en',{maximumFractionDigits:0})+' EGP';
     const dBadge=diff=>{
-      if(Math.abs(diff)<THRESH) return `<span style="color:#9ca3af;font-size:.75rem">✓ Match</span>`;
+      if(Math.abs(diff)<THRESH) return `<span style="color:#9ca3af;font-size:.75rem">âœ“ Match</span>`;
       const over=diff>0;
       const bc=over?'#fee2e2':'#dcfce7'; const tc=over?'#dc2626':'#16a34a';
       return `<span style="background:${bc};color:${tc};border-radius:6px;padding:2px 8px;font-size:.73rem;font-weight:700">${over?'â–²':'â–¼'} ${EGP(Math.abs(diff))}</span>`;
@@ -3097,18 +3097,18 @@ function renderAnalytics(){
         zb.b1+=d1.billed; zb.c1+=d1.contract; zb.b2+=d2.billed; zb.c2+=d2.contract;
         zb.cnt1+=d1.count; zb.cnt2+=d2.count;
         zoneBody+=`<tr style="background:#fff">
-          ${tdLc(sz,`${d1.count}→${d2.count} shipments`)}
-          ${M1?`${tdR(d1.count?EGP(d1.billed):'—',false,'')}${tdR(d1.count?EGP(d1.contract):'—',false,'')}${`<td style="padding:7px 10px;text-align:right;border:1px solid #e2e8f0">${d1.count?dBadge(diff1):'—'}</td>`}`:''}
-          ${tdR(d2.count?EGP(d2.billed):'—',false,'')}
-          ${tdR(d2.count?EGP(d2.contract):'—',false,'')}
-          <td style="padding:7px 10px;text-align:right;border:1px solid #e2e8f0">${d2.count?dBadge(diff2):'—'}</td>
+          ${tdLc(sz,`${d1.count}â†’${d2.count} shipments`)}
+          ${M1?`${tdR(d1.count?EGP(d1.billed):'â€”',false,'')}${tdR(d1.count?EGP(d1.contract):'â€”',false,'')}${`<td style="padding:7px 10px;text-align:right;border:1px solid #e2e8f0">${d1.count?dBadge(diff1):'â€”'}</td>`}`:''}
+          ${tdR(d2.count?EGP(d2.billed):'â€”',false,'')}
+          ${tdR(d2.count?EGP(d2.contract):'â€”',false,'')}
+          <td style="padding:7px 10px;text-align:right;border:1px solid #e2e8f0">${d2.count?dBadge(diff2):'â€”'}</td>
         </tr>`;
       });
       if(!zoneBody) return;
       gt.b1+=zb.b1; gt.c1+=zb.c1; gt.b2+=zb.b2; gt.c2+=zb.c2; gt.cnt1+=zb.cnt1; gt.cnt2+=zb.cnt2;
       const zd1=zb.b1-zb.c1, zd2=zb.b2-zb.c2;
       bodyHtml+=`<tr style="background:#eff6ff">
-        <td style="padding:8px 10px;font-size:.82rem;font-weight:700;color:#0369a1;border:1px solid #bfdbfe">Zone ${z} <span style="font-weight:400;color:#6b7280;font-size:.72rem">(${zb.cnt1}→${zb.cnt2} ships)</span></td>
+        <td style="padding:8px 10px;font-size:.82rem;font-weight:700;color:#0369a1;border:1px solid #bfdbfe">Zone ${z} <span style="font-weight:400;color:#6b7280;font-size:.72rem">(${zb.cnt1}â†’${zb.cnt2} ships)</span></td>
         ${M1?`${tdR(EGP(zb.b1),true,'')}${tdR(EGP(zb.c1),true,'')}<td style="padding:7px 10px;text-align:right;border:1px solid #bfdbfe">${dBadge(zd1)}</td>`:''}
         ${tdR(EGP(zb.b2),true,'')}${tdR(EGP(zb.c2),true,'')}
         <td style="padding:7px 10px;text-align:right;border:1px solid #bfdbfe">${dBadge(zd2)}</td>
@@ -3125,14 +3125,14 @@ function renderAnalytics(){
 
     const filterBtns=['all','delivered','returned'].map(v=>{
       const active=window[stKey]===v;
-      return `<button onclick="window._setRayaCDSt('${v}')" style="padding:5px 14px;border-radius:20px;border:1.5px solid ${active?'#fff':'rgba(255,255,255,.4)'};background:${active?'#fff':'transparent'};color:${active?'#0369a1':'#fff'};font-size:.78rem;font-weight:600;cursor:pointer">${v==='all'?'All':v==='delivered'?'✅ Delivered':'🔄 Returned'}</button>`;
+      return `<button onclick="window._setRayaCDSt('${v}')" style="padding:5px 14px;border-radius:20px;border:1.5px solid ${active?'#fff':'rgba(255,255,255,.4)'};background:${active?'#fff':'transparent'};color:${active?'#0369a1':'#fff'};font-size:.78rem;font-weight:600;cursor:pointer">${v==='all'?'All':v==='delivered'?'âœ… Delivered':'ðŸ”„ Returned'}</button>`;
     }).join('');
 
     const M1cols=M1?`<th style="${thS}">${M1} Billed</th><th style="${thS}">${M1} Contract</th><th style="${thS}">${M1} Diff</th>`:'';
 
     return `<div style="margin-top:18px;border-radius:12px;overflow:hidden;box-shadow:0 2px 12px rgba(3,105,161,.12)">
       <div style="background:linear-gradient(135deg,#0369a1,#0284c7);padding:10px 16px;display:flex;align-items:center;gap:12px;flex-wrap:wrap">
-        <span style="color:#fff;font-weight:700;font-size:.88rem">📋 Billing vs Contract — Discrepancy by Zone & Size</span>
+        <span style="color:#fff;font-weight:700;font-size:.88rem">ðŸ“‹ Billing vs Contract â€” Discrepancy by Zone & Size</span>
         <div style="display:flex;gap:6px;margin-left:auto">${filterBtns}</div>
       </div>
       <div style="overflow-x:auto"><table style="width:100%;border-collapse:collapse;min-width:${M1?'820':'480'}px">
@@ -3143,7 +3143,7 @@ function renderAnalytics(){
         <tbody>${bodyHtml}${totRow}</tbody>
       </table></div>
       <div style="padding:8px 14px;background:#f8fafc;font-size:.72rem;color:#6b7280;font-style:italic">
-        ▲ red = Raya billed above contract &nbsp;|&nbsp; ▼ green = Raya billed below contract &nbsp;|&nbsp; ✓ Match = within 0.50 EGP
+        â–² red = Raya billed above contract &nbsp;|&nbsp; â–¼ green = Raya billed below contract &nbsp;|&nbsp; âœ“ Match = within 0.50 EGP
       </div>
     </div>`;
   }
@@ -3192,7 +3192,7 @@ function renderAnalytics(){
     const tdL=(v,sub)=>`<td style="padding:7px 10px;font-size:.8rem;text-align:left;border:1px solid #e2e8f0;font-weight:600;color:#1e293b">${v}${sub?`<span style="display:block;font-size:.7rem;color:#6b7280;font-weight:400">${sub}</span>`:''}`;
 
     const dBadge=(diff)=>{
-      if(Math.abs(diff)<0.5) return `<span style="color:#9ca3af;font-size:.75rem">—</span>`;
+      if(Math.abs(diff)<0.5) return `<span style="color:#9ca3af;font-size:.75rem">â€”</span>`;
       const over=diff>0;
       const bc=over?'#fee2e2':'#dcfce7'; const tc=over?'#dc2626':'#16a34a';
       return `<span style="background:${bc};color:${tc};border-radius:6px;padding:2px 8px;font-size:.73rem;font-weight:700">${over?'â–²':'â–¼'} ${Math.abs(diff).toLocaleString('en',{maximumFractionDigits:0})}</span>`;
@@ -3205,7 +3205,7 @@ function renderAnalytics(){
       gt1b+=d1.billed; gt1c+=d1.contract; gt2b+=d2.billed; gt2c+=d2.contract;
     }));
 
-    // Build zone rows — skip entirely empty zones for cleanliness
+    // Build zone rows â€” skip entirely empty zones for cleanliness
     const zoneRowsHtml = zones.map(z=>{
       let zRows='', z1b=0,z1c=0,z2b=0,z2c=0;
       sizes.forEach(sz=>{
@@ -3215,22 +3215,22 @@ function renderAnalytics(){
         z1b+=d1.billed; z1c+=d1.contract; z2b+=d2.billed; z2c+=d2.contract;
         const diff1=d1.billed-d1.contract, diff2=d2.billed-d2.contract;
         zRows+=`<tr style="background:#fff">
-          ${tdL(sz,`${(d1.count||0)} → ${d2.count} ships`)}
-          ${M1?td(d1.count?d1.billed.toLocaleString('en',{maximumFractionDigits:0})+' EGP':'—',false,false):''}
-          ${M1?td(d1.count?d1.contract.toLocaleString('en',{maximumFractionDigits:0})+' EGP':'—',false,false):''}
-          ${M1?`<td style="padding:7px 10px;text-align:right;border:1px solid #e2e8f0">${d1.count?dBadge(diff1):'—'}</td>`:''}
-          ${td(d2.count?d2.billed.toLocaleString('en',{maximumFractionDigits:0})+' EGP':'—',false,false)}
-          ${td(d2.count?d2.contract.toLocaleString('en',{maximumFractionDigits:0})+' EGP':'—',false,false)}
-          <td style="padding:7px 10px;text-align:right;border:1px solid #e2e8f0">${d2.count?dBadge(d2.billed-d2.contract):'—'}</td>
+          ${tdL(sz,`${(d1.count||0)} â†’ ${d2.count} ships`)}
+          ${M1?td(d1.count?d1.billed.toLocaleString('en',{maximumFractionDigits:0})+' EGP':'â€”',false,false):''}
+          ${M1?td(d1.count?d1.contract.toLocaleString('en',{maximumFractionDigits:0})+' EGP':'â€”',false,false):''}
+          ${M1?`<td style="padding:7px 10px;text-align:right;border:1px solid #e2e8f0">${d1.count?dBadge(diff1):'â€”'}</td>`:''}
+          ${td(d2.count?d2.billed.toLocaleString('en',{maximumFractionDigits:0})+' EGP':'â€”',false,false)}
+          ${td(d2.count?d2.contract.toLocaleString('en',{maximumFractionDigits:0})+' EGP':'â€”',false,false)}
+          <td style="padding:7px 10px;text-align:right;border:1px solid #e2e8f0">${d2.count?dBadge(d2.billed-d2.contract):'â€”'}</td>
         </tr>`;
       });
       if(!zRows) return '';
       const diff1z=z1b-z1c, diff2z=z2b-z2c;
       const zHdr=`<tr style="background:#eff6ff">
         <td style="padding:8px 10px;font-size:.82rem;font-weight:700;color:${BLUE};border:1px solid #bfdbfe" colspan="1">Zone ${z}</td>
-        ${M1?`${td(z1b?z1b.toLocaleString('en',{maximumFractionDigits:0})+' EGP':'—',true,false)}${td(z1c?z1c.toLocaleString('en',{maximumFractionDigits:0})+' EGP':'—',true,false)}<td style="padding:7px 10px;text-align:right;border:1px solid #bfdbfe">${dBadge(diff1z)}</td>`:''}
-        ${td(z2b?z2b.toLocaleString('en',{maximumFractionDigits:0})+' EGP':'—',true,false)}
-        ${td(z2c?z2c.toLocaleString('en',{maximumFractionDigits:0})+' EGP':'—',true,false)}
+        ${M1?`${td(z1b?z1b.toLocaleString('en',{maximumFractionDigits:0})+' EGP':'â€”',true,false)}${td(z1c?z1c.toLocaleString('en',{maximumFractionDigits:0})+' EGP':'â€”',true,false)}<td style="padding:7px 10px;text-align:right;border:1px solid #bfdbfe">${dBadge(diff1z)}</td>`:''}
+        ${td(z2b?z2b.toLocaleString('en',{maximumFractionDigits:0})+' EGP':'â€”',true,false)}
+        ${td(z2c?z2c.toLocaleString('en',{maximumFractionDigits:0})+' EGP':'â€”',true,false)}
         <td style="padding:7px 10px;text-align:right;border:1px solid #bfdbfe">${dBadge(diff2z)}</td>
       </tr>`;
       return zHdr+zRows;
@@ -3238,7 +3238,7 @@ function renderAnalytics(){
 
     const filterBtns=['all','delivered','returned'].map(v=>{
       const active=st===v;
-      return `<button onclick="window._setRayaCtSt('${v}')" style="padding:5px 14px;border-radius:20px;border:1.5px solid ${active?BLUE:'#cbd5e1'};background:${active?BLUE:'#fff'};color:${active?'#fff':'#374151'};font-size:.78rem;font-weight:600;cursor:pointer">${v==='all'?'All':v==='delivered'?'✅ Delivered':'🔄 Returned'}</button>`;
+      return `<button onclick="window._setRayaCtSt('${v}')" style="padding:5px 14px;border-radius:20px;border:1.5px solid ${active?BLUE:'#cbd5e1'};background:${active?BLUE:'#fff'};color:${active?'#fff':'#374151'};font-size:.78rem;font-weight:600;cursor:pointer">${v==='all'?'All':v==='delivered'?'âœ… Delivered':'ðŸ”„ Returned'}</button>`;
     }).join('');
 
     const M1cols=M1?`<th style="${thS}">${M1} Billed</th><th style="${thS}">${M1} Contract</th><th style="${thS}">${M1} Diff</th>`:'';
@@ -3252,7 +3252,7 @@ function renderAnalytics(){
 
     return `<div id="raya-ct-wrap" style="margin-top:18px;border-radius:12px;overflow:hidden;box-shadow:0 2px 12px rgba(3,105,161,.12)">
       <div style="background:linear-gradient(135deg,#0369a1,#0284c7);padding:10px 16px;display:flex;align-items:center;gap:12px;flex-wrap:wrap">
-        <span style="color:#fff;font-weight:700;font-size:.88rem">📋 Contract vs Breakdown — Total Value Comparison</span>
+        <span style="color:#fff;font-weight:700;font-size:.88rem">ðŸ“‹ Contract vs Breakdown â€” Total Value Comparison</span>
         <div style="display:flex;gap:6px;margin-left:auto">${filterBtns}</div>
       </div>
       <div style="overflow-x:auto">
@@ -3267,7 +3267,7 @@ function renderAnalytics(){
         <tbody>${zoneRowsHtml}${totRow}</tbody>
       </table></div>
       <div style="padding:8px 14px;background:#f8fafc;font-size:.72rem;color:#6b7280;font-style:italic">
-        Diff = Billed − Contract &nbsp;|&nbsp; ▲ red = Raya charged above contract &nbsp;|&nbsp; ▼ green = Raya charged below contract
+        Diff = Billed âˆ’ Contract &nbsp;|&nbsp; â–² red = Raya charged above contract &nbsp;|&nbsp; â–¼ green = Raya charged below contract
       </div>
     </div>`;
   }
@@ -3291,8 +3291,8 @@ function renderAnalytics(){
           const rowTotal=sizeLabels.reduce((sum,s)=>sum+(matrix[z][s]||0),0);
           return `<tr style="background:${zi%2===0?'rgba(255,255,255,.03)':'transparent'}">
             <td style="${tdS};text-align:left;font-weight:600;color:#c084fc">${z}</td>
-            ${sizeLabels.map(s=>`<td style="${tdS}">${matrix[z][s]||'–'}</td>`).join('')}
-            ${sizeLabels.map(s=>`<td style="${tdS};color:#86efac;font-weight:600">${rowTotal>0?Math.round((matrix[z][s]/rowTotal)*100)+'%':'–'}</td>`).join('')}
+            ${sizeLabels.map(s=>`<td style="${tdS}">${matrix[z][s]||'â€“'}</td>`).join('')}
+            ${sizeLabels.map(s=>`<td style="${tdS};color:#86efac;font-weight:600">${rowTotal>0?Math.round((matrix[z][s]/rowTotal)*100)+'%':'â€“'}</td>`).join('')}
           </tr>`;
         }).join('')}</tbody>
       </table></div>
@@ -3346,7 +3346,7 @@ function renderAnalytics(){
     const thB='background:#0f172a;color:#94a3b8;font-size:.68rem;padding:7px 12px;font-weight:700;letter-spacing:.04em;white-space:nowrap';
     const tdB='padding:7px 12px;font-size:.77rem;border-bottom:1px solid rgba(255,255,255,.06);vertical-align:middle';
     const clr=v=>v>0.05?'#4ade80':v<-0.05?'#f87171':'var(--muted)';
-    const arr=v=>v>0.05?'↑':v<-0.05?'↓':'→';
+    const arr=v=>v>0.05?'â†‘':v<-0.05?'â†“':'â†’';
     const fmD=v=>(v>=0?'+':'')+v.toFixed(2);
     const maxEff=Math.max(Math.abs(sizeEffect),Math.abs(zoneEffect),Math.abs(pureRate),...extraRows.map(f=>Math.abs(f.val)),0.01);
     function wBar(val){ const pct=Math.min(Math.abs(val)/maxEff*100,100).toFixed(1); const c=val>0.05?'#f87171':val<-0.05?'#4ade80':'#475569'; return `<div style="background:rgba(255,255,255,.1);border-radius:4px;height:10px;overflow:hidden;min-width:90px"><div style="width:${pct}%;height:100%;background:${c};border-radius:4px"></div></div>`; }
@@ -3362,7 +3362,7 @@ function renderAnalytics(){
           <td style="${tdB};text-align:center;font-weight:700;color:${clr(d)}">${d>=0?'+':''}${d.toFixed(1)}pp ${arr(d)}</td>
         </tr>`;
       }).join('');
-      return `<div><div style="background:#1e3a5f;padding:5px 12px;font-size:.68rem;font-weight:700;color:#7dd3fc;letter-spacing:.04em">${label} · ${M1} → ${M2}</div>
+      return `<div><div style="background:#1e3a5f;padding:5px 12px;font-size:.68rem;font-weight:700;color:#7dd3fc;letter-spacing:.04em">${label} Â· ${M1} â†’ ${M2}</div>
         <div class="tbl-scroll"><table style="width:100%;border-collapse:collapse">
           <thead><tr style="background:#0f172a">
             <th style="${thB};text-align:left">${label.split(' ')[0]}</th>
@@ -3375,7 +3375,7 @@ function renderAnalytics(){
     }
     // Reference-style badge impact
     function impactBadge(val){
-      if(Math.abs(val)<0.05) return `<span style="color:#9ca3af;font-size:.82rem">—</span>`;
+      if(Math.abs(val)<0.05) return `<span style="color:#9ca3af;font-size:.82rem">â€”</span>`;
       const up=val>0;
       const bc=up?'#dcfce7':'#fee2e2'; const tc=up?'#16a34a':'#dc2626'; const bdr=up?'#86efac':'#fca5a5';
       return `<span style="display:inline-flex;align-items:center;gap:3px;background:${bc};color:${tc};border:1.5px solid ${bdr};border-radius:8px;padding:3px 10px;font-size:.78rem;font-weight:700">${up?'â–²':'â–¼'} ${Math.abs(val).toFixed(2)} EGP</span>`;
@@ -3383,23 +3383,23 @@ function renderAnalytics(){
     function wBar2(val){ const pct=Math.min(Math.abs(val)/maxEff*100,100).toFixed(1); const c=val>0.05?'#22c55e':val<-0.05?'#ef4444':'#94a3b8'; return `<div style="background:#f1f5f9;border-radius:6px;height:12px;overflow:hidden;min-width:100px;max-width:200px"><div style="width:${pct}%;height:100%;background:${c};border-radius:6px"></div></div>`; }
     const rowStyle='border-bottom:1px solid #f1f5f9;background:#fff';
     const tdL='padding:12px 14px;font-size:.8rem;vertical-align:middle';
-    const fmV=v=>v!==null?v.toFixed(2)+' EGP':`<span style="color:#9ca3af">—</span>`;
+    const fmV=v=>v!==null?v.toFixed(2)+' EGP':`<span style="color:#9ca3af">â€”</span>`;
     const factors=[
-      {icon:'📦',num:'①',label:'Size Mix',color:'#dc2626',val:sizeEffect,m1:null,m2:null,
+      {icon:'ðŸ“¦',num:'â‘ ',label:'Size Mix',color:'#dc2626',val:sizeEffect,m1:null,m2:null,
        desc:Math.abs(sizeEffect)<0.05?'No size mix change':sizeEffect>0?`Size mix shifted to more expensive sizes`:`Size mix shifted to cheaper sizes`},
-      ...(hasZone&&getZone?[{icon:'🗺️',num:'②',label:'Zone Mix',color:'#2563eb',val:zoneEffect,m1:null,m2:null,
-       desc:Math.abs(zoneEffect)<0.05?'No zone mix change':zoneEffect>0?`More shipments to distant zones → higher cost`:`More shipments to closer zones → lower cost`}]:[]),
-      {icon:'⚡',num:hasZone&&getZone?'â‘¢':'â‘¡',label:'Contract Rate',color:'#d97706',
+      ...(hasZone&&getZone?[{icon:'ðŸ—ºï¸',num:'â‘¡',label:'Zone Mix',color:'#2563eb',val:zoneEffect,m1:null,m2:null,
+       desc:Math.abs(zoneEffect)<0.05?'No zone mix change':zoneEffect>0?`More shipments to distant zones â†’ higher cost`:`More shipments to closer zones â†’ lower cost`}]:[]),
+      {icon:'âš¡',num:hasZone&&getZone?'â‘¢':'â‘¡',label:'Contract Rate',color:'#d97706',
        val: contractDisc ? (avgArr(r2.map(contractDisc.getVal)) - avgArr(r1.map(contractDisc.getVal))) : (extraRows.length?pureRate:residual),
        m1: contractDisc ? avgArr(r1.map(contractDisc.getVal)) : null,
        m2: contractDisc ? avgArr(r2.map(contractDisc.getVal)) : null,
        desc: contractDisc
-         ? (()=>{ const a1=avgArr(r1.map(contractDisc.getVal)), a2=avgArr(r2.map(contractDisc.getVal)); return `Avg discrepancy (Billed − Contract): ${a1.toFixed(2)} EGP → ${a2.toFixed(2)} EGP`; })()
-         : (extraRows.length?`${Math.abs(pureRate).toFixed(2)} EGP — pure contract rate ${pureRate<0?'reduction':'increase'}`:`${Math.abs(residual).toFixed(2)} EGP unexplained`)},
+         ? (()=>{ const a1=avgArr(r1.map(contractDisc.getVal)), a2=avgArr(r2.map(contractDisc.getVal)); return `Avg discrepancy (Billed âˆ’ Contract): ${a1.toFixed(2)} EGP â†’ ${a2.toFixed(2)} EGP`; })()
+         : (extraRows.length?`${Math.abs(pureRate).toFixed(2)} EGP â€” pure contract rate ${pureRate<0?'reduction':'increase'}`:`${Math.abs(residual).toFixed(2)} EGP unexplained`)},
       ...extraRows.map((f,i)=>({icon:f.icon,num:String.fromCharCode(9312+(hasZone&&getZone?3:2)+i),label:f.label,color:f.color,val:f.val,m1:f.avg1,m2:f.avg2,
-       desc:`Avg ${f.label}: ${f.avg1.toFixed(2)} EGP → ${f.avg2.toFixed(2)} EGP`})),
-      {icon:'📊',num:String.fromCharCode(9312+(hasZone&&getZone?3:2)+extraRows.length),label:'Volume',color:'#9ca3af',val:null,m1:r1.length,m2:r2.length,isCount:true,
-       desc:`${volChange>=0?'+':''}${fm(Math.abs(volChange))} shipments (${volChange>=0?'+':''}${volPct}%) — impacts total spend, not cost-per-shipment`},
+       desc:`Avg ${f.label}: ${f.avg1.toFixed(2)} EGP â†’ ${f.avg2.toFixed(2)} EGP`})),
+      {icon:'ðŸ“Š',num:String.fromCharCode(9312+(hasZone&&getZone?3:2)+extraRows.length),label:'Volume',color:'#9ca3af',val:null,m1:r1.length,m2:r2.length,isCount:true,
+       desc:`${volChange>=0?'+':''}${fm(Math.abs(volChange))} shipments (${volChange>=0?'+':''}${volPct}%) â€” impacts total spend, not cost-per-shipment`},
     ];
     // Build contract discrepancy drill-down (rendered as separate table after ACPS)
     let cdDrillTable='';
@@ -3410,8 +3410,8 @@ function renderAnalytics(){
       const thCD='padding:7px 12px;font-size:.7rem;font-weight:700;color:#fff;background:#b45309;letter-spacing:.04em;white-space:nowrap;border:1px solid #92400e;text-align:right';
       const valClr=v=>v>0.5?'#16a34a':v<-0.5?'#dc2626':'#6b7280';
       const valPfx=v=>v>0.5?'â–²':v<-0.5?'â–¼':'';
-      const tdCD=(v)=>{ if(v===null) return `<td style="padding:7px 12px;font-size:.78rem;text-align:right;border:1px solid #e2e8f0;color:#d1d5db">—</td>`; return `<td style="padding:7px 12px;font-size:.78rem;text-align:right;border:1px solid #e2e8f0;font-weight:600;color:${valClr(v)};font-variant-numeric:tabular-nums">${valPfx(v)} ${Math.abs(v).toFixed(2)} EGP</td>`; };
-      const tdCDdelta=(v)=>{ if(v===null) return `<td style="padding:7px 12px;font-size:.78rem;text-align:right;border:1px solid #e2e8f0;color:#d1d5db">—</td>`; const bc=v>0.5?'#dcfce7':v<-0.5?'#fee2e2':'#f8fafc'; const tc=v>0.5?'#16a34a':v<-0.5?'#dc2626':'#6b7280'; return `<td style="padding:7px 12px;font-size:.78rem;text-align:right;border:1px solid #e2e8f0"><span style="background:${bc};color:${tc};border-radius:6px;padding:2px 8px;font-size:.73rem;font-weight:700">${v>0.5?'▲':v<-0.5?'▼':''}${Math.abs(v).toFixed(2)} EGP</span></td>`; };
+      const tdCD=(v)=>{ if(v===null) return `<td style="padding:7px 12px;font-size:.78rem;text-align:right;border:1px solid #e2e8f0;color:#d1d5db">â€”</td>`; return `<td style="padding:7px 12px;font-size:.78rem;text-align:right;border:1px solid #e2e8f0;font-weight:600;color:${valClr(v)};font-variant-numeric:tabular-nums">${valPfx(v)} ${Math.abs(v).toFixed(2)} EGP</td>`; };
+      const tdCDdelta=(v)=>{ if(v===null) return `<td style="padding:7px 12px;font-size:.78rem;text-align:right;border:1px solid #e2e8f0;color:#d1d5db">â€”</td>`; const bc=v>0.5?'#dcfce7':v<-0.5?'#fee2e2':'#f8fafc'; const tc=v>0.5?'#16a34a':v<-0.5?'#dc2626':'#6b7280'; return `<td style="padding:7px 12px;font-size:.78rem;text-align:right;border:1px solid #e2e8f0"><span style="background:${bc};color:${tc};border-radius:6px;padding:2px 8px;font-size:.73rem;font-weight:700">${v>0.5?'â–²':v<-0.5?'â–¼':''}${Math.abs(v).toFixed(2)} EGP</span></td>`; };
       let drillRows='';
       zones2.forEach(z=>{
         sizes2.forEach(s=>{
@@ -3434,15 +3434,15 @@ function renderAnalytics(){
         </tr>`;
         cdDrillTable=`<div style="margin-top:10px;border-radius:10px;overflow:hidden;border:1px solid #fed7aa">
           <div style="background:#b45309;padding:8px 14px;display:flex;align-items:center;gap:8px">
-            <span style="color:#fff;font-weight:700;font-size:.8rem">⚡ Contract Rate Discrepancy — by Zone & Size</span>
-            <span style="color:#fde68a;font-size:.72rem">avg (Billed − Contract) per shipment</span>
+            <span style="color:#fff;font-weight:700;font-size:.8rem">âš¡ Contract Rate Discrepancy â€” by Zone & Size</span>
+            <span style="color:#fde68a;font-size:.72rem">avg (Billed âˆ’ Contract) per shipment</span>
           </div>
           <div style="overflow-x:auto"><table style="width:100%;border-collapse:collapse">
             <thead><tr>
               <th style="${thCD};text-align:left">Zone / Size</th>
               ${M1?`<th style="${thCD}">${M1}</th>`:''}
               <th style="${thCD}">${M2}</th>
-              <th style="${thCD}">Δ Change</th>
+              <th style="${thCD}">Î” Change</th>
             </tr></thead>
             <tbody>${drillRows}${totRow}</tbody>
           </table></div>
@@ -3457,15 +3457,15 @@ function renderAnalytics(){
         <span style="color:#6b7280;font-size:.72rem;margin-right:4px">${f.num}</span>
         <span style="font-weight:600;color:#374151">${f.label}</span>
       </td>
-      <td style="${tdL};text-align:right;color:#374151;font-variant-numeric:tabular-nums">${f.m1!==null?(f.isCount?fm(f.m1):f.m1.toFixed(2)+' EGP'):`<span style="color:#9ca3af">—</span>`}</td>
-      <td style="${tdL};text-align:right;color:#374151;font-variant-numeric:tabular-nums">${f.m2!==null?(f.isCount?fm(f.m2):f.m2.toFixed(2)+' EGP'):`<span style="color:#9ca3af">—</span>`}</td>
-      <td style="${tdL};text-align:center">${f.val!==null?impactBadge(f.val):`<span style="color:#9ca3af">—</span>`}</td>
+      <td style="${tdL};text-align:right;color:#374151;font-variant-numeric:tabular-nums">${f.m1!==null?(f.isCount?fm(f.m1):f.m1.toFixed(2)+' EGP'):`<span style="color:#9ca3af">â€”</span>`}</td>
+      <td style="${tdL};text-align:right;color:#374151;font-variant-numeric:tabular-nums">${f.m2!==null?(f.isCount?fm(f.m2):f.m2.toFixed(2)+' EGP'):`<span style="color:#9ca3af">â€”</span>`}</td>
+      <td style="${tdL};text-align:center">${f.val!==null?impactBadge(f.val):`<span style="color:#9ca3af">â€”</span>`}</td>
       <td style="${tdL}">${f.val!==null?wBar2(f.val):''}</td>
     </tr>`).join('');
     return `<div style="margin-top:18px;border-radius:12px;overflow:hidden;box-shadow:0 2px 12px rgba(126,0,225,.10)">
       <!-- Top summary bar -->
       <div style="background:linear-gradient(135deg,#7E00E1,#5a00a3);padding:10px 16px;display:flex;align-items:center;gap:12px;flex-wrap:wrap">
-        <span style="color:#fff;font-weight:700;font-size:.85rem">${M1} → ${M2}</span>
+        <span style="color:#fff;font-weight:700;font-size:.85rem">${M1} â†’ ${M2}</span>
         <span style="background:rgba(255,255,255,.15);color:#e9d5ff;border:1px solid rgba(255,255,255,.25);border-radius:20px;padding:3px 12px;font-size:.75rem;font-weight:600">${fmD(totalChange)} EGP avg cost</span>
         <span style="background:rgba(255,255,255,.10);color:#bbf7d0;border:1px solid rgba(255,255,255,.2);border-radius:20px;padding:3px 12px;font-size:.75rem;font-weight:600">${volChange>=0?'+':''}${fm(Math.abs(volChange))} shipments (${volChange>=0?'+':''}${volPct}%) volume</span>
       </div>
@@ -3474,15 +3474,15 @@ function renderAnalytics(){
         <span style="color:#fff;font-size:.72rem;font-weight:700">Driver</span>
         <span style="color:#fff;font-size:.72rem;font-weight:700;text-align:right">${M1}</span>
         <span style="color:#fff;font-size:.72rem;font-weight:700;text-align:right">${M2}</span>
-        <span style="color:#fff;font-size:.72rem;font-weight:700;text-align:center">Δ Change</span>
-        <span style="color:#fff;font-size:.72rem;font-weight:700">← Down | <span style="color:#fca5a5">Up</span> →</span>
+        <span style="color:#fff;font-size:.72rem;font-weight:700;text-align:center">Î” Change</span>
+        <span style="color:#fff;font-size:.72rem;font-weight:700">â† Down | <span style="color:#fca5a5">Up</span> â†’</span>
       </div>
       <!-- Baseline row -->
       <div style="background:linear-gradient(90deg,#faf5ff,#f5f3ff);padding:12px 14px;display:grid;grid-template-columns:2fr 1fr 1fr 2fr;gap:8px;align-items:center;border-bottom:1px solid #e9d5ff">
         <span style="font-weight:700;color:#7E00E1;font-size:.88rem">${M1} Avg</span>
         <span style="text-align:center"><span style="background:#fff;border:2px solid #7E00E1;border-radius:8px;padding:4px 12px;font-weight:700;color:#7E00E1;font-size:.9rem">${acps1.toFixed(2)}</span></span>
         <span></span>
-        <span style="color:#9ca3af;font-size:.78rem">Starting point — avg cost per shipment last month</span>
+        <span style="color:#9ca3af;font-size:.78rem">Starting point â€” avg cost per shipment last month</span>
       </div>
       <!-- Factor rows -->
       <div style="background:#fff"><table style="width:100%;border-collapse:collapse">
@@ -3516,16 +3516,16 @@ function renderAnalytics(){
         const dB=(v)=>{ const up=v>0.05; const dn=v<-0.05;
           const bc=up?'#fee2e2':dn?'#dcfce7':'#f8fafc';
           const tc=up?'#dc2626':dn?'#16a34a':'#64748b';
-          const ar=up?'▲':dn?'▼':'→';
+          const ar=up?'â–²':dn?'â–¼':'â†’';
           return `<span style="background:${bc};color:${tc};border-radius:6px;padding:3px 9px;font-size:.75rem;font-weight:700">${ar} ${Math.abs(v).toFixed(2)}</span>`; };
         const rows=[
-          {label:'📋 Contract Rate (per contract file)', v1:avgContract1, v2:avgContract2, delta:contractDelta, color:'#0369a1', bg:'#eff6ff'},
-          {label:'💸 Billed by Raya (actual DL charge)', v1:avgBilled1, v2:avgBilled2, delta:billedDelta, color:'#7c3aed', bg:'#faf5ff'},
-          {label:'⚠️ Gap (Billed − Contract)', v1:gap1, v2:gap2, delta:gapDelta, color:Math.abs(gap2)>0.5?'#dc2626':'#16a34a', bg:Math.abs(gap2)>0.5?'#fff5f5':'#f0fdf4', bold:true},
+          {label:'ðŸ“‹ Contract Rate (per contract file)', v1:avgContract1, v2:avgContract2, delta:contractDelta, color:'#0369a1', bg:'#eff6ff'},
+          {label:'ðŸ’¸ Billed by Raya (actual DL charge)', v1:avgBilled1, v2:avgBilled2, delta:billedDelta, color:'#7c3aed', bg:'#faf5ff'},
+          {label:'âš ï¸ Gap (Billed âˆ’ Contract)', v1:gap1, v2:gap2, delta:gapDelta, color:Math.abs(gap2)>0.5?'#dc2626':'#16a34a', bg:Math.abs(gap2)>0.5?'#fff5f5':'#f0fdf4', bold:true},
         ];
         return `<div style="margin-top:14px;border-radius:10px;overflow:hidden;border:1px solid #e2e8f0">
           <div style="background:#1e293b;padding:8px 14px;display:flex;align-items:center;gap:8px">
-            <span style="color:#fff;font-weight:700;font-size:.8rem">📊 Contract Rate vs Actual Billing Comparison</span>
+            <span style="color:#fff;font-weight:700;font-size:.8rem">ðŸ“Š Contract Rate vs Actual Billing Comparison</span>
             <span style="color:#94a3b8;font-size:.72rem">avg per shipment</span>
           </div>
           <table style="width:100%;border-collapse:collapse">
@@ -3533,7 +3533,7 @@ function renderAnalytics(){
               <th style="${thL}">Metric</th>
               <th style="${thS}">${M1} Avg</th>
               <th style="${thS}">${M2} Avg</th>
-              <th style="${thS}">Change M1→M2</th>
+              <th style="${thS}">Change M1â†’M2</th>
             </tr></thead>
             <tbody>${rows.map(r=>`<tr style="background:${r.bg}">
               <td style="${tdL};color:${r.color};border-left:4px solid ${r.color}">${r.label}</td>
@@ -3556,7 +3556,7 @@ function renderAnalytics(){
     `<div class="an-kpi-row">
       ${kpiCard(t.totalShipments, fm(grandShipm), carriers.length+' '+t.an_fromCarriers, 'var(--purple)')}
       ${kpiCard(t.invoice, fm(grandBill), t.egp, 'var(--green2)')}
-      ${carriers.map(c=>kpiCard(c.name, fm(c.data.length), lang==='ar'?'شحنة':'shipments', COLORS[c.name])).join('')}
+      ${carriers.map(c=>kpiCard(c.name, fm(c.data.length), lang==='ar'?'Ø´Ø­Ù†Ø©':'shipments', COLORS[c.name])).join('')}
     </div>
     ${carriers.length>1 ? `<div style="margin-top:16px"><div class="sbar-title">${t.an_distribution}</div>${carriers.map(c=>bar(c.name,c.data.length,grandShipm,COLORS[c.name])).join('')}</div>` : ''}`
   );
@@ -3564,12 +3564,12 @@ function renderAnalytics(){
   // Aramex
   if(AR) html += section(
     'linear-gradient(135deg,var(--purple),var(--purple2))',
-    '✈️ Aramex',
+    'âœˆï¸ Aramex',
     `<div class="an-kpi-row">
       ${kpiCard(t.totalShipments, fm(AR.total), '', 'var(--purple)')}
       ${kpiCard(t.invoice, fm(AR.totalBill), t.egp, 'var(--red)')}
       ${kpiCard(t.kenzzCalc, fm(AR.totalCalc), t.egp, 'var(--green2)')}
-      ${kpiCard(t.differences, fm(AR.overchargeEGP)+' '+t.egp, AR.flagCount+(lang==='ar'?' شحنة مخالفة':' flagged'), 'var(--amber)')}
+      ${kpiCard(t.differences, fm(AR.overchargeEGP)+' '+t.egp, AR.flagCount+(lang==='ar'?' Ø´Ø­Ù†Ø© Ù…Ø®Ø§Ù„ÙØ©':' flagged'), 'var(--amber)')}
     </div>
     ${overviewTable(auditData, r=>r.uploadMonth||null, r=>r.statusBucket==='DELIVERED', r=>r.statusBucket==='RETURNED', null, r=>(r.baseCharge||0)+(r.otherCharge||0), false)}
     <div style="margin-top:12px"><div class="sbar-title">${t.an_costComp}</div>
@@ -3583,12 +3583,12 @@ function renderAnalytics(){
   // Bosta
   if(BO) html += section(
     'linear-gradient(135deg,#00b844,#009a35)',
-    '📦 Bosta',
+    'ðŸ“¦ Bosta',
     `<div class="an-kpi-row">
       ${kpiCard(t.totalShipments, fm(BO.total), '', 'var(--green2)')}
       ${kpiCard(t.invoice, fm(BO.totalBill), t.egp, 'var(--red)')}
       ${kpiCard(t.kenzzCalc, fm(BO.totalCalc), t.egp, 'var(--green2)')}
-      ${kpiCard(t.differences, fm(BO.overchargeEGP)+' '+t.egp, BO.flagCount+(lang==='ar'?' شحنة مخالفة':' flagged'), 'var(--amber)')}
+      ${kpiCard(t.differences, fm(BO.overchargeEGP)+' '+t.egp, BO.flagCount+(lang==='ar'?' Ø´Ø­Ù†Ø© Ù…Ø®Ø§Ù„ÙØ©':' flagged'), 'var(--amber)')}
     </div>
     ${overviewTable(bostaData, r=>r.uploadMonth||null, r=>r.breakdownLabel==='Delivered', r=>r.breakdownLabel==='RTN'||r.breakdownLabel==='RTO', null, r=>r.priceBAV||0, false)}
     <div style="margin-top:12px"><div class="sbar-title">${t.an_costComp}</div>
@@ -3602,12 +3602,12 @@ function renderAnalytics(){
   // Raya
   if(RA) html += section(
     'linear-gradient(135deg,#0369a1,#0284c7)',
-    '🚚 Raya',
+    'ðŸšš Raya',
     `<div class="an-kpi-row">
       ${kpiCard(t.totalShipments, fm(RA.total), '', '#0369a1')}
       ${kpiCard(t.invoice, fm(RA.totalBill), t.egp, 'var(--red)')}
       ${kpiCard(t.kenzzCalc, fm(RA.totalCalc), t.egp, 'var(--green2)')}
-      ${kpiCard(t.differences, fm(RA.overchargeEGP)+' '+t.egp, RA.flagCount+(lang==='ar'?' شحنة مخالفة':' flagged'), 'var(--amber)')}
+      ${kpiCard(t.differences, fm(RA.overchargeEGP)+' '+t.egp, RA.flagCount+(lang==='ar'?' Ø´Ø­Ù†Ø© Ù…Ø®Ø§Ù„ÙØ©':' flagged'), 'var(--amber)')}
     </div>
     ${overviewTable(rayaData, r=>r.month||null, r=>r.status==='Delivered', r=>r.status==='Returned', r=>r.status==='Cancel on floor', r=>r.totalBilled||0, true)}
     <div style="margin-top:12px"><div class="sbar-title">${t.an_costComp}</div>
@@ -3615,10 +3615,10 @@ function renderAnalytics(){
     </div>
     ${zoneSizeTable(rayaData.filter(r=>r.tier&&r.category), r=>String(r.tier||'').trim(), r=>normSize(r.category), ['Size S','Size M','Size L'], r=>r.totalQty||1)}
     ${acpsBridge(rayaData, r=>r.uploadMonth||r.month, r=>String(r.zone||r.tier||'').trim(), r=>normSize(r.category), r=>r.totalBilled||0, true, [
-      {icon:'🚗',label:'Pickup Cost',color:'#0891b2',getVal:r=>r.pickupCost||0},
-      {icon:'💳',label:'COD Fees',color:'#b45309',getVal:r=>r.codFees||0},
-      {icon:'🛡️',label:'Insurance Fees',color:'#7c3aed',getVal:r=>r.insFees||0},
-      {icon:'🔁',label:'Extra Attempts',color:'#dc2626',getVal:r=>r.extraCost||0},
+      {icon:'ðŸš—',label:'Pickup Cost',color:'#0891b2',getVal:r=>r.pickupCost||0},
+      {icon:'ðŸ’³',label:'COD Fees',color:'#b45309',getVal:r=>r.codFees||0},
+      {icon:'ðŸ›¡ï¸',label:'Insurance Fees',color:'#7c3aed',getVal:r=>r.insFees||0},
+      {icon:'ðŸ”',label:'Extra Attempts',color:'#dc2626',getVal:r=>r.extraCost||0},
     ], null, {getVal:r=>(r.billedPrice||0)-(r.contractPrice||0)})}
     <div id="raya-value-dash" style="margin-top:18px"></div>`
   );
@@ -3626,12 +3626,12 @@ function renderAnalytics(){
   // Mashreq
   if(MQ) html += section(
     'linear-gradient(135deg,#b45309,#d97706)',
-    '🔄 Aramex Mashreq',
+    'ðŸ”„ Aramex Mashreq',
     `<div class="an-kpi-row">
       ${kpiCard(t.totalShipments, fm(MQ.total), '', '#b45309')}
       ${kpiCard(t.invoice, fm(MQ.totalBill), t.egp, 'var(--red)')}
       ${kpiCard(t.kenzzCalc, fm(MQ.totalCalc), t.egp, 'var(--green2)')}
-      ${kpiCard(t.differences, fm(MQ.overchargeEGP)+' '+t.egp, MQ.flagCount+(lang==='ar'?' شحنة مخالفة':' flagged'), 'var(--amber)')}
+      ${kpiCard(t.differences, fm(MQ.overchargeEGP)+' '+t.egp, MQ.flagCount+(lang==='ar'?' Ø´Ø­Ù†Ø© Ù…Ø®Ø§Ù„ÙØ©':' flagged'), 'var(--amber)')}
     </div>
     ${overviewTable(mqData, r=>r.month||null, r=>r.status==='Delivered', r=>r.status==='Returned', r=>r.status==='Cancel on floor', r=>r.totalBilled||0, true)}
     <div style="margin-top:12px"><div class="sbar-title">${t.an_costComp}</div>
@@ -3639,9 +3639,9 @@ function renderAnalytics(){
     </div>
     ${zoneSizeTable(mqData.filter(r=>r.destZone&&r.size), r=>String(r.destZone||'').trim(), r=>normSize(r.size), ['Size S','Size M','Size L'])}
     ${acpsBridge(mqData, r=>r.uploadMonth||r.month, r=>String(r.destZone||'').trim(), r=>normSize(r.size), r=>r.totalBilled||0, mqData.some(r=>r.destZone), [
-      {icon:'🚗',label:'Pickup Cost',color:'#0891b2',getVal:r=>r.actualPickup||0},
-      {icon:'💳',label:'COD Fees',color:'#b45309',getVal:r=>r.actualCODFees||0},
-      {icon:'🛡️',label:'Insurance Fees',color:'#7c3aed',getVal:r=>r.actualIns||0},
+      {icon:'ðŸš—',label:'Pickup Cost',color:'#0891b2',getVal:r=>r.actualPickup||0},
+      {icon:'ðŸ’³',label:'COD Fees',color:'#b45309',getVal:r=>r.actualCODFees||0},
+      {icon:'ðŸ›¡ï¸',label:'Insurance Fees',color:'#7c3aed',getVal:r=>r.actualIns||0},
     ], null, {getVal:r=>(r.actualCharge||0)-(r.calcLM||0)})}
     <div id="mq-value-dash" style="margin-top:18px"></div>`
   );
@@ -3656,7 +3656,7 @@ function renderAnalytics(){
     sizes:['Size S','Size M','Size L','Size XL'],
     getZone:r=>String(r.destZone||'').trim()||'Other',
     getVal:r=>(r.baseCharge||0)+(r.otherCharge||0),
-    color:'#7c3aed', zoneColor:'#5b21b6', title:'✈️ Aramex Total Shipment Value'
+    color:'#7c3aed', zoneColor:'#5b21b6', title:'âœˆï¸ Aramex Total Shipment Value'
   });
   renderValDash({
     elId:'bo-value-dash', key:'bo', data:()=>bostaData,
@@ -3667,7 +3667,7 @@ function renderAnalytics(){
     sizes:null,
     getZone:r=>String(r.zone||'').trim()||'Other',
     getVal:r=>r.priceBAV||0,
-    color:'#15803d', zoneColor:'#166534', title:'📦 Bosta Total Shipment Value'
+    color:'#15803d', zoneColor:'#166534', title:'ðŸ“¦ Bosta Total Shipment Value'
   });
   renderValDash({
     elId:'raya-value-dash', key:'raya', data:()=>rayaData,
@@ -3678,7 +3678,7 @@ function renderAnalytics(){
     sizes:['Size S','Size M','Size L'],
     getZone:r=>String(r.zone||r.tier||'').trim()||'Other',
     getVal:r=>r.totalBilled||0,
-    color:'#0369a1', zoneColor:'#7c3aed', title:'🚚 Raya Total Shipment Value'
+    color:'#0369a1', zoneColor:'#7c3aed', title:'ðŸšš Raya Total Shipment Value'
   });
   renderValDash({
     elId:'mq-value-dash', key:'mq', data:()=>mqData,
@@ -3689,7 +3689,7 @@ function renderAnalytics(){
     sizes:['Size S','Size M','Size L'],
     getZone:r=>String(r.destZone||'').trim()||'Other',
     getVal:r=>r.totalBilled||0,
-    color:'#b45309', zoneColor:'#92400e', title:'🔄 Mashreq Total Shipment Value'
+    color:'#b45309', zoneColor:'#92400e', title:'ðŸ”„ Mashreq Total Shipment Value'
   });
 }
 
@@ -3736,7 +3736,7 @@ function renderValDash(cfg){
   const totV1=rowsM1.reduce((s,r)=>s+cfg.getVal(r),0);
   const totQ2=rowsM2.length||1, totQ1=rowsM1.length||1;
 
-  const dBadge=(v2,v1,egp)=>{ if(!M1)return''; const d=v2-v1; if(Math.abs(d)<0.01)return`<span style="color:#9ca3af">—</span>`; const up=d>0; return `<span style="background:${up?'#dcfce7':'#fee2e2'};color:${up?'#16a34a':'#dc2626'};border-radius:7px;padding:1px 6px;font-size:.74rem;font-weight:700;white-space:nowrap">${up?'▲':'▼'} ${Math.round(Math.abs(d)).toLocaleString()}${egp?' EGP':''}</span>`; };
+  const dBadge=(v2,v1,egp)=>{ if(!M1)return''; const d=v2-v1; if(Math.abs(d)<0.01)return`<span style="color:#9ca3af">â€”</span>`; const up=d>0; return `<span style="background:${up?'#dcfce7':'#fee2e2'};color:${up?'#16a34a':'#dc2626'};border-radius:7px;padding:1px 6px;font-size:.74rem;font-weight:700;white-space:nowrap">${up?'â–²':'â–¼'} ${Math.round(Math.abs(d)).toLocaleString()}${egp?' EGP':''}</span>`; };
 
   const C=cfg.color, ZC=cfg.zoneColor;
   const th=(t,r)=>`<th style="padding:7px 8px;font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.03em;color:#fff;text-align:${r?'right':'left'};white-space:nowrap;background:inherit">${t}</th>`;
@@ -3758,7 +3758,7 @@ function renderValDash(cfg){
     const avg2=d2.qty?Math.round(d2.val/d2.qty):0, avg1=d1.qty?Math.round(d1.val/d1.qty):0;
     const active=selSz===s;
     return `<tr onclick="_vdsSz_${k}('${safe(s)}')" style="cursor:pointer;background:${active?'#f0f9ff':'transparent'};border-bottom:1px solid #f3f4f6;transition:.1s">
-      ${td(`${s}${active?' ✓':''}`,false,true)}
+      ${td(`${s}${active?' âœ“':''}`,false,true)}
       ${M1?td(d1.qty.toLocaleString(),true,false,true):''}
       ${td(d2.qty.toLocaleString(),true,true)}
       ${tdc(dBadge(d2.qty,d1.qty,false))}
@@ -3766,8 +3766,8 @@ function renderValDash(cfg){
       ${M1?td(Math.round(d1.val).toLocaleString()+' EGP',true,false,true):''}
       ${td(Math.round(d2.val).toLocaleString()+' EGP',true,true)}
       ${tdc(dBadge(d2.val,d1.val,true))}
-      ${M1?td(avg1?avg1.toLocaleString()+' EGP':'—',true,false,true):''}
-      ${td(avg2?avg2.toLocaleString()+' EGP':'—',true,true)}
+      ${M1?td(avg1?avg1.toLocaleString()+' EGP':'â€”',true,false,true):''}
+      ${td(avg2?avg2.toLocaleString()+' EGP':'â€”',true,true)}
       ${M1?tdc(dBadge(avg2,avg1,true)):''}
     </tr>`;
   }).join('');
@@ -3782,8 +3782,8 @@ function renderValDash(cfg){
     ${M1?td(Math.round(totV1).toLocaleString()+' EGP',true,false,true):''}
     ${td(Math.round(totV2).toLocaleString()+' EGP',true,true)}
     ${tdc(dBadge(totV2,totV1,true))}
-    ${M1?td(totAvg1?totAvg1.toLocaleString()+' EGP':'—',true,false,true):''}
-    ${td(totAvg2?totAvg2.toLocaleString()+' EGP':'—',true,true)}
+    ${M1?td(totAvg1?totAvg1.toLocaleString()+' EGP':'â€”',true,false,true):''}
+    ${td(totAvg2?totAvg2.toLocaleString()+' EGP':'â€”',true,true)}
     ${M1?tdc(dBadge(totAvg2,totAvg1,true)):''}
   </tr>`;
 
@@ -3802,14 +3802,14 @@ function renderValDash(cfg){
       ${M1?td(Math.round(d1.val).toLocaleString()+' EGP',true,false,true):''}
       ${td(Math.round(d2.val).toLocaleString()+' EGP',true,true,'',ZC)}
       ${tdc(dBadge(d2.val,d1.val,true))}
-      ${M1?td(avg1?avg1.toLocaleString()+' EGP':'—',true,false,true):''}
-      ${td(avg2?avg2.toLocaleString()+' EGP':'—',true,true,'',ZC)}
+      ${M1?td(avg1?avg1.toLocaleString()+' EGP':'â€”',true,false,true):''}
+      ${td(avg2?avg2.toLocaleString()+' EGP':'â€”',true,true,'',ZC)}
       ${M1?tdc(dBadge(avg2,avg1,true)):''}
     </tr>`;
   }).join('');
 
-  const sHdr=`<tr style="background:${C}">${th('Size')}${M1?th(M1+' Qty',true):''}${th(M2+' Qty',true)}${th('Δ Qty',true)}${th('Share')}${M1?th(M1+' Value',true):''}${th(M2+' Value',true)}${th('Δ Value',true)}${M1?th(M1+' Avg/Ship',true):''}${th(M2+' Avg/Ship',true)}${M1?th('Δ Avg',true):''}</tr>`;
-  const zHdr=`<tr style="background:${ZC}">${th(selSz?'Zone ('+selSz+')':'Zone')}${M1?th(M1+' Qty',true):''}${th(M2+' Qty',true)}${th('Δ Qty',true)}${th('Share')}${M1?th(M1+' Value',true):''}${th(M2+' Value',true)}${th('Δ Value',true)}${M1?th(M1+' Avg/Ship',true):''}${th(M2+' Avg/Ship',true)}${M1?th('Δ Avg',true):''}</tr>`;
+  const sHdr=`<tr style="background:${C}">${th('Size')}${M1?th(M1+' Qty',true):''}${th(M2+' Qty',true)}${th('Î” Qty',true)}${th('Share')}${M1?th(M1+' Value',true):''}${th(M2+' Value',true)}${th('Î” Value',true)}${M1?th(M1+' Avg/Ship',true):''}${th(M2+' Avg/Ship',true)}${M1?th('Î” Avg',true):''}</tr>`;
+  const zHdr=`<tr style="background:${ZC}">${th(selSz?'Zone ('+selSz+')':'Zone')}${M1?th(M1+' Qty',true):''}${th(M2+' Qty',true)}${th('Î” Qty',true)}${th('Share')}${M1?th(M1+' Value',true):''}${th(M2+' Value',true)}${th('Î” Value',true)}${M1?th(M1+' Avg/Ship',true):''}${th(M2+' Avg/Ship',true)}${M1?th('Î” Avg',true):''}</tr>`;
 
   el.innerHTML=`
   <div style="border-radius:12px;overflow:hidden;box-shadow:0 2px 12px rgba(0,0,0,.1);border:1px solid #e5e7eb;margin-top:6px">
@@ -3822,11 +3822,11 @@ function renderValDash(cfg){
       ${allMonths.length>1?`<div style="display:flex;gap:4px;align-items:center"><span style="font-size:.74rem;font-weight:600;color:#6b7280">vs:</span>${m1Btns}</div>`:''}
     </div>
     <div style="overflow-x:auto">
-      <div style="padding:6px 12px;font-size:.76rem;font-weight:700;color:${C};border-bottom:1px solid #e5e7eb">SIZE DISTRIBUTION <span style="font-weight:400;color:#9ca3af">· click row to filter zones</span></div>
+      <div style="padding:6px 12px;font-size:.76rem;font-weight:700;color:${C};border-bottom:1px solid #e5e7eb">SIZE DISTRIBUTION <span style="font-weight:400;color:#9ca3af">Â· click row to filter zones</span></div>
       <table style="width:100%;border-collapse:collapse;font-size:.82rem">${sHdr}${sizeRows}${totalRow}</table>
     </div>
     <div style="overflow-x:auto;border-top:2px solid #e5e7eb">
-      <div style="padding:6px 12px;font-size:.76rem;font-weight:700;color:${ZC};border-bottom:1px solid #e5e7eb">ZONE DISTRIBUTION${selSz?' · '+selSz:' · All Sizes'}</div>
+      <div style="padding:6px 12px;font-size:.76rem;font-weight:700;color:${ZC};border-bottom:1px solid #e5e7eb">ZONE DISTRIBUTION${selSz?' Â· '+selSz:' Â· All Sizes'}</div>
       <table style="width:100%;border-collapse:collapse;font-size:.82rem">${zHdr}${zoneRows||`<tr><td colspan="11" style="padding:14px;text-align:center;color:#9ca3af">No zone data</td></tr>`}</table>
     </div>
   </div>`;
@@ -3865,10 +3865,10 @@ function importBackup(input){
       if(backup.mashreq)  { localStorage.setItem('kenzz3pl_mq_v1', backup.mashreq);      restored.push('Mashreq'); }
       if(backup.raya)     { localStorage.setItem('kenzz3pl_raya_v1', backup.raya);       restored.push('Raya'); }
       if(backup.breakdown){ localStorage.setItem(BD_STORAGE, backup.breakdown);           restored.push('Breakdown'); }
-      alert('✅ Restored: ' + restored.join(', ') + '\n\nPage will reload to apply data.');
+      alert('âœ… Restored: ' + restored.join(', ') + '\n\nPage will reload to apply data.');
       location.reload();
     } catch(err) {
-      alert('❌ Failed to restore: ' + err.message);
+      alert('âŒ Failed to restore: ' + err.message);
     }
   };
   fr.readAsText(file);
@@ -3893,7 +3893,7 @@ function _getDb(){
   }catch(e){ console.warn('Firebase init:',e); }
   return _db;
 }
-// Gzip compress JSON string → base64 (97% smaller, fits in one Firestore doc)
+// Gzip compress JSON string â†’ base64 (97% smaller, fits in one Firestore doc)
 async function _gz(str){
   const stream = new Response(str).body.pipeThrough(new CompressionStream('gzip'));
   const buf = await new Response(stream).arrayBuffer();
