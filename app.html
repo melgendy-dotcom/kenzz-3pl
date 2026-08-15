@@ -257,8 +257,8 @@ html[dir=ltr] #login-eye{right:12px}
       <div class="hd-title"><strong id="hd-title"></strong><small id="hd-sub"></small></div>
     </div>
     <div class="hd-right">
-      <button class="btn-lang" onclick="exportBackup()" title="Export all data as backup file" style="background:rgba(0,184,68,.15);border-color:rgba(0,184,68,.4);color:#00b844">ðŸ’¾ Backup</button>
-      <button class="btn-lang" onclick="document.getElementById('restore-inp').click()" title="Restore data from backup file" style="background:rgba(126,0,225,.15);border-color:rgba(126,0,225,.4);color:var(--purple)">ðŸ“‚ Restore</button>
+      <button class="btn-lang" onclick="exportBackup()" title="Export all data as backup file" style="background:rgba(0,184,68,.15);border-color:rgba(0,184,68,.4);color:#00b844">💾 Backup</button>
+      <button class="btn-lang" onclick="document.getElementById('restore-inp').click()" title="Restore data from backup file" style="background:rgba(126,0,225,.15);border-color:rgba(126,0,225,.4);color:var(--purple)">📂 Restore</button>
       <input type="file" id="restore-inp" accept=".json" style="display:none" onchange="importBackup(this)">
       <button class="btn-lang" onclick="toggleLang()" id="hd-lang-btn"></button>
       <button class="btn-lang" style="background:rgba(220,38,38,.2);border-color:rgba(220,38,38,.4)" onclick="logout()" id="hd-logout-btn"></button>
@@ -266,12 +266,12 @@ html[dir=ltr] #login-eye{right:12px}
   </header>
 
   <nav id="tab-nav">
-    <button class="tab-btn active" data-tab="bosta" onclick="switchTab('bosta')"><span>ðŸ“¦</span><span id="tab-bosta-lbl"></span></button>
-    <button class="tab-btn" data-tab="aramex" onclick="switchTab('aramex')"><span>âœˆï¸</span><span id="tab-aramex-lbl"></span></button>
-    <button class="tab-btn" data-tab="mashreq" onclick="switchTab('mashreq')"><span>ðŸ”„</span>Aramex Mashreq</button>
-    <button class="tab-btn" data-tab="raya" onclick="switchTab('raya')"><span>ðŸšš</span>Raya Review</button>
-    <button class="tab-btn" data-tab="analytics" onclick="switchTab('analytics')"><span>ðŸ“ˆ</span>Analytics</button>
-    <button class="tab-btn" data-tab="breakdown" onclick="switchTab('breakdown')"><span>ðŸ“Š</span>Data Breakdown</button>
+    <button class="tab-btn active" data-tab="bosta" onclick="switchTab('bosta')"><span>📦</span><span id="tab-bosta-lbl"></span></button>
+    <button class="tab-btn" data-tab="aramex" onclick="switchTab('aramex')"><span>✈️</span><span id="tab-aramex-lbl"></span></button>
+    <button class="tab-btn" data-tab="mashreq" onclick="switchTab('mashreq')"><span>🔄</span>Aramex Mashreq</button>
+    <button class="tab-btn" data-tab="raya" onclick="switchTab('raya')"><span>🚚</span>Raya Review</button>
+    <button class="tab-btn" data-tab="analytics" onclick="switchTab('analytics')"><span>📈</span>Analytics</button>
+    <button class="tab-btn" data-tab="breakdown" onclick="switchTab('breakdown')"><span>📊</span>Data Breakdown</button>
   </nav>
 
   <main>
@@ -354,7 +354,7 @@ html[dir=ltr] #login-eye{right:12px}
       </div>
 
       <div id="bo-empty" class="empty">
-        <div class="empty-icon">ðŸ“¦</div>
+        <div class="empty-icon">📦</div>
         <h3 id="bo-empty-title"></h3>
       </div>
     </div>
@@ -471,7 +471,7 @@ html[dir=ltr] #login-eye{right:12px}
       </div>
 
       <div id="ar-empty" class="empty">
-        <div class="empty-icon">ðŸ“‹</div>
+        <div class="empty-icon">📋</div>
         <h3 id="ar-empty-title"></h3>
         <p id="ar-empty-desc"></p>
       </div>
@@ -591,7 +591,7 @@ html[dir=ltr] #login-eye{right:12px}
       </div>
 
       <div id="mq-empty" class="empty">
-        <div class="empty-icon">ðŸ”„</div>
+        <div class="empty-icon">🔄</div>
         <h3 id="mq-empty-title"></h3>
       </div>
     </div>
@@ -688,7 +688,7 @@ html[dir=ltr] #login-eye{right:12px}
       </div>
 
       <div id="ra-empty" class="empty">
-        <div class="empty-icon">ðŸšš</div>
+        <div class="empty-icon">🚚</div>
         <h3 id="ra-empty-title"></h3>
       </div>
     </div>
@@ -698,7 +698,7 @@ html[dir=ltr] #login-eye{right:12px}
       <div class="audit-upload-grid" style="margin-bottom:16px">
         <div class="auc p">
           <h3 id="bd-file-title"></h3><p class="desc" id="bd-file-desc"></p>
-          <button class="afl p" onclick="document.getElementById('bd-file-inp').click()" id="bd-file-btn">ðŸ“‚</button>
+          <button class="afl p" onclick="document.getElementById('bd-file-inp').click()" id="bd-file-btn">📂</button>
           <input type="file" id="bd-file-inp" accept=".xlsx,.xls" style="display:none">
           <div class="aust" id="bd-file-status" style="display:none"></div>
           <button class="btn-save" style="margin-top:8px;width:100%" id="bd-load-btn" onclick="bdHandleLoadFile()" disabled></button>
@@ -720,7 +720,7 @@ html[dir=ltr] #login-eye{right:12px}
         </div>
       </div>
       <div class="process-row" style="margin-bottom:8px">
-        <button class="btn-save" id="bd-save-btn" onclick="bdHandleSave()">ðŸ’¾ Save Data</button>
+        <button class="btn-save" id="bd-save-btn" onclick="bdHandleSave()">💾 Save Data</button>
       </div>
       <div id="bd-toast" class="toast"></div>
       <div id="bd-content"></div>
@@ -728,7 +728,7 @@ html[dir=ltr] #login-eye{right:12px}
 
     <div id="panel-analytics" style="display:none">
       <div id="an-empty" class="coming-soon" style="display:none">
-        <div class="empty-icon">ðŸ“ˆ</div>
+        <div class="empty-icon">📈</div>
         <h3 id="an-empty-title"></h3>
         <p id="an-empty-desc" style="color:var(--muted);font-size:.85rem;margin-top:6px"></p>
       </div>
@@ -746,34 +746,34 @@ const STORAGE_KEY = 'kenzz3pl_bosta_v1';
 const I18N = {
   ar: {
     hd:'Ù…Ø­Ù„Ù„ Ù„ÙˆØ¬Ø³ØªÙŠØ§Øª Ø§Ù„Ø´Ø­Ù†', hds:'ØªÙØ§ØµÙŠÙ„ ØªÙƒØ§Ù„ÙŠÙ Ø§Ù„Ø´Ø­Ù† Â· Ø§Ù„Ø£Ø±Ù‚Ø§Ù… Ù„Ø§ ØªØ´Ù…Ù„ Ø¶Ø±ÙŠØ¨Ø© Ø§Ù„Ù‚ÙŠÙ…Ø© Ø§Ù„Ù…Ø¶Ø§ÙØ©',
-    lang:'ðŸŒ English', logout:'Ø®Ø±ÙˆØ¬',
+    lang:'🌐 English', logout:'Ø®Ø±ÙˆØ¬',
     tBosta:'Ù…Ø±Ø§Ø¬Ø¹Ø© Ø¨ÙˆØ³Ø·Ø©', tAramex:'Ù…Ø±Ø§Ø¬Ø¹Ø© Ø£Ø±Ø§Ù…ÙƒØ³',
-    note:'â„¹ï¸ <strong>Ù…Ù„Ø§Ø­Ø¸Ø©:</strong> Ø¬Ù…ÙŠØ¹ Ø§Ù„Ø£Ø±Ù‚Ø§Ù… Ù„Ø§ ØªØ´Ù…Ù„ Ø¶Ø±ÙŠØ¨Ø© Ø§Ù„Ù‚ÙŠÙ…Ø© Ø§Ù„Ù…Ø¶Ø§ÙØ©.',
+    note:'ℹ️ <strong>Ù…Ù„Ø§Ø­Ø¸Ø©:</strong> Ø¬Ù…ÙŠØ¹ Ø§Ù„Ø£Ø±Ù‚Ø§Ù… Ù„Ø§ ØªØ´Ù…Ù„ Ø¶Ø±ÙŠØ¨Ø© Ø§Ù„Ù‚ÙŠÙ…Ø© Ø§Ù„Ù…Ø¶Ø§ÙØ©.',
     loginTitle:'Kenzz 3PL', loginSubtitle:'Ø£Ø¯Ø®Ù„ ÙƒÙ„Ù…Ø© Ø§Ù„Ù…Ø±ÙˆØ± Ù„Ù„ÙˆØµÙˆÙ„ Ø¥Ù„Ù‰ Ø§Ù„Ù†Ø¸Ø§Ù…',
-    loginPwdLabel:'ÙƒÙ„Ù…Ø© Ø§Ù„Ù…Ø±ÙˆØ±', loginBtn:'Ø¯Ø®ÙˆÙ„ ðŸ”', loginError:'âš ï¸ ÙƒÙ„Ù…Ø© Ø§Ù„Ù…Ø±ÙˆØ± ØºÙŠØ± ØµØ­ÙŠØ­Ø©ØŒ Ø­Ø§ÙˆÙ„ Ù…Ø±Ø© Ø£Ø®Ø±Ù‰',
+    loginPwdLabel:'ÙƒÙ„Ù…Ø© Ø§Ù„Ù…Ø±ÙˆØ±', loginBtn:'Ø¯Ø®ÙˆÙ„ 🔐', loginError:'⚠️ ÙƒÙ„Ù…Ø© Ø§Ù„Ù…Ø±ÙˆØ± ØºÙŠØ± ØµØ­ÙŠØ­Ø©ØŒ Ø­Ø§ÙˆÙ„ Ù…Ø±Ø© Ø£Ø®Ø±Ù‰',
     loginFooter:'Ù…Ø­Ù„Ù„ Ù„ÙˆØ¬Ø³ØªÙŠØ§Øª Ø§Ù„Ø´Ø­Ù†',
-    upload:'ðŸ“‚ Ø±ÙØ¹ Ø§Ù„Ù…Ù„Ù', changeFile:'ðŸ“‚ ØªØºÙŠÙŠØ± Ø§Ù„Ù…Ù„Ù',
-    process:'âš¡ Ù…Ø¹Ø§Ù„Ø¬Ø© ÙˆØªØ­Ù„ÙŠÙ„', saveResults:'ðŸ’¾ Ø­ÙØ¸ Ø§Ù„Ù†ØªØ§Ø¦Ø¬', clearData:'ðŸ—‘ï¸ Ù…Ø³Ø­ Ø§Ù„Ø¨ÙŠØ§Ù†Ø§Øª',
-    export:'â¬‡ï¸ ØªØµØ¯ÙŠØ± CSV', search:'Ø¨Ø­Ø«', all:'Ø§Ù„ÙƒÙ„',
+    upload:'📂 Ø±ÙØ¹ Ø§Ù„Ù…Ù„Ù', changeFile:'📂 ØªØºÙŠÙŠØ± Ø§Ù„Ù…Ù„Ù',
+    process:'⚡ Ù…Ø¹Ø§Ù„Ø¬Ø© ÙˆØªØ­Ù„ÙŠÙ„', saveResults:'💾 Ø­ÙØ¸ Ø§Ù„Ù†ØªØ§Ø¦Ø¬', clearData:'🗑️ Ù…Ø³Ø­ Ø§Ù„Ø¨ÙŠØ§Ù†Ø§Øª',
+    export:'⬇️ ØªØµØ¯ÙŠØ± CSV', search:'Ø¨Ø­Ø«', all:'Ø§Ù„ÙƒÙ„',
     overOnly:'Ø¹Ø±Ø¶ Ø§Ù„ÙØ±ÙˆÙ‚Ø§Øª ÙÙ‚Ø·',
     totalShipments:'Ø¥Ø¬Ù…Ø§Ù„ÙŠ Ø§Ù„Ø´Ø­Ù†Ø§Øª', invoice:'Ø¥Ø¬Ù…Ø§Ù„ÙŠ Ø§Ù„ÙØ§ØªÙˆØ±Ø©', differences:'ÙØ±ÙˆÙ‚Ø§Øª', egp:'Ø¬Ù†ÙŠÙ‡',
-    bo_file:'ðŸ“¦ ØªÙ‚Ø±ÙŠØ± Ø¨ÙˆØ³Ø·Ø© *', bo_fileDesc:'Ù…Ù„Ù Ø§Ù„ÙØ§ØªÙˆØ±Ø© Ø§Ù„Ø´Ù‡Ø±ÙŠØ© Ù…Ù† Ø¨ÙˆØ³Ø·Ø©',
-    bo_contract:'ðŸ“ Ù…Ù„Ù Ø§Ù„Ø¹Ù‚Ø¯', bo_contractDesc:'Ø¬Ø¯ÙˆÙ„ Ø£Ø³Ø¹Ø§Ø± Ø¨ÙˆØ³Ø·Ø© (Ø§Ø®ØªÙŠØ§Ø±ÙŠ)',
-    bo_thresh:'âš™ï¸ Ø­Ø¯ Ø§Ù„ÙØ§Ø±Ù‚', bo_threshDesc:'Ø§Ù„Ø­Ø¯ Ø§Ù„Ø£Ø¯Ù†Ù‰ Ù„Ø§Ø¹ØªØ¨Ø§Ø± Ø§Ù„ÙØ§Ø±Ù‚ (Ø¬Ù†ÙŠÙ‡)',
+    bo_file:'📦 ØªÙ‚Ø±ÙŠØ± Ø¨ÙˆØ³Ø·Ø© *', bo_fileDesc:'Ù…Ù„Ù Ø§Ù„ÙØ§ØªÙˆØ±Ø© Ø§Ù„Ø´Ù‡Ø±ÙŠØ© Ù…Ù† Ø¨ÙˆØ³Ø·Ø©',
+    bo_contract:'📝 Ù…Ù„Ù Ø§Ù„Ø¹Ù‚Ø¯', bo_contractDesc:'Ø¬Ø¯ÙˆÙ„ Ø£Ø³Ø¹Ø§Ø± Ø¨ÙˆØ³Ø·Ø© (Ø§Ø®ØªÙŠØ§Ø±ÙŠ)',
+    bo_thresh:'⚙️ Ø­Ø¯ Ø§Ù„ÙØ§Ø±Ù‚', bo_threshDesc:'Ø§Ù„Ø­Ø¯ Ø§Ù„Ø£Ø¯Ù†Ù‰ Ù„Ø§Ø¹ØªØ¨Ø§Ø± Ø§Ù„ÙØ§Ø±Ù‚ (Ø¬Ù†ÙŠÙ‡)',
     bo_alertNoFile:'Ø§Ù„Ø±Ø¬Ø§Ø¡ Ø±ÙØ¹ Ù…Ù„Ù Ø§Ù„ØªÙ‚Ø±ÙŠØ±',
     bo_loadingMsg:'Ø¬Ø§Ø±Ù Ù…Ø¹Ø§Ù„Ø¬Ø© Ø¨ÙŠØ§Ù†Ø§Øª Ø¨ÙˆØ³Ø·Ø©â€¦',
     bo_confirmClear:'Ù…Ø³Ø­ Ø¨ÙŠØ§Ù†Ø§Øª Ø¨ÙˆØ³Ø·Ø©ØŸ',
-    bo_toast:'âœ… ØªÙ… Ø­ÙØ¸ Ø¨ÙŠØ§Ù†Ø§Øª Ø¨ÙˆØ³Ø·Ø©!',
+    bo_toast:'✅ ØªÙ… Ø­ÙØ¸ Ø¨ÙŠØ§Ù†Ø§Øª Ø¨ÙˆØ³Ø·Ø©!',
     bo_emptyTitle:'Ø§Ø±ÙØ¹ Ù…Ù„Ù ØªÙ‚Ø±ÙŠØ± Ø¨ÙˆØ³Ø·Ø© ÙˆØ§Ø¨Ø¯Ø£ Ø§Ù„Ù…Ø±Ø§Ø¬Ø¹Ø©',
     bo_resultsTitle:'Ù†ØªØ§Ø¦Ø¬ Ù…Ø±Ø§Ø¬Ø¹Ø© Ø¨ÙˆØ³Ø·Ø©',
     bo_typeFilter:'Ø§Ù„Ù†ÙˆØ¹', bo_monthLbl:'Ø´Ù‡Ø± Ø§Ù„Ø¨ÙŠØ§Ù†Ø§Øª:',
     errorPrefix:'Ø®Ø·Ø£: ', soonTitle:'Ù‡Ø°Ø§ Ø§Ù„Ù‚Ø³Ù… Ù‚ÙŠØ¯ Ø§Ù„ØªØ·ÙˆÙŠØ±',
     allStatuses:'Ø¬Ù…ÙŠØ¹ Ø§Ù„Ø­Ø§Ù„Ø§Øª', delivered:'ØªÙ… Ø§Ù„ØªØ³Ù„ÙŠÙ…', returned:'Ù…ÙØ¹Ø§Ø¯Ø©', pending:'Ù…Ø¹Ù„Ù‚Ø©',
-    ar_file:'ðŸ“‹ Ù…Ù„Ù Ø£Ø±Ø§Ù…ÙƒØ³ *', ar_fileDesc:'Ø§Ù„Ù…Ù„Ù Ø§Ù„Ø´Ù‡Ø±ÙŠ Ù…Ù† Ø¨ÙˆØ§Ø¨Ø© Ø£Ø±Ø§Ù…ÙƒØ³ (Excel)',
+    ar_file:'📋 Ù…Ù„Ù Ø£Ø±Ø§Ù…ÙƒØ³ *', ar_fileDesc:'Ø§Ù„Ù…Ù„Ù Ø§Ù„Ø´Ù‡Ø±ÙŠ Ù…Ù† Ø¨ÙˆØ§Ø¨Ø© Ø£Ø±Ø§Ù…ÙƒØ³ (Excel)',
     ar_odoo:'ðŸ¦ Ù…Ù„Ù Odoo', ar_odooDesc:'Ù„ØªØ­Ø¯ÙŠØ¯ Ø·Ø±ÙŠÙ‚Ø© Ø§Ù„Ø¯ÙØ¹ ÙˆÙ‚ÙŠÙ…Ø© COD',
     ar_zones:'ðŸ—ºï¸ Ù…Ù„Ù Ø§Ù„Ù…Ù†Ø§Ø·Ù‚', ar_zonesDesc:'Ù…Ù„Ù Ù…Ù†Ø§Ø·Ù‚ Ø§Ù„Ù…Ø¯Ù† (Ø§Ø®ØªÙŠØ§Ø±ÙŠ)',
-    ar_status:'ðŸ“¡ Ù…Ù„Ù Ø§Ù„Ø­Ø§Ù„Ø§Øª', ar_statusDesc:'Ù…Ù„Ù ØªØªØ¨Ø¹ Ø§Ù„Ø´Ø­Ù†Ø§Øª (Ø§Ø®ØªÙŠØ§Ø±ÙŠ)',
-    ar_cfgTitle:'âš™ï¸ Ø¥Ø¹Ø¯Ø§Ø¯Ø§Øª Ø­Ø³Ø§Ø¨ Ø§Ù„ØªÙƒÙ„ÙØ©',
+    ar_status:'📡 Ù…Ù„Ù Ø§Ù„Ø­Ø§Ù„Ø§Øª', ar_statusDesc:'Ù…Ù„Ù ØªØªØ¨Ø¹ Ø§Ù„Ø´Ø­Ù†Ø§Øª (Ø§Ø®ØªÙŠØ§Ø±ÙŠ)',
+    ar_cfgTitle:'⚙️ Ø¥Ø¹Ø¯Ø§Ø¯Ø§Øª Ø­Ø³Ø§Ø¨ Ø§Ù„ØªÙƒÙ„ÙØ©',
     ar_codThresh:'Ø­Ø¯ COD (Ø¬Ù†ÙŠÙ‡)', ar_codThreshHint:'Ø§Ù„Ø­Ø¯ Ø§Ù„Ø£Ø¯Ù†Ù‰ Ù„ØªØ·Ø¨ÙŠÙ‚ Ø¹Ù…ÙˆÙ„Ø© COD',
     ar_codPct:'Ù†Ø³Ø¨Ø© COD', ar_codPctHint:'Ù…Ø«Ø§Ù„: 0.005 = 0.5%',
     ar_annualPct:'Ø§Ù„Ø²ÙŠØ§Ø¯Ø© Ø§Ù„Ø³Ù†ÙˆÙŠØ©', ar_annualPctHint:'Ù…Ø«Ø§Ù„: 0.125 = 12.5%',
@@ -782,7 +782,7 @@ const I18N = {
     ar_alertNoFile:'Ø§Ù„Ø±Ø¬Ø§Ø¡ Ø±ÙØ¹ Ù…Ù„Ù Ø£Ø±Ø§Ù…ÙƒØ³ Ø£ÙˆÙ„Ø§Ù‹',
     ar_loadingMsg:'Ø¬Ø§Ø±Ù Ù…Ø¹Ø§Ù„Ø¬Ø© Ø¨ÙŠØ§Ù†Ø§Øª Ø£Ø±Ø§Ù…ÙƒØ³â€¦',
     ar_confirmClear:'Ù‡Ù„ ØªØ±ÙŠØ¯ Ù…Ø³Ø­ Ù†ØªØ§Ø¦Ø¬ Ø§Ù„Ù…Ø±Ø§Ø¬Ø¹Ø© Ø§Ù„Ù…Ø­ÙÙˆØ¸Ø©ØŸ',
-    ar_toast:'âœ… ØªÙ… Ø­ÙØ¸ Ù†ØªØ§Ø¦Ø¬ Ø§Ù„Ù…Ø±Ø§Ø¬Ø¹Ø©!',
+    ar_toast:'✅ ØªÙ… Ø­ÙØ¸ Ù†ØªØ§Ø¦Ø¬ Ø§Ù„Ù…Ø±Ø§Ø¬Ø¹Ø©!',
     ar_emptyTitle:'Ø§Ø±ÙØ¹ Ù…Ù„ÙØ§Øª Ø£Ø±Ø§Ù…ÙƒØ³ ÙˆØ§Ø¨Ø¯Ø£ Ø§Ù„Ù…Ø±Ø§Ø¬Ø¹Ø©',
     ar_emptyDesc:'Ø§Ø±ÙØ¹ Ù…Ù„Ù Ø£Ø±Ø§Ù…ÙƒØ³ ÙˆOdoo Ø¹Ù„Ù‰ Ø§Ù„Ø£Ù‚Ù„ Ø«Ù… Ø§Ø¶ØºØ· "Ù…Ø¹Ø§Ù„Ø¬Ø©"',
     ar_resultsTitle:'Ù†ØªØ§Ø¦Ø¬ Ù…Ø±Ø§Ø¬Ø¹Ø© Ø£Ø±Ø§Ù…ÙƒØ³',
@@ -790,33 +790,33 @@ const I18N = {
     ar_statusFilter:'Ø§Ù„Ø­Ø§Ù„Ø©', ar_monthLbl:'Ø´Ù‡Ø± Ø§Ù„Ø¨ÙŠØ§Ù†Ø§Øª:',
     allSizes:'Ø¬Ù…ÙŠØ¹ Ø§Ù„Ø£Ø­Ø¬Ø§Ù…', kenzzCalc:'Ø¥Ø¬Ù…Ø§Ù„ÙŠ Kenzz',
     mq_monthLbl:'Ø´Ù‡Ø± Ø§Ù„Ø¨ÙŠØ§Ù†Ø§Øª:', ra_monthLbl:'Ø´Ù‡Ø± Ø§Ù„Ø¨ÙŠØ§Ù†Ø§Øª:',
-    mq_file:'ðŸ“‹ ØªÙ‚Ø±ÙŠØ± Aramex Mashreq *', mq_fileDesc:'Ù…Ù„Ù Ø§Ù„ØªÙ‚Ø±ÙŠØ± Ø§Ù„Ø´Ù‡Ø±ÙŠ',
-    mq_rates:'ðŸ“ Ù…Ù„Ù Ø§Ù„Ø£Ø³Ø¹Ø§Ø±', mq_ratesDesc:'Ø¬Ø¯ÙˆÙ„ Ø£Ø³Ø¹Ø§Ø± Last Mile & Pickup',
+    mq_file:'📋 ØªÙ‚Ø±ÙŠØ± Aramex Mashreq *', mq_fileDesc:'Ù…Ù„Ù Ø§Ù„ØªÙ‚Ø±ÙŠØ± Ø§Ù„Ø´Ù‡Ø±ÙŠ',
+    mq_rates:'📝 Ù…Ù„Ù Ø§Ù„Ø£Ø³Ø¹Ø§Ø±', mq_ratesDesc:'Ø¬Ø¯ÙˆÙ„ Ø£Ø³Ø¹Ø§Ø± Last Mile & Pickup',
     mq_second:'2ï¸âƒ£ Ù…Ù„Ù Ø§Ù„Ù…Ø­Ø§ÙˆÙ„Ø© Ø§Ù„Ø«Ø§Ù†ÙŠØ©', mq_secondDesc:'ØªÙ‚Ø±ÙŠØ± Ø§Ù„Ù…Ø­Ø§ÙˆÙ„Ø§Øª Ø§Ù„Ø«Ø§Ù†ÙŠØ© (Ø§Ø®ØªÙŠØ§Ø±ÙŠ)',
-    mq_settings:'âš™ï¸ Ø§Ù„Ø¥Ø¹Ø¯Ø§Ø¯Ø§Øª', mq_settingsDesc:'Ù†Ø³Ø¨ Ø§Ù„ØªØ£Ù…ÙŠÙ† ÙˆØ§Ù„Ù€ COD ÙˆØ­Ø¯ Ø§Ù„ÙØ§Ø±Ù‚',
+    mq_settings:'⚙️ Ø§Ù„Ø¥Ø¹Ø¯Ø§Ø¯Ø§Øª', mq_settingsDesc:'Ù†Ø³Ø¨ Ø§Ù„ØªØ£Ù…ÙŠÙ† ÙˆØ§Ù„Ù€ COD ÙˆØ­Ø¯ Ø§Ù„ÙØ§Ø±Ù‚',
     mq_insPct:'ØªØ£Ù…ÙŠÙ† %', mq_codPct:'COD %', mq_thresh:'Ø­Ø¯ Ø§Ù„ÙØ§Ø±Ù‚',
     mq_alertNoFile:'Ø§Ù„Ø±Ø¬Ø§Ø¡ Ø±ÙØ¹ Ù…Ù„Ù Ø§Ù„ØªÙ‚Ø±ÙŠØ±',
     mq_loadingMsg:'Ø¬Ø§Ø±Ù Ù…Ø¹Ø§Ù„Ø¬Ø© Mashreqâ€¦',
     mq_confirmClear:'Ù…Ø³Ø­ Ø¨ÙŠØ§Ù†Ø§Øª MashreqØŸ',
-    mq_toast:'âœ… ØªÙ… Ø­ÙØ¸ Ø¨ÙŠØ§Ù†Ø§Øª Mashreq!',
+    mq_toast:'✅ ØªÙ… Ø­ÙØ¸ Ø¨ÙŠØ§Ù†Ø§Øª Mashreq!',
     mq_emptyTitle:'Ø§Ø±ÙØ¹ Ù…Ù„Ù ØªÙ‚Ø±ÙŠØ± Mashreq ÙˆØ§Ø¨Ø¯Ø£ Ø§Ù„Ù…Ø±Ø§Ø¬Ø¹Ø©',
     mq_resultsTitle:'Ù†ØªØ§Ø¦Ø¬ Aramex Mashreq',
     mq_sizeFilter:'Ø§Ù„Ø­Ø¬Ù…',
-    ra_file:'ðŸšš ØªÙ‚Ø±ÙŠØ± Raya *', ra_fileDesc:'Ù…Ù„Ù Ø§Ù„ØªÙ‚Ø±ÙŠØ± Ø§Ù„Ø´Ù‡Ø±ÙŠ Ù…Ù† Raya',
-    ra_contract:'ðŸ“ Ù…Ù„Ù Ø§Ù„Ø¹Ù‚Ø¯', ra_contractDesc:'Ø¬Ø¯ÙˆÙ„ Ø£Ø³Ø¹Ø§Ø± Raya Ø­Ø³Ø¨ Ø§Ù„Ù€ Tier',
-    ra_thresh:'âš™ï¸ Ø­Ø¯ Ø§Ù„ÙØ§Ø±Ù‚', ra_threshDesc:'Ø§Ù„Ø­Ø¯ Ø§Ù„Ø£Ø¯Ù†Ù‰ Ù„Ù„ÙØ§Ø±Ù‚ Ø§Ù„Ù…Ù‚Ø¨ÙˆÙ„ (Ø¬Ù†ÙŠÙ‡)',
+    ra_file:'🚚 ØªÙ‚Ø±ÙŠØ± Raya *', ra_fileDesc:'Ù…Ù„Ù Ø§Ù„ØªÙ‚Ø±ÙŠØ± Ø§Ù„Ø´Ù‡Ø±ÙŠ Ù…Ù† Raya',
+    ra_contract:'📝 Ù…Ù„Ù Ø§Ù„Ø¹Ù‚Ø¯', ra_contractDesc:'Ø¬Ø¯ÙˆÙ„ Ø£Ø³Ø¹Ø§Ø± Raya Ø­Ø³Ø¨ Ø§Ù„Ù€ Tier',
+    ra_thresh:'⚙️ Ø­Ø¯ Ø§Ù„ÙØ§Ø±Ù‚', ra_threshDesc:'Ø§Ù„Ø­Ø¯ Ø§Ù„Ø£Ø¯Ù†Ù‰ Ù„Ù„ÙØ§Ø±Ù‚ Ø§Ù„Ù…Ù‚Ø¨ÙˆÙ„ (Ø¬Ù†ÙŠÙ‡)',
     ra_alertNoFile:'Ø§Ù„Ø±Ø¬Ø§Ø¡ Ø±ÙØ¹ Ù…Ù„Ù Ø§Ù„ØªÙ‚Ø±ÙŠØ±',
     ra_loadingMsg:'Ø¬Ø§Ø±Ù Ù…Ø¹Ø§Ù„Ø¬Ø© Rayaâ€¦',
     ra_confirmClear:'Ù…Ø³Ø­ Ø¨ÙŠØ§Ù†Ø§Øª RayaØŸ',
-    ra_toast:'âœ… ØªÙ… Ø­ÙØ¸ Ø¨ÙŠØ§Ù†Ø§Øª Raya!',
+    ra_toast:'✅ ØªÙ… Ø­ÙØ¸ Ø¨ÙŠØ§Ù†Ø§Øª Raya!',
     ra_emptyTitle:'Ø§Ø±ÙØ¹ Ù…Ù„Ù ØªÙ‚Ø±ÙŠØ± Raya ÙˆØ§Ø¨Ø¯Ø£ Ø§Ù„Ù…Ø±Ø§Ø¬Ø¹Ø©',
     ra_resultsTitle:'Ù†ØªØ§Ø¦Ø¬ Raya Review',
     ra_catFilter:'Ø§Ù„ÙØ¦Ø©',
-    bd_fileTitle:'ðŸ“‚ Ù…Ù„Ù Ø§Ù„ØªÙØ§ØµÙŠÙ„', bd_fileDesc:'Ù…Ù„Ù Excel Ø¨ØªÙØ§ØµÙŠÙ„ ØªÙƒØ§Ù„ÙŠÙ Ø§Ù„Ù†Ø§Ù‚Ù„ÙŠÙ†',
-    bd_addTitle:'âž• Ø¥Ø¶Ø§ÙØ© Ø´Ù‡Ø±', bd_addDesc:'Ø£Ø¶Ù Ø¨ÙŠØ§Ù†Ø§Øª Ø§Ù„Ø´Ù‡Ø± Ø§Ù„Ø­Ø§Ù„ÙŠ Ù…Ù† Ù…Ù„ÙØ§Øª Ø§Ù„Ù…Ø±Ø§Ø¬Ø¹Ø© Ø§Ù„Ù…Ø­Ù…Ù„Ø©',
-    bd_clearTitle:'ðŸ—‘ï¸ Ù…Ø³Ø­ Ø§Ù„Ø¨ÙŠØ§Ù†Ø§Øª', bd_clearDesc:'Ù…Ø³Ø­ Ø¬Ù…ÙŠØ¹ Ø¨ÙŠØ§Ù†Ø§Øª Ø§Ù„ØªÙØ§ØµÙŠÙ„ Ø§Ù„Ù…Ø­ÙÙˆØ¸Ø©',
-    bd_loadBtn:'â¬†ï¸ ØªØ­Ù…ÙŠÙ„ Ø§Ù„Ù…Ù„Ù', bd_addBtn:'âž• Ø¥Ø¶Ø§ÙØ© Ø§Ù„Ø´Ù‡Ø±',
-    bd_clearBtn:'ðŸ—‘ï¸ Ù…Ø³Ø­ Ø§Ù„ÙƒÙ„', bd_carrier:'Ø§Ù„Ù†Ø§Ù‚Ù„',
+    bd_fileTitle:'📂 Ù…Ù„Ù Ø§Ù„ØªÙØ§ØµÙŠÙ„', bd_fileDesc:'Ù…Ù„Ù Excel Ø¨ØªÙØ§ØµÙŠÙ„ ØªÙƒØ§Ù„ÙŠÙ Ø§Ù„Ù†Ø§Ù‚Ù„ÙŠÙ†',
+    bd_addTitle:'➕ Ø¥Ø¶Ø§ÙØ© Ø´Ù‡Ø±', bd_addDesc:'Ø£Ø¶Ù Ø¨ÙŠØ§Ù†Ø§Øª Ø§Ù„Ø´Ù‡Ø± Ø§Ù„Ø­Ø§Ù„ÙŠ Ù…Ù† Ù…Ù„ÙØ§Øª Ø§Ù„Ù…Ø±Ø§Ø¬Ø¹Ø© Ø§Ù„Ù…Ø­Ù…Ù„Ø©',
+    bd_clearTitle:'🗑️ Ù…Ø³Ø­ Ø§Ù„Ø¨ÙŠØ§Ù†Ø§Øª', bd_clearDesc:'Ù…Ø³Ø­ Ø¬Ù…ÙŠØ¹ Ø¨ÙŠØ§Ù†Ø§Øª Ø§Ù„ØªÙØ§ØµÙŠÙ„ Ø§Ù„Ù…Ø­ÙÙˆØ¸Ø©',
+    bd_loadBtn:'⬆️ ØªØ­Ù…ÙŠÙ„ Ø§Ù„Ù…Ù„Ù', bd_addBtn:'➕ Ø¥Ø¶Ø§ÙØ© Ø§Ù„Ø´Ù‡Ø±',
+    bd_clearBtn:'🗑️ Ù…Ø³Ø­ Ø§Ù„ÙƒÙ„', bd_carrier:'Ø§Ù„Ù†Ø§Ù‚Ù„',
     bd_monthPlaceholder:'Ù…Ø«Ø§Ù„: ÙŠÙ†Ø§ÙŠØ±-2025',
     bd_alertNoFile:'Ø§Ù„Ø±Ø¬Ø§Ø¡ Ø±ÙØ¹ Ù…Ù„Ù Ø§Ù„ØªÙØ§ØµÙŠÙ„',
     bd_alertNoMonth:'Ø§Ù„Ø±Ø¬Ø§Ø¡ Ø¥Ø¯Ø®Ø§Ù„ Ø§Ø³Ù… Ø§Ù„Ø´Ù‡Ø±',
@@ -824,10 +824,10 @@ const I18N = {
     bd_loadingFile:'Ø¬Ø§Ø±Ù ØªØ­Ù…ÙŠÙ„ Ù…Ù„Ù Ø§Ù„ØªÙØ§ØµÙŠÙ„â€¦',
     bd_loadingMonth:'Ø¬Ø§Ø±Ù Ø¥Ø¶Ø§ÙØ© Ø¨ÙŠØ§Ù†Ø§Øª Ø§Ù„Ø´Ù‡Ø±â€¦',
     bd_confirmClear:'Ù…Ø³Ø­ Ø¬Ù…ÙŠØ¹ Ø¨ÙŠØ§Ù†Ø§Øª Ø§Ù„ØªÙØ§ØµÙŠÙ„ØŸ',
-    bd_successFile:'âœ… ØªÙ… ØªØ­Ù…ÙŠÙ„ Ù…Ù„Ù Ø§Ù„ØªÙØ§ØµÙŠÙ„ Ø¨Ù†Ø¬Ø§Ø­',
+    bd_successFile:'✅ ØªÙ… ØªØ­Ù…ÙŠÙ„ Ù…Ù„Ù Ø§Ù„ØªÙØ§ØµÙŠÙ„ Ø¨Ù†Ø¬Ø§Ø­',
     bd_emptyTitle:'Ù„Ø§ ØªÙˆØ¬Ø¯ Ø¨ÙŠØ§Ù†Ø§Øª ØªÙØ§ØµÙŠÙ„ Ø¨Ø¹Ø¯',
     bd_emptyDesc:'Ù‚Ù… Ø¨ØªØ­Ù…ÙŠÙ„ Ù…Ù„Ù Ø§Ù„ØªÙØ§ØµÙŠÙ„ Ø£Ùˆ Ø£Ø¶Ù Ø´Ù‡Ø±Ø§Ù‹ Ù…Ù† Ø¨ÙŠØ§Ù†Ø§Øª Ø§Ù„Ù…Ø±Ø§Ø¬Ø¹Ø©',
-    an_grand:'ðŸ“Š Ù…Ù„Ø®Øµ Ø´Ø§Ù…Ù„ Ù„Ø¬Ù…ÙŠØ¹ Ø§Ù„Ù†Ø§Ù‚Ù„ÙŠÙ†',
+    an_grand:'📊 Ù…Ù„Ø®Øµ Ø´Ø§Ù…Ù„ Ù„Ø¬Ù…ÙŠØ¹ Ø§Ù„Ù†Ø§Ù‚Ù„ÙŠÙ†',
     an_fromCarriers:'Ù†Ø§Ù‚Ù„',
     an_distribution:'ØªÙˆØ²ÙŠØ¹ Ø§Ù„Ø´Ø­Ù†Ø§Øª Ø­Ø³Ø¨ Ø§Ù„Ù†Ø§Ù‚Ù„',
     an_statusDist:'ØªÙˆØ²ÙŠØ¹ Ø§Ù„Ø­Ø§Ù„Ø§Øª',
@@ -846,34 +846,34 @@ const I18N = {
   },
   en: {
     hd:'3PL Logistics Analyzer', hds:'Shipping Cost Breakdown Â· All figures exclude VAT',
-    lang:'ðŸŒ Ø§Ù„Ø¹Ø±Ø¨ÙŠØ©', logout:'Logout',
+    lang:'🌐 Ø§Ù„Ø¹Ø±Ø¨ÙŠØ©', logout:'Logout',
     tBosta:'Bosta Audit', tAramex:'Aramex Audit',
-    note:'â„¹ï¸ <strong>Note:</strong> All figures exclude VAT.',
+    note:'ℹ️ <strong>Note:</strong> All figures exclude VAT.',
     loginTitle:'Kenzz 3PL', loginSubtitle:'Enter password to access the system',
-    loginPwdLabel:'Password', loginBtn:'Sign In ðŸ”', loginError:'âš ï¸ Incorrect password, please try again',
+    loginPwdLabel:'Password', loginBtn:'Sign In 🔐', loginError:'⚠️ Incorrect password, please try again',
     loginFooter:'Shipping Logistics Analyzer',
-    upload:'ðŸ“‚ Upload File', changeFile:'ðŸ“‚ Change File',
-    process:'âš¡ Process & Analyze', saveResults:'ðŸ’¾ Save Results', clearData:'ðŸ—‘ï¸ Clear Data',
-    export:'â¬‡ï¸ Export CSV', search:'Search', all:'All',
+    upload:'📂 Upload File', changeFile:'📂 Change File',
+    process:'⚡ Process & Analyze', saveResults:'💾 Save Results', clearData:'🗑️ Clear Data',
+    export:'⬇️ Export CSV', search:'Search', all:'All',
     overOnly:'Show differences only',
     totalShipments:'Total Shipments', invoice:'Total Invoice', differences:'Differences', egp:'EGP',
-    bo_file:'ðŸ“¦ Bosta Report *', bo_fileDesc:'Monthly invoice file from Bosta',
-    bo_contract:'ðŸ“ Contract File', bo_contractDesc:'Bosta rate table (optional)',
-    bo_thresh:'âš™ï¸ Difference Threshold', bo_threshDesc:'Minimum difference to flag (EGP)',
+    bo_file:'📦 Bosta Report *', bo_fileDesc:'Monthly invoice file from Bosta',
+    bo_contract:'📝 Contract File', bo_contractDesc:'Bosta rate table (optional)',
+    bo_thresh:'⚙️ Difference Threshold', bo_threshDesc:'Minimum difference to flag (EGP)',
     bo_alertNoFile:'Please upload the report file',
     bo_loadingMsg:'Processing Bosta dataâ€¦',
     bo_confirmClear:'Clear Bosta data?',
-    bo_toast:'âœ… Bosta results saved!',
+    bo_toast:'✅ Bosta results saved!',
     bo_emptyTitle:'Upload Bosta report to start audit',
     bo_resultsTitle:'Bosta Audit Results',
     bo_typeFilter:'Type', bo_monthLbl:'Data Month:',
     errorPrefix:'Error: ', soonTitle:'This section is coming soon',
     allStatuses:'All Statuses', delivered:'Delivered', returned:'Returned', pending:'Pending',
-    ar_file:'ðŸ“‹ Aramex File *', ar_fileDesc:'Monthly file from Aramex portal (Excel)',
+    ar_file:'📋 Aramex File *', ar_fileDesc:'Monthly file from Aramex portal (Excel)',
     ar_odoo:'ðŸ¦ Odoo File', ar_odooDesc:'For payment type and COD value',
     ar_zones:'ðŸ—ºï¸ Zones File', ar_zonesDesc:'City zones mapping file (optional)',
-    ar_status:'ðŸ“¡ Status File', ar_statusDesc:'Shipment tracking status file (optional)',
-    ar_cfgTitle:'âš™ï¸ Cost Calculation Settings',
+    ar_status:'📡 Status File', ar_statusDesc:'Shipment tracking status file (optional)',
+    ar_cfgTitle:'⚙️ Cost Calculation Settings',
     ar_codThresh:'COD Threshold (EGP)', ar_codThreshHint:'Minimum for COD fee to apply',
     ar_codPct:'COD Rate', ar_codPctHint:'e.g. 0.005 = 0.5%',
     ar_annualPct:'Annual Increase', ar_annualPctHint:'e.g. 0.125 = 12.5%',
@@ -882,7 +882,7 @@ const I18N = {
     ar_alertNoFile:'Please upload the Aramex file first',
     ar_loadingMsg:'Processing Aramex dataâ€¦',
     ar_confirmClear:'Clear saved audit results?',
-    ar_toast:'âœ… Audit results saved!',
+    ar_toast:'✅ Audit results saved!',
     ar_emptyTitle:'Upload Aramex files to start the audit',
     ar_emptyDesc:'Upload at least the Aramex file then click Process',
     ar_resultsTitle:'Aramex Audit Results',
@@ -890,33 +890,33 @@ const I18N = {
     ar_statusFilter:'Status', ar_monthLbl:'Data Month:',
     allSizes:'All Sizes', kenzzCalc:'Kenzz Total',
     mq_monthLbl:'Data Month:', ra_monthLbl:'Data Month:',
-    mq_file:'ðŸ“‹ Aramex Mashreq Report *', mq_fileDesc:'Monthly report file',
-    mq_rates:'ðŸ“ Rates File', mq_ratesDesc:'Last Mile & Pickup rate table',
+    mq_file:'📋 Aramex Mashreq Report *', mq_fileDesc:'Monthly report file',
+    mq_rates:'📝 Rates File', mq_ratesDesc:'Last Mile & Pickup rate table',
     mq_second:'2ï¸âƒ£ Second Attempt File', mq_secondDesc:'Second attempt report (optional)',
-    mq_settings:'âš™ï¸ Settings', mq_settingsDesc:'Insurance, COD rates and threshold',
+    mq_settings:'⚙️ Settings', mq_settingsDesc:'Insurance, COD rates and threshold',
     mq_insPct:'Insurance %', mq_codPct:'COD %', mq_thresh:'Diff. Threshold',
     mq_alertNoFile:'Please upload the report file',
     mq_loadingMsg:'Processing Mashreq dataâ€¦',
     mq_confirmClear:'Clear Mashreq data?',
-    mq_toast:'âœ… Mashreq results saved!',
+    mq_toast:'✅ Mashreq results saved!',
     mq_emptyTitle:'Upload Mashreq report to start audit',
     mq_resultsTitle:'Aramex Mashreq Results',
     mq_sizeFilter:'Size',
-    ra_file:'ðŸšš Raya Report *', ra_fileDesc:'Monthly report file from Raya',
-    ra_contract:'ðŸ“ Contract File', ra_contractDesc:'Raya rates by Tier',
-    ra_thresh:'âš™ï¸ Difference Threshold', ra_threshDesc:'Acceptable difference threshold (EGP)',
+    ra_file:'🚚 Raya Report *', ra_fileDesc:'Monthly report file from Raya',
+    ra_contract:'📝 Contract File', ra_contractDesc:'Raya rates by Tier',
+    ra_thresh:'⚙️ Difference Threshold', ra_threshDesc:'Acceptable difference threshold (EGP)',
     ra_alertNoFile:'Please upload the report file',
     ra_loadingMsg:'Processing Raya dataâ€¦',
     ra_confirmClear:'Clear Raya data?',
-    ra_toast:'âœ… Raya results saved!',
+    ra_toast:'✅ Raya results saved!',
     ra_emptyTitle:'Upload Raya report to start audit',
     ra_resultsTitle:'Raya Review Results',
     ra_catFilter:'Category',
-    bd_fileTitle:'ðŸ“‚ Breakdown File', bd_fileDesc:'Excel file with carrier cost breakdown data',
-    bd_addTitle:'âž• Add Month', bd_addDesc:'Add current month data from loaded audit files',
-    bd_clearTitle:'ðŸ—‘ï¸ Clear Data', bd_clearDesc:'Clear all saved breakdown data',
-    bd_loadBtn:'â¬†ï¸ Load File', bd_addBtn:'âž• Add Month',
-    bd_clearBtn:'ðŸ—‘ï¸ Clear All', bd_carrier:'Carrier',
+    bd_fileTitle:'📂 Breakdown File', bd_fileDesc:'Excel file with carrier cost breakdown data',
+    bd_addTitle:'➕ Add Month', bd_addDesc:'Add current month data from loaded audit files',
+    bd_clearTitle:'🗑️ Clear Data', bd_clearDesc:'Clear all saved breakdown data',
+    bd_loadBtn:'⬆️ Load File', bd_addBtn:'➕ Add Month',
+    bd_clearBtn:'🗑️ Clear All', bd_carrier:'Carrier',
     bd_monthPlaceholder:'e.g. Jan-2025',
     bd_alertNoFile:'Please upload the breakdown file',
     bd_alertNoMonth:'Please enter a month name',
@@ -924,10 +924,10 @@ const I18N = {
     bd_loadingFile:'Loading breakdown fileâ€¦',
     bd_loadingMonth:'Adding month dataâ€¦',
     bd_confirmClear:'Clear all breakdown data?',
-    bd_successFile:'âœ… Breakdown file loaded successfully',
+    bd_successFile:'✅ Breakdown file loaded successfully',
     bd_emptyTitle:'No breakdown data yet',
     bd_emptyDesc:'Load a breakdown file or add a month from audit data',
-    an_grand:'ðŸ“Š Grand Summary â€” All Carriers',
+    an_grand:'📊 Grand Summary â€” All Carriers',
     an_fromCarriers:'carrier(s)',
     an_distribution:'Shipment Distribution by Carrier',
     an_statusDist:'Status Distribution',
@@ -1159,7 +1159,7 @@ function applyI18n(){
   document.getElementById('hd-title').textContent = T('hd');
   document.getElementById('hd-sub').textContent = T('hds');
   document.getElementById('hd-lang-btn').textContent = T('lang');
-  document.getElementById('hd-logout-btn').textContent = 'ðŸ”’ ' + T('logout');
+  document.getElementById('hd-logout-btn').textContent = '🔒 ' + T('logout');
 
   document.getElementById('tab-bosta-lbl').textContent = T('tBosta');
   document.getElementById('tab-aramex-lbl').textContent = T('tAramex');
@@ -1215,7 +1215,7 @@ function toggleShowPwd(){
   showPwd = !showPwd;
   const inp = document.getElementById('login-pwd');
   inp.type = showPwd ? 'text' : 'password';
-  document.getElementById('login-eye').textContent = showPwd ? 'ðŸ™ˆ' : 'ðŸ‘ï¸';
+  document.getElementById('login-eye').textContent = showPwd ? '🙈' : 'ðŸ‘ï¸';
 }
 function attemptLogin(e){
   e.preventDefault();
@@ -1271,11 +1271,11 @@ function hideLoading(){ document.getElementById('loading-overlay').classList.rem
 function showToast(){ const t=document.getElementById('bo-toast'); t.classList.add('show'); setTimeout(()=>t.classList.remove('show'), 3000); }
 
 document.getElementById('bo-report-inp').addEventListener('change', e=>{
-  if(e.target.files[0]){ reportFile = e.target.files[0]; document.getElementById('bo-report-status').textContent = 'âœ… ' + reportFile.name; applyI18n(); }
+  if(e.target.files[0]){ reportFile = e.target.files[0]; document.getElementById('bo-report-status').textContent = '✅ ' + reportFile.name; applyI18n(); }
   e.target.value = '';
 });
 document.getElementById('bo-contract-inp').addEventListener('change', e=>{
-  if(e.target.files[0]){ contractFile = e.target.files[0]; document.getElementById('bo-contract-status').textContent = 'âœ… ' + contractFile.name; applyI18n(); }
+  if(e.target.files[0]){ contractFile = e.target.files[0]; document.getElementById('bo-contract-status').textContent = '✅ ' + contractFile.name; applyI18n(); }
   e.target.value = '';
 });
 
@@ -1652,10 +1652,10 @@ let auditData = [];
 let _aramexPersisted = [];
 let aramexFile=null, odooFile=null, zoneFile=null, statusFile=null;
 
-document.getElementById('ar-file-inp').addEventListener('change', e=>{ if(e.target.files[0]){ aramexFile=e.target.files[0]; document.getElementById('ar-file-status').textContent='âœ… '+aramexFile.name; applyI18nAramex(); } e.target.value=''; });
-document.getElementById('ar-odoo-inp').addEventListener('change', e=>{ if(e.target.files[0]){ odooFile=e.target.files[0]; document.getElementById('ar-odoo-status').textContent='âœ… '+odooFile.name; applyI18nAramex(); } e.target.value=''; });
-document.getElementById('ar-zones-inp').addEventListener('change', e=>{ if(e.target.files[0]){ zoneFile=e.target.files[0]; document.getElementById('ar-zones-status').textContent='âœ… '+zoneFile.name; applyI18nAramex(); } e.target.value=''; });
-document.getElementById('ar-status-inp').addEventListener('change', e=>{ if(e.target.files[0]){ statusFile=e.target.files[0]; document.getElementById('ar-status-status').textContent='âœ… '+statusFile.name; applyI18nAramex(); } e.target.value=''; });
+document.getElementById('ar-file-inp').addEventListener('change', e=>{ if(e.target.files[0]){ aramexFile=e.target.files[0]; document.getElementById('ar-file-status').textContent='✅ '+aramexFile.name; applyI18nAramex(); } e.target.value=''; });
+document.getElementById('ar-odoo-inp').addEventListener('change', e=>{ if(e.target.files[0]){ odooFile=e.target.files[0]; document.getElementById('ar-odoo-status').textContent='✅ '+odooFile.name; applyI18nAramex(); } e.target.value=''; });
+document.getElementById('ar-zones-inp').addEventListener('change', e=>{ if(e.target.files[0]){ zoneFile=e.target.files[0]; document.getElementById('ar-zones-status').textContent='✅ '+zoneFile.name; applyI18nAramex(); } e.target.value=''; });
+document.getElementById('ar-status-inp').addEventListener('change', e=>{ if(e.target.files[0]){ statusFile=e.target.files[0]; document.getElementById('ar-status-status').textContent='✅ '+statusFile.name; applyI18nAramex(); } e.target.value=''; });
 
 function getAramexCfg(){
   return {
@@ -2024,9 +2024,9 @@ function processMQ({rawReport, raw2nd, rates, INS_PCT, COD_PCT, THRESH}){
   });
 }
 
-document.getElementById('mq-file-inp').addEventListener('change', e=>{ if(e.target.files[0]){ mqReportFile=e.target.files[0]; document.getElementById('mq-file-status').textContent='âœ… '+mqReportFile.name; applyI18nMashreq(); } e.target.value=''; });
-document.getElementById('mq-rates-inp').addEventListener('change', e=>{ if(e.target.files[0]){ mqRatesFile=e.target.files[0]; document.getElementById('mq-rates-status').textContent='âœ… '+mqRatesFile.name; applyI18nMashreq(); } e.target.value=''; });
-document.getElementById('mq-second-inp').addEventListener('change', e=>{ if(e.target.files[0]){ mqSecondFile=e.target.files[0]; document.getElementById('mq-second-status').textContent='âœ… '+mqSecondFile.name; applyI18nMashreq(); } e.target.value=''; });
+document.getElementById('mq-file-inp').addEventListener('change', e=>{ if(e.target.files[0]){ mqReportFile=e.target.files[0]; document.getElementById('mq-file-status').textContent='✅ '+mqReportFile.name; applyI18nMashreq(); } e.target.value=''; });
+document.getElementById('mq-rates-inp').addEventListener('change', e=>{ if(e.target.files[0]){ mqRatesFile=e.target.files[0]; document.getElementById('mq-rates-status').textContent='✅ '+mqRatesFile.name; applyI18nMashreq(); } e.target.value=''; });
+document.getElementById('mq-second-inp').addEventListener('change', e=>{ if(e.target.files[0]){ mqSecondFile=e.target.files[0]; document.getElementById('mq-second-status').textContent='✅ '+mqSecondFile.name; applyI18nMashreq(); } e.target.value=''; });
 
 async function processMashreq(){
   if(!mqReportFile){ alert(T('mq_alertNoFile')); return; }
@@ -2313,8 +2313,8 @@ function processRaya({rawRows, contract, THRESH}){
   });
 }
 
-document.getElementById('ra-file-inp').addEventListener('change', e=>{ if(e.target.files[0]){ rayaReportFile=e.target.files[0]; document.getElementById('ra-file-status').textContent='âœ… '+rayaReportFile.name; applyI18nRaya(); } e.target.value=''; });
-document.getElementById('ra-contract-inp').addEventListener('change', e=>{ if(e.target.files[0]){ rayaContractFile=e.target.files[0]; document.getElementById('ra-contract-status').textContent='âœ… '+rayaContractFile.name; applyI18nRaya(); } e.target.value=''; });
+document.getElementById('ra-file-inp').addEventListener('change', e=>{ if(e.target.files[0]){ rayaReportFile=e.target.files[0]; document.getElementById('ra-file-status').textContent='✅ '+rayaReportFile.name; applyI18nRaya(); } e.target.value=''; });
+document.getElementById('ra-contract-inp').addEventListener('change', e=>{ if(e.target.files[0]){ rayaContractFile=e.target.files[0]; document.getElementById('ra-contract-status').textContent='✅ '+rayaContractFile.name; applyI18nRaya(); } e.target.value=''; });
 
 async function processRayaPage(){
   if(!rayaReportFile){ alert(T('ra_alertNoFile')); return; }
@@ -2729,7 +2729,7 @@ function bdSave(){
 function bdShowToast(msg){ const t=document.getElementById('bd-toast'); t.textContent=msg; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),3200); }
 
 document.getElementById('bd-file-inp').addEventListener('change',e=>{
-  if(e.target.files[0]){ bdFile=e.target.files[0]; const s=document.getElementById('bd-file-status'); s.textContent='âœ… '+bdFile.name; s.style.display='block'; document.getElementById('bd-load-btn').disabled=false; }
+  if(e.target.files[0]){ bdFile=e.target.files[0]; const s=document.getElementById('bd-file-status'); s.textContent='✅ '+bdFile.name; s.style.display='block'; document.getElementById('bd-load-btn').disabled=false; }
   e.target.value='';
 });
 
@@ -2767,13 +2767,13 @@ async function bdHandleAddMonth(){
     const {store,added}=bdAddMonth({store:JSON.parse(JSON.stringify(base)),monthName,sources});
     bdStore=store;
     bdSave();
-    bdShowToast('âœ… '+monthName+' ('+added.join(', ')+')');
+    bdShowToast('✅ '+monthName+' ('+added.join(', ')+')');
     renderBreakdown();
   }catch(err){ alert(T('errorPrefix')+err.message); }
   finally{ hideLoading(); }
 }
 
-function bdHandleSave(){ if(!bdStore) return; bdSave(); bdShowToast('âœ… Breakdown saved!'); }
+function bdHandleSave(){ if(!bdStore) return; bdSave(); bdShowToast('✅ Breakdown saved!'); }
 
 function bdHandleClear(){
   if(!confirm(T('bd_confirmClear'))) return;
@@ -2787,7 +2787,7 @@ function renderBreakdown(){
   applyI18nBreakdown();
   const content=document.getElementById('bd-content');
   if(!bdStore||!bdStore.months.length){
-    content.innerHTML=`<div class="coming-soon" style="display:flex"><div class="empty-icon">ðŸ“Š</div><h3>${T('bd_emptyTitle')}</h3><p style="color:var(--muted);font-size:.85rem;margin-top:6px">${T('bd_emptyDesc')}</p></div>`;
+    content.innerHTML=`<div class="coming-soon" style="display:flex"><div class="empty-icon">📊</div><h3>${T('bd_emptyTitle')}</h3><p style="color:var(--muted);font-size:.85rem;margin-top:6px">${T('bd_emptyDesc')}</p></div>`;
     return;
   }
   const allCos=[BD_GRAND,...BD_COMPANIES];
@@ -2887,7 +2887,7 @@ function applyI18nBreakdown(){
   el('bd-note').innerHTML=t.note;
   el('bd-file-title').textContent=t.bd_fileTitle;
   el('bd-file-desc').textContent=t.bd_fileDesc;
-  el('bd-file-btn').textContent='ðŸ“‚ '+(bdFile?t.changeFile:t.upload);
+  el('bd-file-btn').textContent='📂 '+(bdFile?t.changeFile:t.upload);
   el('bd-load-btn').textContent=t.bd_loadBtn;
   el('bd-add-title').textContent=t.bd_addTitle;
   el('bd-add-desc').textContent=t.bd_addDesc;
@@ -3074,7 +3074,7 @@ function renderAnalytics(){
 
     const THRESH=0.5;
     const hasContract=rows.some(r=>r.contractPrice>0);
-    if(!hasContract) return `<div style="margin-top:14px;padding:10px 14px;background:#fef9c3;border-radius:8px;font-size:.8rem;color:#854d0e">âš ï¸ No contract file loaded â€” upload a contract file to see discrepancy analysis.</div>`;
+    if(!hasContract) return `<div style="margin-top:14px;padding:10px 14px;background:#fef9c3;border-radius:8px;font-size:.8rem;color:#854d0e">⚠️ No contract file loaded â€” upload a contract file to see discrepancy analysis.</div>`;
 
     const EGP=v=>v.toLocaleString('en',{maximumFractionDigits:0})+' EGP';
     const dBadge=diff=>{
@@ -3129,14 +3129,14 @@ function renderAnalytics(){
 
     const filterBtns=['all','delivered','returned'].map(v=>{
       const active=window[stKey]===v;
-      return `<button onclick="window._setRayaCDSt('${v}')" style="padding:5px 14px;border-radius:20px;border:1.5px solid ${active?'#fff':'rgba(255,255,255,.4)'};background:${active?'#fff':'transparent'};color:${active?'#0369a1':'#fff'};font-size:.78rem;font-weight:600;cursor:pointer">${v==='all'?'All':v==='delivered'?'âœ… Delivered':'ðŸ”„ Returned'}</button>`;
+      return `<button onclick="window._setRayaCDSt('${v}')" style="padding:5px 14px;border-radius:20px;border:1.5px solid ${active?'#fff':'rgba(255,255,255,.4)'};background:${active?'#fff':'transparent'};color:${active?'#0369a1':'#fff'};font-size:.78rem;font-weight:600;cursor:pointer">${v==='all'?'All':v==='delivered'?'✅ Delivered':'🔄 Returned'}</button>`;
     }).join('');
 
     const M1cols=M1?`<th style="${thS}">${M1} Billed</th><th style="${thS}">${M1} Contract</th><th style="${thS}">${M1} Diff</th>`:'';
 
     return `<div style="margin-top:18px;border-radius:12px;overflow:hidden;box-shadow:0 2px 12px rgba(3,105,161,.12)">
       <div style="background:linear-gradient(135deg,#0369a1,#0284c7);padding:10px 16px;display:flex;align-items:center;gap:12px;flex-wrap:wrap">
-        <span style="color:#fff;font-weight:700;font-size:.88rem">ðŸ“‹ Billing vs Contract â€” Discrepancy by Zone & Size</span>
+        <span style="color:#fff;font-weight:700;font-size:.88rem">📋 Billing vs Contract â€” Discrepancy by Zone & Size</span>
         <div style="display:flex;gap:6px;margin-left:auto">${filterBtns}</div>
       </div>
       <div style="overflow-x:auto"><table style="width:100%;border-collapse:collapse;min-width:${M1?'820':'480'}px">
@@ -3242,7 +3242,7 @@ function renderAnalytics(){
 
     const filterBtns=['all','delivered','returned'].map(v=>{
       const active=st===v;
-      return `<button onclick="window._setRayaCtSt('${v}')" style="padding:5px 14px;border-radius:20px;border:1.5px solid ${active?BLUE:'#cbd5e1'};background:${active?BLUE:'#fff'};color:${active?'#fff':'#374151'};font-size:.78rem;font-weight:600;cursor:pointer">${v==='all'?'All':v==='delivered'?'âœ… Delivered':'ðŸ”„ Returned'}</button>`;
+      return `<button onclick="window._setRayaCtSt('${v}')" style="padding:5px 14px;border-radius:20px;border:1.5px solid ${active?BLUE:'#cbd5e1'};background:${active?BLUE:'#fff'};color:${active?'#fff':'#374151'};font-size:.78rem;font-weight:600;cursor:pointer">${v==='all'?'All':v==='delivered'?'✅ Delivered':'🔄 Returned'}</button>`;
     }).join('');
 
     const M1cols=M1?`<th style="${thS}">${M1} Billed</th><th style="${thS}">${M1} Contract</th><th style="${thS}">${M1} Diff</th>`:'';
@@ -3256,7 +3256,7 @@ function renderAnalytics(){
 
     return `<div id="raya-ct-wrap" style="margin-top:18px;border-radius:12px;overflow:hidden;box-shadow:0 2px 12px rgba(3,105,161,.12)">
       <div style="background:linear-gradient(135deg,#0369a1,#0284c7);padding:10px 16px;display:flex;align-items:center;gap:12px;flex-wrap:wrap">
-        <span style="color:#fff;font-weight:700;font-size:.88rem">ðŸ“‹ Contract vs Breakdown â€” Total Value Comparison</span>
+        <span style="color:#fff;font-weight:700;font-size:.88rem">📋 Contract vs Breakdown â€” Total Value Comparison</span>
         <div style="display:flex;gap:6px;margin-left:auto">${filterBtns}</div>
       </div>
       <div style="overflow-x:auto">
@@ -3389,11 +3389,11 @@ function renderAnalytics(){
     const tdL='padding:12px 14px;font-size:.8rem;vertical-align:middle';
     const fmV=v=>v!==null?v.toFixed(2)+' EGP':`<span style="color:#9ca3af">â€”</span>`;
     const factors=[
-      {icon:'ðŸ“¦',num:'â‘ ',label:'Size Mix',color:'#dc2626',val:sizeEffect,m1:null,m2:null,
+      {icon:'📦',num:'â‘ ',label:'Size Mix',color:'#dc2626',val:sizeEffect,m1:null,m2:null,
        desc:Math.abs(sizeEffect)<0.05?'No size mix change':sizeEffect>0?`Size mix shifted to more expensive sizes`:`Size mix shifted to cheaper sizes`},
       ...(hasZone&&getZone?[{icon:'ðŸ—ºï¸',num:'â‘¡',label:'Zone Mix',color:'#2563eb',val:zoneEffect,m1:null,m2:null,
        desc:Math.abs(zoneEffect)<0.05?'No zone mix change':zoneEffect>0?`More shipments to distant zones â†’ higher cost`:`More shipments to closer zones â†’ lower cost`}]:[]),
-      {icon:'âš¡',num:hasZone&&getZone?'â‘¢':'â‘¡',label:'Contract Rate',color:'#d97706',
+      {icon:'⚡',num:hasZone&&getZone?'â‘¢':'â‘¡',label:'Contract Rate',color:'#d97706',
        val: contractDisc ? (avgArr(r2.map(contractDisc.getVal)) - avgArr(r1.map(contractDisc.getVal))) : (extraRows.length?pureRate:residual),
        m1: contractDisc ? avgArr(r1.map(contractDisc.getVal)) : null,
        m2: contractDisc ? avgArr(r2.map(contractDisc.getVal)) : null,
@@ -3402,7 +3402,7 @@ function renderAnalytics(){
          : (extraRows.length?`${Math.abs(pureRate).toFixed(2)} EGP â€” pure contract rate ${pureRate<0?'reduction':'increase'}`:`${Math.abs(residual).toFixed(2)} EGP unexplained`)},
       ...extraRows.map((f,i)=>({icon:f.icon,num:String.fromCharCode(9312+(hasZone&&getZone?3:2)+i),label:f.label,color:f.color,val:f.val,m1:f.avg1,m2:f.avg2,
        desc:`Avg ${f.label}: ${f.avg1.toFixed(2)} EGP â†’ ${f.avg2.toFixed(2)} EGP`})),
-      {icon:'ðŸ“Š',num:String.fromCharCode(9312+(hasZone&&getZone?3:2)+extraRows.length),label:'Volume',color:'#9ca3af',val:null,m1:r1.length,m2:r2.length,isCount:true,
+      {icon:'📊',num:String.fromCharCode(9312+(hasZone&&getZone?3:2)+extraRows.length),label:'Volume',color:'#9ca3af',val:null,m1:r1.length,m2:r2.length,isCount:true,
        desc:`${volChange>=0?'+':''}${fm(Math.abs(volChange))} shipments (${volChange>=0?'+':''}${volPct}%) â€” impacts total spend, not cost-per-shipment`},
     ];
     // Build contract discrepancy drill-down (rendered as separate table after ACPS)
@@ -3438,7 +3438,7 @@ function renderAnalytics(){
         </tr>`;
         cdDrillTable=`<div style="margin-top:10px;border-radius:10px;overflow:hidden;border:1px solid #fed7aa">
           <div style="background:#b45309;padding:8px 14px;display:flex;align-items:center;gap:8px">
-            <span style="color:#fff;font-weight:700;font-size:.8rem">âš¡ Contract Rate Discrepancy â€” by Zone & Size</span>
+            <span style="color:#fff;font-weight:700;font-size:.8rem">⚡ Contract Rate Discrepancy â€” by Zone & Size</span>
             <span style="color:#fde68a;font-size:.72rem">avg (Billed âˆ’ Contract) per shipment</span>
           </div>
           <div style="overflow-x:auto"><table style="width:100%;border-collapse:collapse">
@@ -3523,13 +3523,13 @@ function renderAnalytics(){
           const ar=up?'â–²':dn?'â–¼':'â†’';
           return `<span style="background:${bc};color:${tc};border-radius:6px;padding:3px 9px;font-size:.75rem;font-weight:700">${ar} ${Math.abs(v).toFixed(2)}</span>`; };
         const rows=[
-          {label:'ðŸ“‹ Contract Rate (per contract file)', v1:avgContract1, v2:avgContract2, delta:contractDelta, color:'#0369a1', bg:'#eff6ff'},
-          {label:'ðŸ’¸ Billed by Raya (actual DL charge)', v1:avgBilled1, v2:avgBilled2, delta:billedDelta, color:'#7c3aed', bg:'#faf5ff'},
-          {label:'âš ï¸ Gap (Billed âˆ’ Contract)', v1:gap1, v2:gap2, delta:gapDelta, color:Math.abs(gap2)>0.5?'#dc2626':'#16a34a', bg:Math.abs(gap2)>0.5?'#fff5f5':'#f0fdf4', bold:true},
+          {label:'📋 Contract Rate (per contract file)', v1:avgContract1, v2:avgContract2, delta:contractDelta, color:'#0369a1', bg:'#eff6ff'},
+          {label:'💸 Billed by Raya (actual DL charge)', v1:avgBilled1, v2:avgBilled2, delta:billedDelta, color:'#7c3aed', bg:'#faf5ff'},
+          {label:'⚠️ Gap (Billed âˆ’ Contract)', v1:gap1, v2:gap2, delta:gapDelta, color:Math.abs(gap2)>0.5?'#dc2626':'#16a34a', bg:Math.abs(gap2)>0.5?'#fff5f5':'#f0fdf4', bold:true},
         ];
         return `<div style="margin-top:14px;border-radius:10px;overflow:hidden;border:1px solid #e2e8f0">
           <div style="background:#1e293b;padding:8px 14px;display:flex;align-items:center;gap:8px">
-            <span style="color:#fff;font-weight:700;font-size:.8rem">ðŸ“Š Contract Rate vs Actual Billing Comparison</span>
+            <span style="color:#fff;font-weight:700;font-size:.8rem">📊 Contract Rate vs Actual Billing Comparison</span>
             <span style="color:#94a3b8;font-size:.72rem">avg per shipment</span>
           </div>
           <table style="width:100%;border-collapse:collapse">
@@ -3568,7 +3568,7 @@ function renderAnalytics(){
   // Aramex
   if(AR) html += section(
     'linear-gradient(135deg,var(--purple),var(--purple2))',
-    'âœˆï¸ Aramex',
+    '✈️ Aramex',
     `<div class="an-kpi-row">
       ${kpiCard(t.totalShipments, fm(AR.total), '', 'var(--purple)')}
       ${kpiCard(t.invoice, fm(AR.totalBill), t.egp, 'var(--red)')}
@@ -3587,7 +3587,7 @@ function renderAnalytics(){
   // Bosta
   if(BO) html += section(
     'linear-gradient(135deg,#00b844,#009a35)',
-    'ðŸ“¦ Bosta',
+    '📦 Bosta',
     `<div class="an-kpi-row">
       ${kpiCard(t.totalShipments, fm(BO.total), '', 'var(--green2)')}
       ${kpiCard(t.invoice, fm(BO.totalBill), t.egp, 'var(--red)')}
@@ -3606,7 +3606,7 @@ function renderAnalytics(){
   // Raya
   if(RA) html += section(
     'linear-gradient(135deg,#0369a1,#0284c7)',
-    'ðŸšš Raya',
+    '🚚 Raya',
     `<div class="an-kpi-row">
       ${kpiCard(t.totalShipments, fm(RA.total), '', '#0369a1')}
       ${kpiCard(t.invoice, fm(RA.totalBill), t.egp, 'var(--red)')}
@@ -3619,8 +3619,8 @@ function renderAnalytics(){
     </div>
     ${zoneSizeTable(rayaData.filter(r=>r.tier&&r.category), r=>String(r.tier||'').trim(), r=>normSize(r.category), ['Size S','Size M','Size L'], r=>r.totalQty||1)}
     ${acpsBridge(rayaData, r=>r.uploadMonth||r.month, r=>String(r.zone||r.tier||'').trim(), r=>normSize(r.category), r=>r.totalBilled||0, true, [
-      {icon:'ðŸš—',label:'Pickup Cost',color:'#0891b2',getVal:r=>r.pickupCost||0},
-      {icon:'ðŸ’³',label:'COD Fees',color:'#b45309',getVal:r=>r.codFees||0},
+      {icon:'🚗',label:'Pickup Cost',color:'#0891b2',getVal:r=>r.pickupCost||0},
+      {icon:'💳',label:'COD Fees',color:'#b45309',getVal:r=>r.codFees||0},
       {icon:'ðŸ›¡ï¸',label:'Insurance Fees',color:'#7c3aed',getVal:r=>r.insFees||0},
       {icon:'ðŸ”',label:'Extra Attempts',color:'#dc2626',getVal:r=>r.extraCost||0},
     ], null, {getVal:r=>(r.billedPrice||0)-(r.contractPrice||0)})}
@@ -3630,7 +3630,7 @@ function renderAnalytics(){
   // Mashreq
   if(MQ) html += section(
     'linear-gradient(135deg,#b45309,#d97706)',
-    'ðŸ”„ Aramex Mashreq',
+    '🔄 Aramex Mashreq',
     `<div class="an-kpi-row">
       ${kpiCard(t.totalShipments, fm(MQ.total), '', '#b45309')}
       ${kpiCard(t.invoice, fm(MQ.totalBill), t.egp, 'var(--red)')}
@@ -3643,8 +3643,8 @@ function renderAnalytics(){
     </div>
     ${zoneSizeTable(mqData.filter(r=>r.destZone&&r.size), r=>String(r.destZone||'').trim(), r=>normSize(r.size), ['Size S','Size M','Size L'])}
     ${acpsBridge(mqData, r=>r.uploadMonth||r.month, r=>String(r.destZone||'').trim(), r=>normSize(r.size), r=>r.totalBilled||0, mqData.some(r=>r.destZone), [
-      {icon:'ðŸš—',label:'Pickup Cost',color:'#0891b2',getVal:r=>r.actualPickup||0},
-      {icon:'ðŸ’³',label:'COD Fees',color:'#b45309',getVal:r=>r.actualCODFees||0},
+      {icon:'🚗',label:'Pickup Cost',color:'#0891b2',getVal:r=>r.actualPickup||0},
+      {icon:'💳',label:'COD Fees',color:'#b45309',getVal:r=>r.actualCODFees||0},
       {icon:'ðŸ›¡ï¸',label:'Insurance Fees',color:'#7c3aed',getVal:r=>r.actualIns||0},
     ], null, {getVal:r=>(r.actualCharge||0)-(r.calcLM||0)})}
     <div id="mq-value-dash" style="margin-top:18px"></div>`
@@ -3660,7 +3660,7 @@ function renderAnalytics(){
     sizes:['Size S','Size M','Size L','Size XL'],
     getZone:r=>String(r.destZone||'').trim()||'Other',
     getVal:r=>(r.baseCharge||0)+(r.otherCharge||0),
-    color:'#7c3aed', zoneColor:'#5b21b6', title:'âœˆï¸ Aramex Total Shipment Value'
+    color:'#7c3aed', zoneColor:'#5b21b6', title:'✈️ Aramex Total Shipment Value'
   });
   renderValDash({
     elId:'bo-value-dash', key:'bo', data:()=>bostaData,
@@ -3671,7 +3671,7 @@ function renderAnalytics(){
     sizes:null,
     getZone:r=>String(r.zone||'').trim()||'Other',
     getVal:r=>r.priceBAV||0,
-    color:'#15803d', zoneColor:'#166534', title:'ðŸ“¦ Bosta Total Shipment Value'
+    color:'#15803d', zoneColor:'#166534', title:'📦 Bosta Total Shipment Value'
   });
   renderValDash({
     elId:'raya-value-dash', key:'raya', data:()=>rayaData,
@@ -3682,7 +3682,7 @@ function renderAnalytics(){
     sizes:['Size S','Size M','Size L'],
     getZone:r=>String(r.zone||r.tier||'').trim()||'Other',
     getVal:r=>r.totalBilled||0,
-    color:'#0369a1', zoneColor:'#7c3aed', title:'ðŸšš Raya Total Shipment Value'
+    color:'#0369a1', zoneColor:'#7c3aed', title:'🚚 Raya Total Shipment Value'
   });
   renderValDash({
     elId:'mq-value-dash', key:'mq', data:()=>mqData,
@@ -3693,7 +3693,7 @@ function renderAnalytics(){
     sizes:['Size S','Size M','Size L'],
     getZone:r=>String(r.destZone||'').trim()||'Other',
     getVal:r=>r.totalBilled||0,
-    color:'#b45309', zoneColor:'#92400e', title:'ðŸ”„ Mashreq Total Shipment Value'
+    color:'#b45309', zoneColor:'#92400e', title:'🔄 Mashreq Total Shipment Value'
   });
 }
 
@@ -3869,10 +3869,10 @@ function importBackup(input){
       if(backup.mashreq)  { localStorage.setItem('kenzz3pl_mq_v1', backup.mashreq);      restored.push('Mashreq'); }
       if(backup.raya)     { localStorage.setItem('kenzz3pl_raya_v1', backup.raya);       restored.push('Raya'); }
       if(backup.breakdown){ localStorage.setItem(BD_STORAGE, backup.breakdown);           restored.push('Breakdown'); }
-      alert('âœ… Restored: ' + restored.join(', ') + '\n\nPage will reload to apply data.');
+      alert('✅ Restored: ' + restored.join(', ') + '\n\nPage will reload to apply data.');
       location.reload();
     } catch(err) {
-      alert('âŒ Failed to restore: ' + err.message);
+      alert('❌ Failed to restore: ' + err.message);
     }
   };
   fr.readAsText(file);
