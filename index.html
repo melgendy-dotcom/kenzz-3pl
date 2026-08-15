@@ -3924,7 +3924,7 @@ async function cloudSaveChunked(key, rows){
   );
   // Delete any old extra chunks beyond current count
   const deletes = [];
-  for(let ci=chunks.length; ci<chunks.length+5; ci++)
+  for(let ci=chunks.length; ci<chunks.length+40; ci++)
     deletes.push(db.collection('kenzz3pl').doc(`${key}_${ci}`).delete().catch(()=>{}));
   await Promise.all([...saves, ...deletes]);
   // Also delete the old single-doc format if it exists
@@ -3932,7 +3932,7 @@ async function cloudSaveChunked(key, rows){
 }
 async function cloudLoadChunked(db, key){
   const snaps = await Promise.all(
-    Array.from({length:10},(_,ci)=>db.collection('kenzz3pl').doc(`${key}_${ci}`).get())
+    Array.from({length:50},(_,ci)=>db.collection('kenzz3pl').doc(`${key}_${ci}`).get())
   );
   let rows = [];
   for(const snap of snaps){
