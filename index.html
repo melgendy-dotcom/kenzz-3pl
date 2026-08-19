@@ -2866,13 +2866,13 @@ function renderBreakdown(){
     </div>
     <div class="tbl-card">
       <div class="card-hdr"><span><span class="dot"></span>Data Breakdown — ${bdSelCo}</span></div>
-      <div style="display:flex;overflow:hidden;max-height:65vh;border-radius:0 0 var(--r) var(--r)">
+      <div style="display:flex;overflow:hidden;max-height:65vh;border-radius:0 0 var(--r) var(--r);width:100%">
         <div style="flex-shrink:0;overflow:hidden;box-shadow:3px 0 6px rgba(0,0,0,.15);z-index:2">
           <table class="bd-table" style="border-collapse:collapse;table-layout:fixed">
             <thead>${leftThead}</thead><tbody>${leftTbody}</tbody>
           </table>
         </div>
-        <div id="bd-tbl-scroll" style="overflow-x:auto;overflow-y:auto;flex:1">
+        <div id="bd-tbl-scroll" style="overflow-x:auto;overflow-y:auto;flex:1;min-width:0">
           <table class="bd-table" style="border-collapse:collapse">
             <thead>${rightThead}</thead><tbody>${rightTbody}</tbody>
           </table>
