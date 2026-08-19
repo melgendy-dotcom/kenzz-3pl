@@ -745,7 +745,7 @@ const STORAGE_KEY = 'kenzz3pl_bosta_v1';
 
 const I18N = {
   ar: {
-    hd:'Ù…Ø­Ù„Ù„ Ù„ÙˆØ¬Ø³ØªÙŠØ§Øª Ø§Ù„Ø´Ø­Ù†', hds:'ØªÙØ§ØµÙŠÙ„ ØªÙƒØ§Ù„ÙŠÙ Ø§Ù„Ø´Ø­Ù† Â· Ø§Ù„Ø£Ø±Ù‚Ø§Ù… Ù„Ø§ ØªØ´Ù…Ù„ Ø¶Ø±ÙŠØ¨Ø© Ø§Ù„Ù‚ÙŠÙ…Ø© Ø§Ù„Ù…Ø¶Ø§ÙØ©',
+    hd:'Ù…Ø­Ù„Ù„ Ù„ÙˆØ¬Ø³ØªÙŠØ§Øª Ø§Ù„Ø´Ø­Ù†', hds:'ØªÙØ§ØµÙŠÙ„ ØªÙƒØ§Ù„ÙŠÙ Ø§Ù„Ø´Ø­Ù† · Ø§Ù„Ø£Ø±Ù‚Ø§Ù… Ù„Ø§ ØªØ´Ù…Ù„ Ø¶Ø±ÙŠØ¨Ø© Ø§Ù„Ù‚ÙŠÙ…Ø© Ø§Ù„Ù…Ø¶Ø§ÙØ©',
     lang:'🌐 English', logout:'Ø®Ø±ÙˆØ¬',
     tBosta:'Ù…Ø±Ø§Ø¬Ø¹Ø© Ø¨ÙˆØ³Ø·Ø©', tAramex:'Ù…Ø±Ø§Ø¬Ø¹Ø© Ø£Ø±Ø§Ù…ÙƒØ³',
     note:'ℹ️ <strong>Ù…Ù„Ø§Ø­Ø¸Ø©:</strong> Ø¬Ù…ÙŠØ¹ Ø§Ù„Ø£Ø±Ù‚Ø§Ù… Ù„Ø§ ØªØ´Ù…Ù„ Ø¶Ø±ÙŠØ¨Ø© Ø§Ù„Ù‚ÙŠÙ…Ø© Ø§Ù„Ù…Ø¶Ø§ÙØ©.',
@@ -845,7 +845,7 @@ const I18N = {
     an_chgCan:'Ø¥Ø¬Ù…Ø§Ù„ÙŠ ØªÙƒÙ„ÙØ© Ø§Ù„Ù…Ù„ØºØ§Ø©', an_retPct:'% Ø§Ù„Ø¥Ø¹Ø§Ø¯Ø© Ù…Ù† Ø§Ù„ÙØ§ØªÙˆØ±Ø©',
   },
   en: {
-    hd:'3PL Logistics Analyzer', hds:'Shipping Cost Breakdown Â· All figures exclude VAT',
+    hd:'3PL Logistics Analyzer', hds:'Shipping Cost Breakdown · All figures exclude VAT',
     lang:'🌐 Ø§Ù„Ø¹Ø±Ø¨ÙŠØ©', logout:'Logout',
     tBosta:'Bosta Audit', tAramex:'Aramex Audit',
     note:'ℹ️ <strong>Note:</strong> All figures exclude VAT.',
@@ -959,7 +959,7 @@ function _paginate(filtered, page, totalAll, countElId, tbodyFn, tabPrefix){
   if(page >= pages) page = pages-1;
   const start = page*PAGE_SIZE, end = Math.min(start+PAGE_SIZE, total);
   document.getElementById(countElId).innerHTML =
-    `${start+1}â€“${end} / ${total} &nbsp;` +
+    `${start+1}–${end} / ${total} &nbsp;` +
     (pages>1 ? `<span style="display:inline-flex;gap:4px;vertical-align:middle">` +
       `<button onclick="window['${tabPrefix}PageGo'](${page-1})" ${page===0?'disabled':''} style="border:1px solid var(--border);border-radius:4px;padding:1px 8px;cursor:pointer;background:var(--bg)">â€¹</button>` +
       `<span style="font-size:.75rem;padding:0 4px">${page+1}/${pages}</span>` +
@@ -992,9 +992,9 @@ let reportFile = null, contractFile = null;
 /* ---------- helpers ---------- */
 function rv(v){ if(v===''||v==null) return 0; const n=parseFloat(v); return isNaN(n)?0:n; }
 function fm(v){
-  if(v===''||v==null) return 'â€“';
+  if(v===''||v==null) return '–';
   const n=parseFloat(v);
-  if(isNaN(n)) return 'â€“';
+  if(isNaN(n)) return '–';
   if(n===0) return '0';
   return Math.abs(n)%1===0 ? n.toLocaleString('en-US') : n.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});
 }
@@ -2795,7 +2795,7 @@ function renderBreakdown(){
   const _moKey=s=>{ const p=s.split("'"); const yr=p.length>1?(+p[1]||0):0; const mi=_moOrder.indexOf(p[0]); return yr*12+(mi>=0?mi:0); };
   const months=[...bdStore.months].sort((a,b)=>_moKey(a)-_moKey(b));
   const val=(co,rt,key,mi)=>{ const origMi=bdStore.months.indexOf(months[mi]); const v=bdStore?.companies?.[co]?.[rt]?.[key]?.[origMi]; return (v===null||v===undefined)?null:v; };
-  const fmVal=v=>v===null?'<span style="color:var(--muted);font-size:.72rem">â€“</span>':fm(v);
+  const fmVal=v=>v===null?'<span style="color:var(--muted);font-size:.72rem">–</span>':fm(v);
 
   // carrier filter chips
   const hasData=co=>BD_ROW_TYPES.some(rt=>bdStore.companies[co]?.[rt]?.value?.some(v=>v!==null&&v!==undefined));
@@ -2978,8 +2978,8 @@ function renderAnalytics(){
       return {total,del,ret,can,delCharge,retCharge,canCharge};
     }
     const cols = months.map(m=>({ label:m, d:colData(m==='All'?rows:rows.filter(r=>!getMonth||getMonth(r)===m)) }));
-    const pct=(n,d)=>d>0?Math.round((n/d)*100)+'%':'â€“';
-    const egp=v=>v?fm(Math.round(v)):'â€“';
+    const pct=(n,d)=>d>0?Math.round((n/d)*100)+'%':'–';
+    const egp=v=>v?fm(Math.round(v)):'–';
     const metrics = [
       {key:'total', label:t.totalShipments, fmt:d=>fm(d.total), bold:true},
       {key:'del', label:t.delivered, fmt:d=>fm(d.del)},
@@ -3036,7 +3036,7 @@ function renderAnalytics(){
     const sizes=['Small','Medium','Large'];
     const zones=[...new Set(rows.map(r=>String(r.tier||r.zone||'').trim()).filter(Boolean))].sort((a,b)=>a.localeCompare(b,undefined,{numeric:true}));
 
-    // Build aggregates: zone|size|month â†’ {billedSum, contractSum, count, discrepancyCount}
+    // Build aggregates: zone|size|month → {billedSum, contractSum, count, discrepancyCount}
     const agg={};
     rows.filter(matchSt).forEach(r=>{
       const mo=r.uploadMonth||r.month||''; if(!mo) return;
@@ -3081,7 +3081,7 @@ function renderAnalytics(){
         zb.b1+=d1.billed; zb.c1+=d1.contract; zb.b2+=d2.billed; zb.c2+=d2.contract;
         zb.cnt1+=d1.count; zb.cnt2+=d2.count;
         zoneBody+=`<tr style="background:#fff">
-          ${tdLc(sz,`${d1.count}â†’${d2.count} shipments`)}
+          ${tdLc(sz,`${d1.count}→${d2.count} shipments`)}
           ${M1?`${tdR(d1.count?EGP(d1.billed):'—',false,'')}${tdR(d1.count?EGP(d1.contract):'—',false,'')}${`<td style="padding:7px 10px;text-align:right;border:1px solid #e2e8f0">${d1.count?dBadge(diff1):'—'}</td>`}`:''}
           ${tdR(d2.count?EGP(d2.billed):'—',false,'')}
           ${tdR(d2.count?EGP(d2.contract):'—',false,'')}
@@ -3092,7 +3092,7 @@ function renderAnalytics(){
       gt.b1+=zb.b1; gt.c1+=zb.c1; gt.b2+=zb.b2; gt.c2+=zb.c2; gt.cnt1+=zb.cnt1; gt.cnt2+=zb.cnt2;
       const zd1=zb.b1-zb.c1, zd2=zb.b2-zb.c2;
       bodyHtml+=`<tr style="background:#eff6ff">
-        <td style="padding:8px 10px;font-size:.82rem;font-weight:700;color:#0369a1;border:1px solid #bfdbfe">Zone ${z} <span style="font-weight:400;color:#6b7280;font-size:.72rem">(${zb.cnt1}â†’${zb.cnt2} ships)</span></td>
+        <td style="padding:8px 10px;font-size:.82rem;font-weight:700;color:#0369a1;border:1px solid #bfdbfe">Zone ${z} <span style="font-weight:400;color:#6b7280;font-size:.72rem">(${zb.cnt1}→${zb.cnt2} ships)</span></td>
         ${M1?`${tdR(EGP(zb.b1),true,'')}${tdR(EGP(zb.c1),true,'')}<td style="padding:7px 10px;text-align:right;border:1px solid #bfdbfe">${dBadge(zd1)}</td>`:''}
         ${tdR(EGP(zb.b2),true,'')}${tdR(EGP(zb.c2),true,'')}
         <td style="padding:7px 10px;text-align:right;border:1px solid #bfdbfe">${dBadge(zd2)}</td>
@@ -3199,7 +3199,7 @@ function renderAnalytics(){
         z1b+=d1.billed; z1c+=d1.contract; z2b+=d2.billed; z2c+=d2.contract;
         const diff1=d1.billed-d1.contract, diff2=d2.billed-d2.contract;
         zRows+=`<tr style="background:#fff">
-          ${tdL(sz,`${(d1.count||0)} â†’ ${d2.count} ships`)}
+          ${tdL(sz,`${(d1.count||0)} → ${d2.count} ships`)}
           ${M1?td(d1.count?d1.billed.toLocaleString('en',{maximumFractionDigits:0})+' EGP':'—',false,false):''}
           ${M1?td(d1.count?d1.contract.toLocaleString('en',{maximumFractionDigits:0})+' EGP':'—',false,false):''}
           ${M1?`<td style="padding:7px 10px;text-align:right;border:1px solid #e2e8f0">${d1.count?dBadge(diff1):'—'}</td>`:''}
@@ -3275,8 +3275,8 @@ function renderAnalytics(){
           const rowTotal=sizeLabels.reduce((sum,s)=>sum+(matrix[z][s]||0),0);
           return `<tr style="background:${zi%2===0?'rgba(255,255,255,.03)':'transparent'}">
             <td style="${tdS};text-align:left;font-weight:600;color:#c084fc">${z}</td>
-            ${sizeLabels.map(s=>`<td style="${tdS}">${matrix[z][s]||'â€“'}</td>`).join('')}
-            ${sizeLabels.map(s=>`<td style="${tdS};color:#86efac;font-weight:600">${rowTotal>0?Math.round((matrix[z][s]/rowTotal)*100)+'%':'â€“'}</td>`).join('')}
+            ${sizeLabels.map(s=>`<td style="${tdS}">${matrix[z][s]||'–'}</td>`).join('')}
+            ${sizeLabels.map(s=>`<td style="${tdS};color:#86efac;font-weight:600">${rowTotal>0?Math.round((matrix[z][s]/rowTotal)*100)+'%':'–'}</td>`).join('')}
           </tr>`;
         }).join('')}</tbody>
       </table></div>
@@ -3330,7 +3330,7 @@ function renderAnalytics(){
     const thB='background:#0f172a;color:#94a3b8;font-size:.68rem;padding:7px 12px;font-weight:700;letter-spacing:.04em;white-space:nowrap';
     const tdB='padding:7px 12px;font-size:.77rem;border-bottom:1px solid rgba(255,255,255,.06);vertical-align:middle';
     const clr=v=>v>0.05?'#4ade80':v<-0.05?'#f87171':'var(--muted)';
-    const arr=v=>v>0.05?'â†‘':v<-0.05?'â†“':'â†’';
+    const arr=v=>v>0.05?'â†‘':v<-0.05?'â†“':'→';
     const fmD=v=>(v>=0?'+':'')+v.toFixed(2);
     const maxEff=Math.max(Math.abs(sizeEffect),Math.abs(zoneEffect),Math.abs(pureRate),...extraRows.map(f=>Math.abs(f.val)),0.01);
     function wBar(val){ const pct=Math.min(Math.abs(val)/maxEff*100,100).toFixed(1); const c=val>0.05?'#f87171':val<-0.05?'#4ade80':'#475569'; return `<div style="background:rgba(255,255,255,.1);border-radius:4px;height:10px;overflow:hidden;min-width:90px"><div style="width:${pct}%;height:100%;background:${c};border-radius:4px"></div></div>`; }
@@ -3346,7 +3346,7 @@ function renderAnalytics(){
           <td style="${tdB};text-align:center;font-weight:700;color:${clr(d)}">${d>=0?'+':''}${d.toFixed(1)}pp ${arr(d)}</td>
         </tr>`;
       }).join('');
-      return `<div><div style="background:#1e3a5f;padding:5px 12px;font-size:.68rem;font-weight:700;color:#7dd3fc;letter-spacing:.04em">${label} Â· ${M1} â†’ ${M2}</div>
+      return `<div><div style="background:#1e3a5f;padding:5px 12px;font-size:.68rem;font-weight:700;color:#7dd3fc;letter-spacing:.04em">${label} · ${M1} → ${M2}</div>
         <div class="tbl-scroll"><table style="width:100%;border-collapse:collapse">
           <thead><tr style="background:#0f172a">
             <th style="${thB};text-align:left">${label.split(' ')[0]}</th>
@@ -3372,16 +3372,16 @@ function renderAnalytics(){
       {icon:'📦',num:'â‘ ',label:'Size Mix',color:'#dc2626',val:sizeEffect,m1:null,m2:null,
        desc:Math.abs(sizeEffect)<0.05?'No size mix change':sizeEffect>0?`Size mix shifted to more expensive sizes`:`Size mix shifted to cheaper sizes`},
       ...(hasZone&&getZone?[{icon:'ðŸ—ºï¸',num:'â‘¡',label:'Zone Mix',color:'#2563eb',val:zoneEffect,m1:null,m2:null,
-       desc:Math.abs(zoneEffect)<0.05?'No zone mix change':zoneEffect>0?`More shipments to distant zones â†’ higher cost`:`More shipments to closer zones â†’ lower cost`}]:[]),
+       desc:Math.abs(zoneEffect)<0.05?'No zone mix change':zoneEffect>0?`More shipments to distant zones → higher cost`:`More shipments to closer zones → lower cost`}]:[]),
       {icon:'⚡',num:hasZone&&getZone?'â‘¢':'â‘¡',label:'Contract Rate',color:'#d97706',
        val: contractDisc ? (avgArr(r2.map(contractDisc.getVal)) - avgArr(r1.map(contractDisc.getVal))) : (extraRows.length?pureRate:residual),
        m1: contractDisc ? avgArr(r1.map(contractDisc.getVal)) : null,
        m2: contractDisc ? avgArr(r2.map(contractDisc.getVal)) : null,
        desc: contractDisc
-         ? (()=>{ const a1=avgArr(r1.map(contractDisc.getVal)), a2=avgArr(r2.map(contractDisc.getVal)); return `Avg discrepancy (Billed âˆ’ Contract): ${a1.toFixed(2)} EGP â†’ ${a2.toFixed(2)} EGP`; })()
+         ? (()=>{ const a1=avgArr(r1.map(contractDisc.getVal)), a2=avgArr(r2.map(contractDisc.getVal)); return `Avg discrepancy (Billed âˆ’ Contract): ${a1.toFixed(2)} EGP → ${a2.toFixed(2)} EGP`; })()
          : (extraRows.length?`${Math.abs(pureRate).toFixed(2)} EGP — pure contract rate ${pureRate<0?'reduction':'increase'}`:`${Math.abs(residual).toFixed(2)} EGP unexplained`)},
       ...extraRows.map((f,i)=>({icon:f.icon,num:String.fromCharCode(9312+(hasZone&&getZone?3:2)+i),label:f.label,color:f.color,val:f.val,m1:f.avg1,m2:f.avg2,
-       desc:`Avg ${f.label}: ${f.avg1.toFixed(2)} EGP â†’ ${f.avg2.toFixed(2)} EGP`})),
+       desc:`Avg ${f.label}: ${f.avg1.toFixed(2)} EGP → ${f.avg2.toFixed(2)} EGP`})),
       {icon:'📊',num:String.fromCharCode(9312+(hasZone&&getZone?3:2)+extraRows.length),label:'Volume',color:'#9ca3af',val:null,m1:r1.length,m2:r2.length,isCount:true,
        desc:`${volChange>=0?'+':''}${fm(Math.abs(volChange))} shipments (${volChange>=0?'+':''}${volPct}%) — impacts total spend, not cost-per-shipment`},
     ];
@@ -3449,7 +3449,7 @@ function renderAnalytics(){
     return `<div style="margin-top:18px;border-radius:12px;overflow:hidden;box-shadow:0 2px 12px rgba(126,0,225,.10)">
       <!-- Top summary bar -->
       <div style="background:linear-gradient(135deg,#7E00E1,#5a00a3);padding:10px 16px;display:flex;align-items:center;gap:12px;flex-wrap:wrap">
-        <span style="color:#fff;font-weight:700;font-size:.85rem">${M1} â†’ ${M2}</span>
+        <span style="color:#fff;font-weight:700;font-size:.85rem">${M1} → ${M2}</span>
         <span style="background:rgba(255,255,255,.15);color:#e9d5ff;border:1px solid rgba(255,255,255,.25);border-radius:20px;padding:3px 12px;font-size:.75rem;font-weight:600">${fmD(totalChange)} EGP avg cost</span>
         <span style="background:rgba(255,255,255,.10);color:#bbf7d0;border:1px solid rgba(255,255,255,.2);border-radius:20px;padding:3px 12px;font-size:.75rem;font-weight:600">${volChange>=0?'+':''}${fm(Math.abs(volChange))} shipments (${volChange>=0?'+':''}${volPct}%) volume</span>
       </div>
@@ -3459,7 +3459,7 @@ function renderAnalytics(){
         <span style="color:#fff;font-size:.72rem;font-weight:700;text-align:right">${M1}</span>
         <span style="color:#fff;font-size:.72rem;font-weight:700;text-align:right">${M2}</span>
         <span style="color:#fff;font-size:.72rem;font-weight:700;text-align:center">Î” Change</span>
-        <span style="color:#fff;font-size:.72rem;font-weight:700">â† Down | <span style="color:#fca5a5">Up</span> â†’</span>
+        <span style="color:#fff;font-size:.72rem;font-weight:700">← Down | <span style="color:#fca5a5">Up</span> →</span>
       </div>
       <!-- Baseline row -->
       <div style="background:linear-gradient(90deg,#faf5ff,#f5f3ff);padding:12px 14px;display:grid;grid-template-columns:2fr 1fr 1fr 2fr;gap:8px;align-items:center;border-bottom:1px solid #e9d5ff">
@@ -3500,7 +3500,7 @@ function renderAnalytics(){
         const dB=(v)=>{ const up=v>0.05; const dn=v<-0.05;
           const bc=up?'#fee2e2':dn?'#dcfce7':'#f8fafc';
           const tc=up?'#dc2626':dn?'#16a34a':'#64748b';
-          const ar=up?'▲':dn?'▼':'â†’';
+          const ar=up?'▲':dn?'▼':'→';
           return `<span style="background:${bc};color:${tc};border-radius:6px;padding:3px 9px;font-size:.75rem;font-weight:700">${ar} ${Math.abs(v).toFixed(2)}</span>`; };
         const rows=[
           {label:'📋 Contract Rate (per contract file)', v1:avgContract1, v2:avgContract2, delta:contractDelta, color:'#0369a1', bg:'#eff6ff'},
@@ -3517,7 +3517,7 @@ function renderAnalytics(){
               <th style="${thL}">Metric</th>
               <th style="${thS}">${M1} Avg</th>
               <th style="${thS}">${M2} Avg</th>
-              <th style="${thS}">Change M1â†’M2</th>
+              <th style="${thS}">Change M1→M2</th>
             </tr></thead>
             <tbody>${rows.map(r=>`<tr style="background:${r.bg}">
               <td style="${tdL};color:${r.color};border-left:4px solid ${r.color}">${r.label}</td>
@@ -3806,11 +3806,11 @@ function renderValDash(cfg){
       ${allMonths.length>1?`<div style="display:flex;gap:4px;align-items:center"><span style="font-size:.74rem;font-weight:600;color:#6b7280">vs:</span>${m1Btns}</div>`:''}
     </div>
     <div style="overflow-x:auto">
-      <div style="padding:6px 12px;font-size:.76rem;font-weight:700;color:${C};border-bottom:1px solid #e5e7eb">SIZE DISTRIBUTION <span style="font-weight:400;color:#9ca3af">Â· click row to filter zones</span></div>
+      <div style="padding:6px 12px;font-size:.76rem;font-weight:700;color:${C};border-bottom:1px solid #e5e7eb">SIZE DISTRIBUTION <span style="font-weight:400;color:#9ca3af">· click row to filter zones</span></div>
       <table style="width:100%;border-collapse:collapse;font-size:.82rem">${sHdr}${sizeRows}${totalRow}</table>
     </div>
     <div style="overflow-x:auto;border-top:2px solid #e5e7eb">
-      <div style="padding:6px 12px;font-size:.76rem;font-weight:700;color:${ZC};border-bottom:1px solid #e5e7eb">ZONE DISTRIBUTION${selSz?' Â· '+selSz:' Â· All Sizes'}</div>
+      <div style="padding:6px 12px;font-size:.76rem;font-weight:700;color:${ZC};border-bottom:1px solid #e5e7eb">ZONE DISTRIBUTION${selSz?' · '+selSz:' · All Sizes'}</div>
       <table style="width:100%;border-collapse:collapse;font-size:.82rem">${zHdr}${zoneRows||`<tr><td colspan="11" style="padding:14px;text-align:center;color:#9ca3af">No zone data</td></tr>`}</table>
     </div>
   </div>`;
@@ -3877,7 +3877,7 @@ function _getDb(){
   }catch(e){ console.warn('Firebase init:',e); }
   return _db;
 }
-// Gzip compress JSON string â†’ base64 (97% smaller, fits in one Firestore doc)
+// Gzip compress JSON string → base64 (97% smaller, fits in one Firestore doc)
 async function _gz(str){
   const stream = new Response(str).body.pipeThrough(new CompressionStream('gzip'));
   const buf = await new Response(stream).arrayBuffer();
