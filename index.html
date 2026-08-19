@@ -2810,13 +2810,15 @@ function renderBreakdown(){
   const tdStyle='padding:5px 10px;font-size:.76rem;text-align:center;border-bottom:1px solid var(--border)';
   const ROW_H = 32; // px per row
 
-  // Single combined table (no split, avoids flex width:0 bug)
+  // Single combined table — Category column frozen via sticky
+  const stickyTh='position:sticky;left:0;z-index:3;box-shadow:3px 0 6px rgba(0,0,0,.15)';
+  const stickyTd='position:sticky;left:0;z-index:2;box-shadow:3px 0 4px rgba(0,0,0,.10)';
   const thead=`<tr>
-    <th style="${thStyle};text-align:left;min-width:130px">Category</th>
+    <th style="${thStyle};text-align:left;min-width:130px;${stickyTh}">Category</th>
     ${months.map(m=>`<th colspan="3" style="${thStyle};min-width:200px;border-right:2px solid rgba(255,255,255,.2)">${m}</th>`).join('')}
   </tr>
   <tr>
-    <th style="${thSubStyle};background:#1a0038"></th>
+    <th style="${thSubStyle};background:#1a0038;${stickyTh}"></th>
     ${months.map(()=>`
       <th style="${thSubStyle};background:#1d4ed8;min-width:65px">Qty</th>
       <th style="${thSubStyle};background:#0f766e;min-width:85px">Value</th>
@@ -2828,8 +2830,9 @@ function renderBreakdown(){
     const bg=isTotal?'#f0fdf4':is2nd?'#fffbeb':'';
     const clr=isTotal?'var(--green2)':is2nd?'#d97706':'var(--purple)';
     const cellBg=isTotal?'background:#dcfce7;color:#15803d;':is2nd?'color:#d97706;font-weight:700;':'';
-    return `<tr style="height:${ROW_H}px;background:${bg||'var(--bg)'}">
-      <td style="${tdStyle};text-align:left;font-weight:${isTotal?800:600};color:${clr};white-space:nowrap">${rt}</td>
+    const rowBgColor=bg||'var(--bg)';
+    return `<tr style="height:${ROW_H}px;background:${rowBgColor}">
+      <td style="${tdStyle};text-align:left;font-weight:${isTotal?800:600};color:${clr};white-space:nowrap;background:${rowBgColor};${stickyTd}">${rt}</td>
       ${months.map((_,mi)=>`
         <td style="${tdStyle};${cellBg}">${fmVal(val(bdSelCo,rt,'qty',mi))}</td>
         <td style="${tdStyle};${cellBg}font-weight:700">${fmVal(val(bdSelCo,rt,'value',mi))}</td>
