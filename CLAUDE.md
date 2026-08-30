@@ -265,7 +265,7 @@ else:
 
 ### Billing Rules
 - **Delivered / Returned:** `calcLM = rate[size][destZone] × qty`
-- **Cancel on Floor:** `calcLM = actualCharge × 0.5` (dispute 50% only), accept pickup/ins/COD as-is
+- **Cancel on Floor:** `calcLM = contractRate × 0.5` (50% of contract rate, NOT actual charge), accept pickup/ins/COD as-is
 - **Second attempt file:** all charges summed as a flat `mqSecondTotal` added to invoice
 
 ### Size detection
