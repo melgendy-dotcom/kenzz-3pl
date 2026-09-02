@@ -2660,6 +2660,7 @@ function bdAddMonth({store,monthName,sources}){
     bdSetSlot(co['Returns-RTO'],'qty',returned.length,mi);
     bdSetSlot(co['Returns-RTO'],'value',retVal,mi);
     bdSetSlot(co['Returns-RTO'],'rate',returned.length?Math.round(retVal/returned.length*100)/100:0,mi);
+    bdSetSlot(co['COD'],'value',Math.round(sum(ar,'codFees')*100)/100,mi);
     const totQty=delivered.length+returned.length;
     const totVal=Math.round(ar.reduce((s,r)=>s+arTotal(r),0)*100)/100;
     bdSetSlot(co['Total'],'qty',totQty,mi); bdSetSlot(co['Total'],'value',totVal,mi);
