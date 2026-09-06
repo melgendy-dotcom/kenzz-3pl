@@ -2237,23 +2237,51 @@ function rayaCategory(row){
   return 'Small';
 }
 function parseRayaContractSheet(raw){
-  // Parses one sheet: Delivery table rows 2-7 (0-idx 1-6), Returns table rows 13-18 (0-idx 12-17)
-  // Columns: col 6=zone, col 8=Small, col 9=Medium, col 10=Large
-  const delivery = {}, returns = {};
+  // Auto-detects column positions by scanning for a header row containing 'zone' or 'zones'
+  // Supports both HA layout (zone at col 6) and Furniture layout (zone at col 0)
+  // Size columns detected by header: Small, Medium, Large, L Shape, U Shape, Full Room
   function parseZones(v){ return String(v||'').split(',').map(z=>z.trim()).filter(Boolean); }
-  function fillMap(map, startRow, endRow){
-    for(let r=startRow; r<=endRow && r<raw.length; r++){
-      const row = raw[r];
-      const zoneVal = row[6];
-      const small  = parseFloat(row[8])||0;
-      const medium = parseFloat(row[9])||0;
-      const large  = parseFloat(row[10])||0;
-      if(!zoneVal || (!small && !medium && !large)) continue;
-      parseZones(zoneVal).forEach(z => { map[z] = {Small:small, Medium:medium, Large:large}; });
+
+  // Find all header rows (rows where a cell contains 'zone' case-insensitive)
+  const headerRows = [];
+  for(let i=0;i<raw.length;i++){
+    const row = raw[i];
+    if(row.some(c=>String(c||'').trim().toLowerCase()==='zones'||String(c||'').trim().toLowerCase()==='zone')){
+      headerRows.push(i);
     }
   }
-  fillMap(delivery, 1, 6);
-  fillMap(returns,  12, 17);
+  if(!headerRows.length) return {delivery:{}, returns:{}};
+
+  function parseTable(headerRowIdx){
+    const hrow = raw[headerRowIdx];
+    const zoneCol = hrow.findIndex(c=>String(c||'').trim().toLowerCase()==='zones'||String(c||'').trim().toLowerCase()==='zone');
+    const sizeMap = {};
+    hrow.forEach((c,i)=>{
+      const name = String(c||'').trim();
+      if(/^small$/i.test(name)) sizeMap['Small']=i;
+      else if(/^medium$/i.test(name)) sizeMap['Medium']=i;
+      else if(/^large$/i.test(name)) sizeMap['Large']=i;
+      else if(/l\s*shape/i.test(name)) sizeMap['L Shape']=i;
+      else if(/u\s*shape/i.test(name)) sizeMap['U Shape']=i;
+      else if(/full\s*room/i.test(name)) sizeMap['Full Room']=i;
+    });
+    const map = {};
+    for(let r=headerRowIdx+1; r<raw.length; r++){
+      const row = raw[r];
+      const zoneVal = row[zoneCol];
+      if(!zoneVal && zoneVal!==0) continue;
+      const zStr = String(zoneVal).trim();
+      if(!zStr || /zone|tier|deliver|return/i.test(zStr)) continue;
+      const rates = {};
+      Object.entries(sizeMap).forEach(([size,col])=>{ rates[size]=parseFloat(row[col])||0; });
+      if(Object.values(rates).every(v=>v===0)) continue;
+      parseZones(zStr).forEach(z=>{ map[z]=rates; });
+    }
+    return map;
+  }
+
+  const delivery = parseTable(headerRows[0]);
+  const returns  = headerRows[1] ? parseTable(headerRows[1]) : delivery;
   return {delivery, returns};
 }
 function parseRayaContract(cwb){
