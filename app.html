@@ -2236,10 +2236,9 @@ function rayaCategory(row){
   if(catKey && row[catKey]) return String(row[catKey]).trim();
   return 'Small';
 }
-function parseRayaContract(raw){
-  // raw = sheet_to_json with header:1 (array of arrays)
-  // Delivery table: col G=zone(6), H=tier(7), I=Small(8), J=Medium(9), K=Large(10), rows 2-7 (0-idx 1-6)
-  // Returns table: same columns, rows 13-18 (0-idx 12-17)
+function parseRayaContractSheet(raw){
+  // Parses one sheet: Delivery table rows 2-7 (0-idx 1-6), Returns table rows 13-18 (0-idx 12-17)
+  // Columns: col 6=zone, col 8=Small, col 9=Medium, col 10=Large
   const delivery = {}, returns = {};
   function parseZones(v){ return String(v||'').split(',').map(z=>z.trim()).filter(Boolean); }
   function fillMap(map, startRow, endRow){
@@ -2253,9 +2252,16 @@ function parseRayaContract(raw){
       parseZones(zoneVal).forEach(z => { map[z] = {Small:small, Medium:medium, Large:large}; });
     }
   }
-  fillMap(delivery, 1, 6);   // Delivery table rows 2-7
-  fillMap(returns,  12, 17); // Returns table rows 13-18
+  fillMap(delivery, 1, 6);
+  fillMap(returns,  12, 17);
   return {delivery, returns};
+}
+function parseRayaContract(cwb){
+  // cwb = full XLSX workbook with potentially 2 sheets: tab 1 = HA, tab 2 = Furniture
+  const toArr = sheet => XLSX.utils.sheet_to_json(sheet, {header:1, defval:''});
+  const ha = parseRayaContractSheet(toArr(cwb.Sheets[cwb.SheetNames[0]]));
+  const furniture = cwb.SheetNames[1] ? parseRayaContractSheet(toArr(cwb.Sheets[cwb.SheetNames[1]])) : ha;
+  return {ha, furniture};
 }
 function processRaya({rawRows, contract, THRESH}){
   return rawRows.map((row, idx)=>{
@@ -2282,9 +2288,12 @@ function processRaya({rawRows, contract, THRESH}){
     const totalBilled = totalBilledRaw || Math.round((billedPrice + pickupCost + codFees + insFees + extraCost)*1000)/1000;
 
     const isReturned = status.toLowerCase().includes('return') || status.toLowerCase().includes('cancel');
-    // Furniture returns are billed at 100% of delivery rate (not the standard 75% returns rate)
-    const isFurnitureReturn = isReturned && mainCategory.toLowerCase() === 'furniture';
-    const rateTable = (isReturned && !isFurnitureReturn ? (contract.returns||{}) : (contract.delivery||{}));
+    const isFurniture = mainCategory.toLowerCase() === 'furniture';
+    // Select the correct category rate table (HA or Furniture) from the contract
+    const catContract = isFurniture ? (contract.furniture || contract.ha || contract) : (contract.ha || contract);
+    // Furniture returns use 100% of delivery rate; all others use the returns table (75%)
+    const isFurnitureReturn = isReturned && isFurniture;
+    const rateTable = (isReturned && !isFurnitureReturn ? (catContract.returns||{}) : (catContract.delivery||{}));
     const zoneKey = String(zone).trim().replace(/^zone\s*/i,'');
     const rates = rateTable[zoneKey] || {};
     // If Raya billed 0 for delivery and no size QTY is set, skip contract rate (free/gratis shipment)
@@ -2342,7 +2351,7 @@ async function processRayaPage(){
     let contract = {};
     if(rayaContractFile){
       const cwb = XLSX.read(await readBuf(rayaContractFile), {type:'array'});
-      contract = parseRayaContract(XLSX.utils.sheet_to_json(cwb.Sheets[cwb.SheetNames[0]], {header:1, defval:''}));
+      contract = parseRayaContract(cwb);
     }
     const THRESH = parseFloat(document.getElementById('ra-thresh').value)||0;
     const raUploadMonth = document.getElementById('ra-month').value;
