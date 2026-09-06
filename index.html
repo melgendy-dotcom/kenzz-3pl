@@ -2257,10 +2257,15 @@ function parseRayaContractSheet(raw){
   return {delivery, returns};
 }
 function parseRayaContract(cwb){
-  // cwb = full XLSX workbook with potentially 2 sheets: tab 1 = HA, tab 2 = Furniture
+  // cwb = full XLSX workbook — tab named "HA rates" (or first tab) + "Furniture rates" (or second tab)
   const toArr = sheet => XLSX.utils.sheet_to_json(sheet, {header:1, defval:''});
-  const ha = parseRayaContractSheet(toArr(cwb.Sheets[cwb.SheetNames[0]]));
-  const furniture = cwb.SheetNames[1] ? parseRayaContractSheet(toArr(cwb.Sheets[cwb.SheetNames[1]])) : ha;
+  const findSheet = (keywords, fallbackIdx) => {
+    const name = cwb.SheetNames.find(n => keywords.some(k => n.toLowerCase().includes(k)));
+    return cwb.Sheets[name || cwb.SheetNames[fallbackIdx] || cwb.SheetNames[0]];
+  };
+  const ha = parseRayaContractSheet(toArr(findSheet(['ha'], 0)));
+  const furnitureSheet = findSheet(['furniture'], 1);
+  const furniture = furnitureSheet ? parseRayaContractSheet(toArr(furnitureSheet)) : ha;
   return {ha, furniture};
 }
 function processRaya({rawRows, contract, THRESH}){
