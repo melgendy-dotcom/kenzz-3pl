@@ -2252,7 +2252,7 @@ function parseRayaContractSheet(raw){
   }
   if(!headerRows.length) return {delivery:{}, returns:{}};
 
-  function parseTable(headerRowIdx){
+  function parseTable(headerRowIdx, stopRowIdx){
     const hrow = raw[headerRowIdx];
     const zoneCol = hrow.findIndex(c=>String(c||'').trim().toLowerCase()==='zones'||String(c||'').trim().toLowerCase()==='zone');
     const sizeMap = {};
@@ -2266,7 +2266,8 @@ function parseRayaContractSheet(raw){
       else if(/full\s*room/i.test(name)) sizeMap['Full Room']=i;
     });
     const map = {};
-    for(let r=headerRowIdx+1; r<raw.length; r++){
+    const endRow = stopRowIdx !== undefined ? stopRowIdx : raw.length;
+    for(let r=headerRowIdx+1; r<endRow; r++){
       const row = raw[r];
       const zoneVal = row[zoneCol];
       if(!zoneVal && zoneVal!==0) continue;
@@ -2280,7 +2281,8 @@ function parseRayaContractSheet(raw){
     return map;
   }
 
-  const delivery = parseTable(headerRows[0]);
+  // Stop delivery table at the returns header row so it doesn't overwrite with returns data
+  const delivery = parseTable(headerRows[0], headerRows[1]);
   const returns  = headerRows[1] ? parseTable(headerRows[1]) : delivery;
   return {delivery, returns};
 }
