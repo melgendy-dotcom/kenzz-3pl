@@ -2266,6 +2266,7 @@ function processRaya({rawRows, contract, THRESH}){
     const city = String(rg(row,'City')||'').trim();
 
     const category = rayaCategory(row);
+    const mainCategory = String(rg(row,'Main Category','MainCategory','main category')||'').trim();
 
     let billedPrice = Math.round((parseFloat(rg(row,'Price','DL Cost','DLCost','Delivery Cost','DeliveryCost','DL price','DLPrice','Raya Price','RayaPrice')||0)||0)*1000)/1000;
     const pickupCost = parseFloat(rg(row,'Pickup Cost','PickupCost')||0)||0;
@@ -2281,7 +2282,9 @@ function processRaya({rawRows, contract, THRESH}){
     const totalBilled = totalBilledRaw || Math.round((billedPrice + pickupCost + codFees + insFees + extraCost)*1000)/1000;
 
     const isReturned = status.toLowerCase().includes('return') || status.toLowerCase().includes('cancel');
-    const rateTable = (isReturned ? (contract.returns||{}) : (contract.delivery||{}));
+    // Furniture returns are billed at 100% of delivery rate (not the standard 75% returns rate)
+    const isFurnitureReturn = isReturned && mainCategory.toLowerCase() === 'furniture';
+    const rateTable = (isReturned && !isFurnitureReturn ? (contract.returns||{}) : (contract.delivery||{}));
     const zoneKey = String(zone).trim().replace(/^zone\s*/i,'');
     const rates = rateTable[zoneKey] || {};
     // If Raya billed 0 for delivery and no size QTY is set, skip contract rate (free/gratis shipment)
@@ -2308,7 +2311,7 @@ function processRaya({rawRows, contract, THRESH}){
     const isOver = diff > THRESH;
     const isUnder = diff < -THRESH;
 
-    return { idx:idx+1, awb, status, zone, tier: zoneKey, category, month, city,
+    return { idx:idx+1, awb, status, zone, tier: zoneKey, category, mainCategory, month, city,
       billedPrice, pickupCost, codFees, insFees, extraCost, totalBilled,
       contractPrice, isReturned, diff, isOver, isUnder, totalQty };
   });
@@ -2411,8 +2414,8 @@ function renderRayaTable(){
 }
 function exportRayaPage(){
   const filtered = getFilteredRaya();
-  const headers = ['#','AWB','Status','Zone','Category','Qty','Raya Price','Pickup Cost','Insurance','COD Fees','Extra Attempts','Contract Price','Total Billed','Diff'];
-  exportCSV(headers, filtered.map(r=>[r.idx,r.awb,r.status,r.zone,r.category,r.totalQty||1,r.billedPrice,r.pickupCost,r.insFees,r.codFees,r.extraCost,r.contractPrice,r.totalBilled,r.diff]), 'raya_audit.csv');
+  const headers = ['#','AWB','Status','Zone','Main Category','Category','Qty','Raya Price','Pickup Cost','Insurance','COD Fees','Extra Attempts','Contract Price','Total Billed','Diff'];
+  exportCSV(headers, filtered.map(r=>[r.idx,r.awb,r.status,r.zone,r.mainCategory||'',r.category,r.totalQty||1,r.billedPrice,r.pickupCost,r.insFees,r.codFees,r.extraCost,r.contractPrice,r.totalBilled,r.diff]), 'raya_audit.csv');
 }
 async function saveRayaPage(){
   const btn = document.getElementById('ra-save-btn');
