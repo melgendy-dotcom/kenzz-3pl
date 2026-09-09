@@ -728,26 +728,7 @@ html[dir=ltr] #login-eye{right:12px}
     </div>
 
     <div id="panel-contracts" style="display:none">
-      <!-- Rate Change Comparison section -->
-      <div style="background:var(--card);border:1.5px solid var(--border);border-radius:12px;padding:18px;margin-bottom:18px">
-        <div style="font-weight:800;font-size:.95rem;color:var(--text);margin-bottom:4px">📊 Contract Rate Change Comparison</div>
-        <div style="font-size:.82rem;color:var(--muted);margin-bottom:14px">Upload the old and new contract files for any carrier — see exactly which zones and sizes changed and by how much.</div>
-        <div style="display:grid;grid-template-columns:1fr 1fr auto;gap:10px;align-items:end;margin-bottom:14px">
-          <div>
-            <div style="font-size:.76rem;font-weight:700;color:var(--muted);margin-bottom:5px;text-transform:uppercase;letter-spacing:.4px">Previous Contract</div>
-            <button onclick="document.getElementById('ct-old-inp').click()" id="ct-old-btn" style="width:100%;padding:9px 14px;border:1.5px dashed var(--border);border-radius:8px;background:var(--bg);color:var(--text);font-size:.82rem;cursor:pointer;text-align:left">📂 Choose old contract…</button>
-            <input type="file" id="ct-old-inp" accept=".xlsx,.xls" style="display:none">
-          </div>
-          <div>
-            <div style="font-size:.76rem;font-weight:700;color:var(--muted);margin-bottom:5px;text-transform:uppercase;letter-spacing:.4px">New Contract</div>
-            <button onclick="document.getElementById('ct-new-inp').click()" id="ct-new-btn" style="width:100%;padding:9px 14px;border:1.5px dashed var(--border);border-radius:8px;background:var(--bg);color:var(--text);font-size:.82rem;cursor:pointer;text-align:left">📂 Choose new contract…</button>
-            <input type="file" id="ct-new-inp" accept=".xlsx,.xls" style="display:none">
-          </div>
-          <button onclick="runContractDiff()" style="padding:9px 20px;background:linear-gradient(135deg,#7c3aed,#6d28d9);color:#fff;border:none;border-radius:8px;font-weight:800;font-size:.85rem;cursor:pointer;white-space:nowrap">Compare ▶</button>
-        </div>
-        <div id="ct-diff-out"></div>
-      </div>
-      <!-- Current contract rate cards -->
+      <div id="ct-mgr"></div>
       <div id="ct-content"></div>
     </div>
 
@@ -1290,7 +1271,7 @@ function switchTab(name){
   if(name==='mashreq' && _tabDirty.mashreq){ renderMashreq(); _tabDirty.mashreq=false; }
   if(name==='raya' && _tabDirty.raya){ renderRayaPage(); _tabDirty.raya=false; }
   if(name==='analytics' && _analyticsDirty){ renderAnalytics(); _analyticsDirty=false; }
-  if(name==='contracts'){ renderContracts(); _wireCtInputs(); }
+  if(name==='contracts'){ renderContractMgr(); renderContracts(); }
   if(name==='breakdown') renderBreakdown();
 }
 
@@ -1415,8 +1396,8 @@ function renderContracts(){
     </div>`;
   }
 
-  // Raya section — show HA and Furniture tabs
-  const rc = _savedContracts.raya;
+  // Raya section — prefer manager contract, fall back to session-loaded contract
+  const rc = _ctState.raya?.current || _savedContracts.raya;
   let rayaBody = '';
   if(!rc){
     rayaBody = '<p style="color:var(--muted);font-size:.83rem">Upload a contract file on the Raya tab to see rates here. Rates are loaded into memory when you process the report.</p>';
@@ -1443,156 +1424,244 @@ function renderContracts(){
     </div>`;
   }
 
-  html += card('🚚', 'Raya', '#0f766e', rc ? 'Contract Loaded' : 'No Contract', rayaBody);
-  html += card('📦', 'Bosta', '#7c3aed', _savedContracts.bosta ? 'Contract Loaded' : 'No Contract', bostaRateTable(_savedContracts.bosta));
-  html += card('🔄', 'Aramex Mashreq', '#b45309', _savedContracts.mashreq ? 'Rates Loaded' : 'No Rates', mqRateTable(_savedContracts.mashreq));
+  const bostaC = _ctState.bosta?.current || _savedContracts.bosta;
+  const mqC    = _ctState.mashreq?.current || _savedContracts.mashreq;
+  html += card('🚚', 'Raya', '#0f766e', rc ? 'Contract Active' : 'No Contract', rayaBody);
+  html += card('📦', 'Bosta', '#7c3aed', bostaC ? 'Contract Active' : 'No Contract', bostaRateTable(bostaC));
+  html += card('🔄', 'Aramex Mashreq', '#b45309', mqC ? 'Rates Active' : 'No Rates', mqRateTable(mqC));
   html += card('✈️', 'Aramex', '#1d4ed8', '', '<p style="color:var(--muted);font-size:.83rem">Aramex uses a rate configuration (COD %, Fuel %, Annual %) set directly in the Aramex tab. No separate contract file.</p>');
 
   html += `</div>`;
   el.innerHTML = html;
 }
 
-/* ---------- Contract diff ---------- */
-window._ctFiles = { old: {file:null}, new: {file:null} };
-function _wireCtInputs(){
-  ['old','new'].forEach(key=>{
-    const inp = document.getElementById('ct-'+key+'-inp');
-    const btn = document.getElementById('ct-'+key+'-btn');
-    if(!inp || inp._wired) return;
-    inp._wired = true;
-    inp.addEventListener('change', e=>{
-      const f = e.target.files[0];
-      if(f){ window._ctFiles[key].file=f; btn.textContent='✅ '+f.name; btn.style.borderColor='var(--green2)'; btn.style.color='var(--green2)'; }
-      e.target.value='';
+/* ---------- Contract Manager ---------- */
+const CT_LS_KEY = 'kenzz3pl_contracts_v1';
+const CT_COMPANIES = [
+  { key:'raya',    label:'Raya',           icon:'🚚', color:'#0f766e', parser:'raya' },
+  { key:'bosta',   label:'Bosta',          icon:'📦', color:'#7c3aed', parser:'bosta' },
+  { key:'mashreq', label:'Aramex Mashreq', icon:'🔄', color:'#b45309', parser:'mashreq' },
+];
+// In-memory parsed contracts: { raya:{current,new}, bosta:{current,new}, mashreq:{current,new} }
+const _ctState = {};
+CT_COMPANIES.forEach(c=>{ _ctState[c.key]={current:null,newC:null,newFile:null,curFile:null}; });
+
+function _ctLoadLS(){
+  try{
+    const raw = localStorage.getItem(CT_LS_KEY);
+    if(!raw) return;
+    const saved = JSON.parse(raw);
+    CT_COMPANIES.forEach(c=>{
+      if(saved[c.key]?.current) _ctState[c.key].current = saved[c.key].current;
+    });
+  }catch(e){}
+}
+function _ctSaveLS(){
+  try{
+    const obj={};
+    CT_COMPANIES.forEach(c=>{ obj[c.key]={current:_ctState[c.key].current}; });
+    localStorage.setItem(CT_LS_KEY, JSON.stringify(obj));
+  }catch(e){}
+}
+_ctLoadLS();
+
+function _ctParseWb(wb, parser){
+  if(parser==='raya') return parseRayaContract(wb);
+  const arr = XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]], {header:1, defval:''});
+  if(parser==='bosta') return parseBostaContract(arr);
+  if(parser==='mashreq') return parseMQRates(arr);
+  return null;
+}
+
+function _ctHasData(parsed, parser){
+  if(!parsed) return false;
+  if(parser==='raya') return parsed.ha && Object.keys(parsed.ha.delivery||{}).length>0;
+  if(parser==='bosta') return Object.keys(parsed.shipping||{}).length>0;
+  if(parser==='mashreq') return Object.keys(parsed.lastmile||{}).length>0;
+  return false;
+}
+
+function _ctDiff(oldP, newP, parser){
+  const SIZE_ORDER = ['Small','Medium','Large','L Shape','U Shape','Full Room'];
+  const rows=[];
+  function diffTable(oldTbl, newTbl, cat, status){
+    const allZones=[...new Set([...Object.keys(oldTbl||{}),...Object.keys(newTbl||{})])].sort((a,b)=>parseInt(a)-parseInt(b));
+    const allSizes=[...new Set([...Object.keys(oldTbl||{}).flatMap(z=>Object.keys((oldTbl[z])||{})),...Object.keys(newTbl||{}).flatMap(z=>Object.keys((newTbl[z])||{}))])];
+    allSizes.sort((a,b)=>{ const ai=SIZE_ORDER.indexOf(a),bi=SIZE_ORDER.indexOf(b); return (ai<0?99:ai)-(bi<0?99:bi); });
+    allZones.forEach(z=>{ allSizes.forEach(sz=>{
+      const o=(oldTbl[z]||{})[sz]||0, n=(newTbl[z]||{})[sz]||0;
+      if(o===0&&n===0) return;
+      rows.push({cat,status,zone:'Zone '+z,size:sz,oldR:o,newR:n,delta:n-o,pct:o>0?(n-o)/o*100:null});
+    }); });
+  }
+  if(parser==='raya'){
+    diffTable(oldP.ha?.delivery||{}, newP.ha?.delivery||{}, 'HA','Delivery');
+    diffTable(oldP.ha?.returns||{},  newP.ha?.returns||{},  'HA','Returns');
+    diffTable(oldP.furniture?.delivery||{}, newP.furniture?.delivery||{}, 'Furniture','Delivery');
+    diffTable(oldP.furniture?.returns||{},  newP.furniture?.returns||{},  'Furniture','Returns');
+  } else if(parser==='bosta'){
+    const allTypes=[...new Set([...Object.keys(oldP.shipping||{}),...Object.keys(newP.shipping||{})])];
+    const allZones=[...new Set([...(oldP.zones||[]),...(newP.zones||[])])];
+    allTypes.forEach(t=>{ allZones.forEach(z=>{
+      const o=(oldP.shipping[t]||{})[z]||0, n=(newP.shipping[t]||{})[z]||0;
+      if(o===0&&n===0) return;
+      rows.push({cat:'Shipping',status:t,zone:z,size:'—',oldR:o,newR:n,delta:n-o,pct:o>0?(n-o)/o*100:null});
+    }); });
+    const allSizes=[...new Set([...Object.keys(oldP.pkg||{}),...Object.keys(newP.pkg||{})])];
+    allSizes.forEach(sz=>{ allZones.forEach(z=>{
+      const o=(oldP.pkg[sz]||{})[z]||0, n=(newP.pkg[sz]||{})[z]||0;
+      if(o===0&&n===0) return;
+      rows.push({cat:'PKG',status:'Extra Fee',zone:z,size:sz,oldR:o,newR:n,delta:n-o,pct:o>0?(n-o)/o*100:null});
+    }); });
+  } else if(parser==='mashreq'){
+    ['lastmile','pickup'].forEach(type=>{
+      const zones=(oldP.zones||newP.zones||[1,2,3,4]);
+      const allSizes=[...new Set([...Object.keys(oldP[type]||{}),...Object.keys(newP[type]||{})])];
+      allSizes.forEach(sz=>{ zones.forEach(z=>{
+        const o=((oldP[type]||{})[sz]||{})[z]||0, n=((newP[type]||{})[sz]||{})[z]||0;
+        if(o===0&&n===0) return;
+        rows.push({cat:type==='lastmile'?'Last Mile':'Pickup',status:sz,zone:'Zone '+z,size:'—',oldR:o,newR:n,delta:n-o,pct:o>0?(n-o)/o*100:null});
+      }); });
+    });
+  }
+  return rows;
+}
+
+function _ctDiffTable(rows){
+  if(!rows.length) return '<div style="color:var(--muted);font-size:.83rem;padding:8px 0">✅ No rate changes — contracts are identical.</div>';
+  const changes=rows.filter(r=>r.delta!==0);
+  const ups=changes.filter(r=>r.delta>0), dns=changes.filter(r=>r.delta<0);
+  const fm=v=>v===0?'0':v.toLocaleString('en-US',{minimumFractionDigits:0,maximumFractionDigits:2});
+  let h=`<div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px">
+    <span style="background:#fef2f2;color:#dc2626;border:1px solid #fca5a5;padding:3px 10px;border-radius:20px;font-size:.76rem;font-weight:700">↑ ${ups.length} increases</span>
+    <span style="background:#f0fdf4;color:#16a34a;border:1px solid #86efac;padding:3px 10px;border-radius:20px;font-size:.76rem;font-weight:700">↓ ${dns.length} decreases</span>
+    <span style="background:var(--bg);color:var(--muted);border:1px solid var(--border);padding:3px 10px;border-radius:20px;font-size:.76rem;font-weight:700">= ${rows.length-changes.length} unchanged</span>
+  </div>
+  <div style="overflow-x:auto"><table style="width:100%;border-collapse:collapse;font-size:.79rem">
+  <thead><tr style="background:var(--dark);color:#fff">
+    <th style="padding:7px 10px;text-align:left">Category</th>
+    <th style="padding:7px 10px;text-align:left">Status</th>
+    <th style="padding:7px 10px;text-align:left">Zone</th>
+    <th style="padding:7px 10px;text-align:left">Size</th>
+    <th style="padding:7px 10px;text-align:right">Old Rate</th>
+    <th style="padding:7px 10px;text-align:right">New Rate</th>
+    <th style="padding:7px 10px;text-align:right">Change</th>
+    <th style="padding:7px 10px;text-align:right">%</th>
+  </tr></thead><tbody>`;
+  const sorted=[...changes.sort((a,b)=>b.delta-a.delta),...rows.filter(r=>r.delta===0)];
+  sorted.forEach((r,i)=>{
+    const up=r.delta>0,dn=r.delta<0;
+    const bg=up?'rgba(220,38,38,.07)':dn?'rgba(22,163,74,.07)':(i%2===0?'var(--bg)':'var(--card)');
+    const dc=up?'#dc2626':dn?'#16a34a':'var(--muted)';
+    h+=`<tr style="background:${bg};border-bottom:1px solid var(--border)">
+      <td style="padding:6px 10px;font-weight:600">${r.cat}</td>
+      <td style="padding:6px 10px">${r.status}</td>
+      <td style="padding:6px 10px">${r.zone}</td>
+      <td style="padding:6px 10px">${r.size}</td>
+      <td style="padding:6px 10px;text-align:right;font-variant-numeric:tabular-nums">${fm(r.oldR)}</td>
+      <td style="padding:6px 10px;text-align:right;font-variant-numeric:tabular-nums;font-weight:${up||dn?700:400}">${fm(r.newR)}</td>
+      <td style="padding:6px 10px;text-align:right;font-variant-numeric:tabular-nums;color:${dc};font-weight:700">${up?'↑ +':dn?'↓ ':'= '}${fm(r.delta)}</td>
+      <td style="padding:6px 10px;text-align:right;font-variant-numeric:tabular-nums;color:${dc};font-weight:700">${r.pct!==null?(r.pct>0?'+':'')+r.pct.toFixed(1)+'%':'—'}</td>
+    </tr>`;
+  });
+  h+=`</tbody></table></div>`;
+  return h;
+}
+
+function renderContractMgr(){
+  const el=document.getElementById('ct-mgr');
+  if(!el) return;
+  let html=`<div style="margin-bottom:18px">
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:14px">`;
+  CT_COMPANIES.forEach(co=>{
+    const st=_ctState[co.key];
+    const hasCur=_ctHasData(st.current,co.parser);
+    const hasNew=_ctHasData(st.newC,co.parser);
+    html+=`<div style="background:var(--card);border:1.5px solid ${hasCur?co.color:'var(--border)'};border-radius:12px;overflow:hidden">
+      <div style="background:${co.color};padding:11px 16px;display:flex;align-items:center;gap:9px">
+        <span style="font-size:1.2rem">${co.icon}</span>
+        <span style="font-weight:800;font-size:.95rem;color:#fff;flex:1">${co.label}</span>
+        ${hasCur?`<span style="background:rgba(255,255,255,.25);color:#fff;font-size:.68rem;font-weight:700;padding:2px 8px;border-radius:12px">✓ Contract Set</span>`:`<span style="background:rgba(255,255,255,.15);color:rgba(255,255,255,.7);font-size:.68rem;font-weight:700;padding:2px 8px;border-radius:12px">No Contract</span>`}
+      </div>
+      <div style="padding:14px 16px">
+        <div style="display:flex;gap:8px;margin-bottom:${hasNew?'12px':'0'}">
+          <div style="flex:1">
+            <div style="font-size:.72rem;font-weight:700;color:var(--muted);margin-bottom:4px;text-transform:uppercase">Current Contract</div>
+            <button onclick="ctPickFile('${co.key}','cur')" id="ct-${co.key}-cur-btn"
+              style="width:100%;padding:7px 12px;border:1.5px ${hasCur?'solid '+co.color:'dashed var(--border)'};border-radius:7px;background:var(--bg);color:${hasCur?co.color:'var(--muted)'};font-size:.79rem;cursor:pointer;text-align:left;font-weight:${hasCur?700:400}">
+              ${hasCur?'✓ Contract loaded — click to replace':'📂 Set current contract…'}
+            </button>
+            <input type="file" id="ct-${co.key}-cur-inp" accept=".xlsx,.xls" style="display:none">
+          </div>
+          <div style="flex:1">
+            <div style="font-size:.72rem;font-weight:700;color:var(--muted);margin-bottom:4px;text-transform:uppercase">Import New Rates</div>
+            <button onclick="ctPickFile('${co.key}','new')" id="ct-${co.key}-new-btn"
+              style="width:100%;padding:7px 12px;border:1.5px ${hasNew?'solid #f59e0b':'dashed var(--border)'};border-radius:7px;background:var(--bg);color:${hasNew?'#d97706':'var(--muted)'};font-size:.79rem;cursor:pointer;text-align:left;font-weight:${hasNew?700:400}">
+              ${hasNew?'⚠️ New rates loaded':'📂 Import new contract…'}
+            </button>
+            <input type="file" id="ct-${co.key}-new-inp" accept=".xlsx,.xls" style="display:none">
+          </div>
+        </div>
+        ${hasNew&&hasCur?`<button onclick="ctCompare('${co.key}')" style="width:100%;padding:7px 0;background:linear-gradient(135deg,${co.color},${co.color}cc);color:#fff;border:none;border-radius:7px;font-weight:800;font-size:.82rem;cursor:pointer">Compare Rates ▶</button>`:''}
+        ${hasNew&&!hasCur?`<div style="font-size:.75rem;color:#d97706;margin-top:4px">⚠️ Set a current contract first to compare</div>`:''}
+        <div id="ct-${co.key}-diff" style="margin-top:${hasNew&&hasCur?'12px':'0'}"></div>
+      </div>
+    </div>`;
+  });
+  html+=`</div></div>`;
+  el.innerHTML=html;
+  // Wire file inputs
+  CT_COMPANIES.forEach(co=>{
+    ['cur','new'].forEach(slot=>{
+      const inp=document.getElementById(`ct-${co.key}-${slot}-inp`);
+      if(inp&&!inp._wired){ inp._wired=true; inp.addEventListener('change',e=>ctFileChosen(e,co.key,slot)); }
     });
   });
 }
 
-async function runContractDiff(){
-  const out = document.getElementById('ct-diff-out');
-  if(!out) return;
-  const oldFile = window._ctFiles.old.file;
-  const newFile = window._ctFiles.new.file;
-  if(!oldFile || !newFile){
-    out.innerHTML = '<div style="color:#dc2626;font-size:.83rem;padding:6px 0">Please choose both a previous and a new contract file.</div>';
-    return;
-  }
-  out.innerHTML = '<div style="color:var(--muted);font-size:.83rem">Comparing…</div>';
+function ctPickFile(key,slot){ document.getElementById(`ct-${key}-${slot}-inp`)?.click(); }
+
+async function ctFileChosen(e,key,slot){
+  const f=e.target.files[0]; e.target.value='';
+  if(!f) return;
+  const co=CT_COMPANIES.find(c=>c.key===key);
   try{
-    const [oldWb, newWb] = await Promise.all([
-      XLSX.read(await readBuf(oldFile), {type:'array'}),
-      XLSX.read(await readBuf(newFile), {type:'array'})
-    ]);
-    const toArr = wb => XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]], {header:1, defval:''});
-    // Try to detect if it's a Raya-style multi-tab workbook or Bosta-style single sheet
-    const isRaya = wb => wb.SheetNames.some(n=>n.toLowerCase().includes('ha')||n.toLowerCase().includes('furniture')||n.toLowerCase().includes('rate'));
-    let diffRows = [];
-    const SIZE_ORDER = ['Small','Medium','Large','L Shape','U Shape','Full Room'];
-
-    if(isRaya(oldWb) || isRaya(newWb)){
-      // Raya: parse both as Raya contracts, compare HA delivery/returns + Furniture delivery
-      const oldC = parseRayaContract(oldWb);
-      const newC = parseRayaContract(newWb);
-      const sections = [
-        { label:'HA — Delivery',    old: oldC.ha?.delivery||{},        new: newC.ha?.delivery||{},        cat:'HA',        status:'Delivery' },
-        { label:'HA — Returns',     old: oldC.ha?.returns||{},         new: newC.ha?.returns||{},          cat:'HA',        status:'Returns'  },
-        { label:'Furniture — Delivery', old: oldC.furniture?.delivery||{}, new: newC.furniture?.delivery||{}, cat:'Furniture',  status:'Delivery' },
-        { label:'Furniture — Returns',  old: oldC.furniture?.returns||{},  new: newC.furniture?.returns||{},  cat:'Furniture',  status:'Returns'  },
-      ];
-      sections.forEach(sec=>{
-        const allZones = [...new Set([...Object.keys(sec.old), ...Object.keys(sec.new)])].sort((a,b)=>parseInt(a)-parseInt(b));
-        const allSizes = [...new Set([...Object.keys(sec.old).flatMap(z=>Object.keys(sec.old[z]||{})), ...Object.keys(sec.new).flatMap(z=>Object.keys(sec.new[z]||{}))])];
-        allSizes.sort((a,b)=>{ const ai=SIZE_ORDER.indexOf(a),bi=SIZE_ORDER.indexOf(b); return (ai<0?99:ai)-(bi<0?99:bi); });
-        allZones.forEach(zone=>{
-          allSizes.forEach(size=>{
-            const oldR = (sec.old[zone]||{})[size]||0;
-            const newR = (sec.new[zone]||{})[size]||0;
-            if(oldR===0 && newR===0) return;
-            const delta = newR - oldR;
-            const pct = oldR>0 ? delta/oldR*100 : null;
-            diffRows.push({ cat:sec.cat, status:sec.status, zone:'Zone '+zone, size, oldR, newR, delta, pct });
-          });
-        });
-      });
+    const wb=XLSX.read(await readBuf(f),{type:'array'});
+    const parsed=_ctParseWb(wb,co.parser);
+    if(!_ctHasData(parsed,co.parser)){ alert('Could not read rate data from this file. Check it matches the expected format.'); return; }
+    if(slot==='cur'){
+      _ctState[key].current=parsed;
+      _ctState[key].curFile=f.name;
+      _ctSaveLS();
     } else {
-      // Bosta-style: compare shipping and pkg tables
-      const oldC = parseBostaContract(toArr(oldWb));
-      const newC = parseBostaContract(toArr(newWb));
-      const allTypes = [...new Set([...Object.keys(oldC.shipping||{}), ...Object.keys(newC.shipping||{})])];
-      const allZones = [...new Set([...(oldC.zones||[]), ...(newC.zones||[])])];
-      allTypes.forEach(type=>{
-        allZones.forEach(zone=>{
-          const oldR = (oldC.shipping[type]||{})[zone]||0;
-          const newR = (newC.shipping[type]||{})[zone]||0;
-          if(oldR===0&&newR===0) return;
-          const delta=newR-oldR, pct=oldR>0?delta/oldR*100:null;
-          diffRows.push({ cat:'Shipping', status:type, zone, size:'—', oldR, newR, delta, pct });
-        });
-      });
-      const allSizes = [...new Set([...Object.keys(oldC.pkg||{}), ...Object.keys(newC.pkg||{})])];
-      allSizes.forEach(sz=>{
-        allZones.forEach(zone=>{
-          const oldR=(oldC.pkg[sz]||{})[zone]||0, newR=(newC.pkg[sz]||{})[zone]||0;
-          if(oldR===0&&newR===0) return;
-          const delta=newR-oldR, pct=oldR>0?delta/oldR*100:null;
-          diffRows.push({ cat:'PKG', status:'Extra Fee', zone, size:sz, oldR, newR, delta, pct });
-        });
-      });
+      _ctState[key].newC=parsed;
+      _ctState[key].newFile=f.name;
     }
+    renderContractMgr();
+    renderContracts();
+  }catch(err){ alert('Error reading file: '+err.message); }
+}
 
-    if(!diffRows.length){
-      out.innerHTML = '<div style="color:var(--muted);font-size:.83rem;padding:6px 0">✅ No rate changes found between the two contracts.</div>';
-      return;
-    }
+function ctCompare(key){
+  const co=CT_COMPANIES.find(c=>c.key===key);
+  const st=_ctState[key];
+  if(!st.current||!st.newC) return;
+  const rows=_ctDiff(st.current,st.newC,co.parser);
+  const el=document.getElementById(`ct-${key}-diff`);
+  if(!el) return;
+  // Accept button if changes exist
+  const hasChanges=rows.some(r=>r.delta!==0);
+  el.innerHTML=_ctDiffTable(rows)+(hasChanges?`<button onclick="ctAccept('${key}')" style="margin-top:10px;padding:7px 18px;background:#16a34a;color:#fff;border:none;border-radius:7px;font-weight:800;font-size:.82rem;cursor:pointer">✓ Accept & Set as Current Contract</button>`:'');
+}
 
-    const changes = diffRows.filter(r=>r.delta!==0);
-    const increases = changes.filter(r=>r.delta>0);
-    const decreases = changes.filter(r=>r.delta<0);
-
-    const fm = v => v===0?'0':v.toLocaleString('en-US',{minimumFractionDigits:0,maximumFractionDigits:2});
-
-    // Summary pills
-    let html = `<div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px">
-      <span style="background:#fef2f2;color:#dc2626;border:1px solid #fca5a5;padding:4px 12px;border-radius:20px;font-size:.78rem;font-weight:700">↑ ${increases.length} increases</span>
-      <span style="background:#f0fdf4;color:#16a34a;border:1px solid #86efac;padding:4px 12px;border-radius:20px;font-size:.78rem;font-weight:700">↓ ${decreases.length} decreases</span>
-      <span style="background:var(--bg);color:var(--muted);border:1px solid var(--border);padding:4px 12px;border-radius:20px;font-size:.78rem;font-weight:700">= ${diffRows.length-changes.length} unchanged</span>
-    </div>`;
-
-    // Diff table — show changed rows first
-    const sorted = [...changes.sort((a,b)=>b.delta-a.delta), ...diffRows.filter(r=>r.delta===0)];
-    html += `<div style="overflow-x:auto"><table style="width:100%;border-collapse:collapse;font-size:.8rem">
-      <thead><tr style="background:var(--dark);color:#fff">
-        <th style="padding:8px 11px;text-align:left;white-space:nowrap">Category</th>
-        <th style="padding:8px 11px;text-align:left;white-space:nowrap">Status</th>
-        <th style="padding:8px 11px;text-align:left;white-space:nowrap">Zone</th>
-        <th style="padding:8px 11px;text-align:left;white-space:nowrap">Size</th>
-        <th style="padding:8px 11px;text-align:right;white-space:nowrap">Old Rate</th>
-        <th style="padding:8px 11px;text-align:right;white-space:nowrap">New Rate</th>
-        <th style="padding:8px 11px;text-align:right;white-space:nowrap">Change</th>
-        <th style="padding:8px 11px;text-align:right;white-space:nowrap">% Change</th>
-      </tr></thead><tbody>`;
-
-    sorted.forEach((r,i)=>{
-      const isUp = r.delta>0, isDn = r.delta<0;
-      const rowBg = isUp ? 'rgba(220,38,38,.07)' : isDn ? 'rgba(22,163,74,.07)' : (i%2===0?'var(--bg)':'var(--card)');
-      const dColor = isUp ? '#dc2626' : isDn ? '#16a34a' : 'var(--muted)';
-      const dIcon  = isUp ? '↑' : isDn ? '↓' : '=';
-      html += `<tr style="background:${rowBg};border-bottom:1px solid var(--border)">
-        <td style="padding:7px 11px;font-weight:600">${r.cat}</td>
-        <td style="padding:7px 11px">${r.status}</td>
-        <td style="padding:7px 11px">${r.zone}</td>
-        <td style="padding:7px 11px">${r.size}</td>
-        <td style="padding:7px 11px;text-align:right;font-variant-numeric:tabular-nums">${fm(r.oldR)}</td>
-        <td style="padding:7px 11px;text-align:right;font-variant-numeric:tabular-nums;font-weight:${isUp||isDn?700:400}">${fm(r.newR)}</td>
-        <td style="padding:7px 11px;text-align:right;font-variant-numeric:tabular-nums;color:${dColor};font-weight:700">${dIcon} ${r.delta>0?'+':''}${fm(r.delta)}</td>
-        <td style="padding:7px 11px;text-align:right;font-variant-numeric:tabular-nums;color:${dColor};font-weight:700">${r.pct!==null?(r.pct>0?'+':'')+r.pct.toFixed(1)+'%':'—'}</td>
-      </tr>`;
-    });
-    html += `</tbody></table></div>`;
-    out.innerHTML = html;
-  }catch(err){
-    out.innerHTML = `<div style="color:#dc2626;font-size:.83rem;padding:6px 0">Error: ${err.message}</div>`;
-  }
+function ctAccept(key){
+  const st=_ctState[key];
+  if(!st.newC) return;
+  st.current=st.newC; st.curFile=st.newFile;
+  st.newC=null; st.newFile=null;
+  _ctSaveLS();
+  renderContractMgr();
+  renderContracts();
 }
 
 /* ---------- Bosta page logic ---------- */
