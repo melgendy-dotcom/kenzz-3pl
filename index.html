@@ -771,7 +771,7 @@ const I18N = {
     allStatuses:'Ø¬Ù…ÙŠØ¹ Ø§Ù„Ø­Ø§Ù„Ø§Øª', delivered:'ØªÙ… Ø§Ù„ØªØ³Ù„ÙŠÙ…', returned:'Ù…ÙØ¹Ø§Ø¯Ø©', pending:'Ù…Ø¹Ù„Ù‚Ø©',
     ar_file:'📋 Ù…Ù„Ù Ø£Ø±Ø§Ù…ÙƒØ³ *', ar_fileDesc:'Ø§Ù„Ù…Ù„Ù Ø§Ù„Ø´Ù‡Ø±ÙŠ Ù…Ù† Ø¨ÙˆØ§Ø¨Ø© Ø£Ø±Ø§Ù…ÙƒØ³ (Excel)',
     ar_odoo:'ðŸ¦ Ù…Ù„Ù Odoo', ar_odooDesc:'Ù„ØªØ­Ø¯ÙŠØ¯ Ø·Ø±ÙŠÙ‚Ø© Ø§Ù„Ø¯ÙØ¹ ÙˆÙ‚ÙŠÙ…Ø© COD',
-    ar_zones:'ðŸ—ºï¸ Ù…Ù„Ù Ø§Ù„Ù…Ù†Ø§Ø·Ù‚', ar_zonesDesc:'Ù…Ù„Ù Ù…Ù†Ø§Ø·Ù‚ Ø§Ù„Ù…Ø¯Ù† (Ø§Ø®ØªÙŠØ§Ø±ÙŠ)',
+    ar_zones:'🗺️ Ù…Ù„Ù Ø§Ù„Ù…Ù†Ø§Ø·Ù‚', ar_zonesDesc:'Ù…Ù„Ù Ù…Ù†Ø§Ø·Ù‚ Ø§Ù„Ù…Ø¯Ù† (Ø§Ø®ØªÙŠØ§Ø±ÙŠ)',
     ar_status:'📡 Ù…Ù„Ù Ø§Ù„Ø­Ø§Ù„Ø§Øª', ar_statusDesc:'Ù…Ù„Ù ØªØªØ¨Ø¹ Ø§Ù„Ø´Ø­Ù†Ø§Øª (Ø§Ø®ØªÙŠØ§Ø±ÙŠ)',
     ar_cfgTitle:'⚙️ Ø¥Ø¹Ø¯Ø§Ø¯Ø§Øª Ø­Ø³Ø§Ø¨ Ø§Ù„ØªÙƒÙ„ÙØ©',
     ar_codThresh:'Ø­Ø¯ COD (Ø¬Ù†ÙŠÙ‡)', ar_codThreshHint:'Ø§Ù„Ø­Ø¯ Ø§Ù„Ø£Ø¯Ù†Ù‰ Ù„ØªØ·Ø¨ÙŠÙ‚ Ø¹Ù…ÙˆÙ„Ø© COD',
@@ -871,7 +871,7 @@ const I18N = {
     allStatuses:'All Statuses', delivered:'Delivered', returned:'Returned', pending:'Pending',
     ar_file:'📋 Aramex File *', ar_fileDesc:'Monthly file from Aramex portal (Excel)',
     ar_odoo:'ðŸ¦ Odoo File', ar_odooDesc:'For payment type and COD value',
-    ar_zones:'ðŸ—ºï¸ Zones File', ar_zonesDesc:'City zones mapping file (optional)',
+    ar_zones:'🗺️ Zones File', ar_zonesDesc:'City zones mapping file (optional)',
     ar_status:'📡 Status File', ar_statusDesc:'Shipment tracking status file (optional)',
     ar_cfgTitle:'⚙️ Cost Calculation Settings',
     ar_codThresh:'COD Threshold (EGP)', ar_codThreshHint:'Minimum for COD fee to apply',
@@ -1376,7 +1376,7 @@ function renderBostaTable(){
       <td class="td-ins">${fm(r.insurance)}</td>
       <td class="td-r">${fm(r.priceBAV)}</td>
       <td class="td-diff ${r.isOver?'fb-over':'fb-ok'}">${fm(r.diff)}</td>
-      <td><span class="${r.isOver?'fb-over':'fb-ok'}">${r.isOver?'▲ Over':'âœ“'}</span></td>
+      <td><span class="${r.isOver?'fb-over':'fb-ok'}">${r.isOver?'▲ Over':'✓'}</span></td>
     </tr>`).join('');
   }, 'bo');
 }
@@ -1772,7 +1772,7 @@ function renderAramexTable(){
   const tbody = document.getElementById('ar-table-body');
   arPage = _paginate(filtered, arPage, auditData.length, 'ar-results-count', rows => {
     tbody.innerHTML = rows.map(r => {
-      const flagTxt = (r.flagBase&&r.flagOther) ? 'Both' : r.flagBase ? 'Baseâ†‘' : r.flagOther ? 'Otherâ†“' : r.isPending ? 'Pend' : 'âœ“';
+      const flagTxt = (r.flagBase&&r.flagOther) ? 'Both' : r.flagBase ? 'Base↑' : r.flagOther ? 'Other↓' : r.isPending ? 'Pend' : '✓';
       const flagCls = (r.flagBase||r.flagOther) ? 'fb-over' : r.isPending ? 'fb-pend' : 'fb-ok';
       return `
     <tr class="${aramexRowCls(r)}">
@@ -3110,7 +3110,7 @@ function renderAnalytics(){
 
     const EGP=v=>v.toLocaleString('en',{maximumFractionDigits:0})+' EGP';
     const dBadge=diff=>{
-      if(Math.abs(diff)<THRESH) return `<span style="color:#9ca3af;font-size:.75rem">âœ“ Match</span>`;
+      if(Math.abs(diff)<THRESH) return `<span style="color:#9ca3af;font-size:.75rem">✓ Match</span>`;
       const over=diff>0;
       const bc=over?'#fee2e2':'#dcfce7'; const tc=over?'#dc2626':'#16a34a';
       return `<span style="background:${bc};color:${tc};border-radius:6px;padding:2px 8px;font-size:.73rem;font-weight:700">${over?'▲':'▼'} ${EGP(Math.abs(diff))}</span>`;
@@ -3179,7 +3179,7 @@ function renderAnalytics(){
         <tbody>${bodyHtml}${totRow}</tbody>
       </table></div>
       <div style="padding:8px 14px;background:#f8fafc;font-size:.72rem;color:#6b7280;font-style:italic">
-        ▲ red = Raya billed above contract &nbsp;|&nbsp; ▼ green = Raya billed below contract &nbsp;|&nbsp; âœ“ Match = within 0.50 EGP
+        ▲ red = Raya billed above contract &nbsp;|&nbsp; ▼ green = Raya billed below contract &nbsp;|&nbsp; ✓ Match = within 0.50 EGP
       </div>
     </div>`;
   }
@@ -3382,7 +3382,7 @@ function renderAnalytics(){
     const thB='background:#0f172a;color:#94a3b8;font-size:.68rem;padding:7px 12px;font-weight:700;letter-spacing:.04em;white-space:nowrap';
     const tdB='padding:7px 12px;font-size:.77rem;border-bottom:1px solid rgba(255,255,255,.06);vertical-align:middle';
     const clr=v=>v>0.05?'#4ade80':v<-0.05?'#f87171':'var(--muted)';
-    const arr=v=>v>0.05?'â†‘':v<-0.05?'â†“':'→';
+    const arr=v=>v>0.05?'↑':v<-0.05?'↓':'→';
     const fmD=v=>(v>=0?'+':'')+v.toFixed(2);
     const maxEff=Math.max(Math.abs(sizeEffect),Math.abs(zoneEffect),Math.abs(pureRate),...extraRows.map(f=>Math.abs(f.val)),0.01);
     function wBar(val){ const pct=Math.min(Math.abs(val)/maxEff*100,100).toFixed(1); const c=val>0.05?'#f87171':val<-0.05?'#4ade80':'#475569'; return `<div style="background:rgba(255,255,255,.1);border-radius:4px;height:10px;overflow:hidden;min-width:90px"><div style="width:${pct}%;height:100%;background:${c};border-radius:4px"></div></div>`; }
@@ -3421,11 +3421,11 @@ function renderAnalytics(){
     const tdL='padding:12px 14px;font-size:.8rem;vertical-align:middle';
     const fmV=v=>v!==null?v.toFixed(2)+' EGP':`<span style="color:#9ca3af">—</span>`;
     const factors=[
-      {icon:'📦',num:'â‘ ',label:'Size Mix',color:'#dc2626',val:sizeEffect,m1:null,m2:null,
+      {icon:'📦',num:'①',label:'Size Mix',color:'#dc2626',val:sizeEffect,m1:null,m2:null,
        desc:Math.abs(sizeEffect)<0.05?'No size mix change':sizeEffect>0?`Size mix shifted to more expensive sizes`:`Size mix shifted to cheaper sizes`},
-      ...(hasZone&&getZone?[{icon:'ðŸ—ºï¸',num:'â‘¡',label:'Zone Mix',color:'#2563eb',val:zoneEffect,m1:null,m2:null,
+      ...(hasZone&&getZone?[{icon:'🗺️',num:'②',label:'Zone Mix',color:'#2563eb',val:zoneEffect,m1:null,m2:null,
        desc:Math.abs(zoneEffect)<0.05?'No zone mix change':zoneEffect>0?`More shipments to distant zones → higher cost`:`More shipments to closer zones → lower cost`}]:[]),
-      {icon:'⚡',num:hasZone&&getZone?'â‘¢':'â‘¡',label:'Contract Rate',color:'#d97706',
+      {icon:'⚡',num:hasZone&&getZone?'③':'②',label:'Contract Rate',color:'#d97706',
        val: contractDisc ? (avgArr(r2.map(contractDisc.getVal)) - avgArr(r1.map(contractDisc.getVal))) : (extraRows.length?pureRate:residual),
        m1: contractDisc ? avgArr(r1.map(contractDisc.getVal)) : null,
        m2: contractDisc ? avgArr(r2.map(contractDisc.getVal)) : null,
@@ -3794,7 +3794,7 @@ function renderValDash(cfg){
     const avg2=d2.qty?Math.round(d2.val/d2.qty):0, avg1=d1.qty?Math.round(d1.val/d1.qty):0;
     const active=selSz===s;
     return `<tr onclick="_vdsSz_${k}('${safe(s)}')" style="cursor:pointer;background:${active?'#f0f9ff':'transparent'};border-bottom:1px solid #f3f4f6;transition:.1s">
-      ${td(`${s}${active?' âœ“':''}`,false,true)}
+      ${td(`${s}${active?' ✓':''}`,false,true)}
       ${M1?td(d1.qty.toLocaleString(),true,false,true):''}
       ${td(d2.qty.toLocaleString(),true,true)}
       ${tdc(dBadge(d2.qty,d1.qty,false))}
