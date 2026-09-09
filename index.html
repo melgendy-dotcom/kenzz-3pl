@@ -1644,16 +1644,139 @@ async function ctFileChosen(e,key,slot){
   }catch(err){ alert('Error reading file: '+err.message); }
 }
 
+// Raya zone groups: display as "1", "2", "3,4,5", "6", "7,8,9" with tier labels
+const RAYA_ZONE_GROUPS = [
+  { zones:['1'],       label:'1',     tier:'Tier 1' },
+  { zones:['2'],       label:'2',     tier:'Tier 2' },
+  { zones:['3','4','5'], label:'3,4,5', tier:'Tier 3' },
+  { zones:['6'],       label:'6',     tier:'Tier 4' },
+  { zones:['7','8','9'], label:'7,8,9', tier:'Tier 5' },
+];
+const SIZE_ORDER_FULL = ['Small','Medium','Large','L Shape','U Shape','Full Room'];
+
+function _ctGridSection(title, oldTbl, newTbl, color, showTier){
+  // Collect all sizes present in either table
+  const allZoneKeys = [...new Set([...Object.keys(oldTbl||{}),...Object.keys(newTbl||{})])];
+  const allSizes = [...new Set(allZoneKeys.flatMap(z=>Object.keys((oldTbl[z]||{}))))].concat(
+                   [...new Set(allZoneKeys.flatMap(z=>Object.keys((newTbl[z]||{}))))]);
+  const sizes = [...new Set(allSizes)].sort((a,b)=>{
+    const ai=SIZE_ORDER_FULL.indexOf(a),bi=SIZE_ORDER_FULL.indexOf(b);
+    return (ai<0?99:ai)-(bi<0?99:bi);
+  });
+  if(!sizes.length) return '';
+
+  // Determine row groups
+  const groups = showTier ? RAYA_ZONE_GROUPS.filter(g=>g.zones.some(z=>allZoneKeys.includes(z)))
+    : [...new Set(allZoneKeys)].sort((a,b)=>parseInt(a)-parseInt(b)).map(z=>({zones:[z],label:z,tier:null}));
+
+  const fm = v => v>0 ? v.toLocaleString('en-US',{minimumFractionDigits:0,maximumFractionDigits:3}) : '—';
+  let totalChanges=0, totalUps=0, totalDns=0;
+
+  // Build rows data first to count changes
+  const rowData = groups.map(g=>{
+    const cells = sizes.map(sz=>{
+      const oldV = g.zones.reduce((v,z)=>v||(oldTbl[z]||{})[sz]||0, 0);
+      const newV = g.zones.reduce((v,z)=>v||(newTbl[z]||{})[sz]||0, 0);
+      const delta = newV - oldV;
+      if(delta!==0) { totalChanges++; if(delta>0) totalUps++; else totalDns++; }
+      return {oldV, newV, delta};
+    });
+    return {g, cells};
+  });
+
+  let h = `<div style="margin-bottom:20px">
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
+      <div style="font-size:.82rem;font-weight:800;color:${color};text-transform:uppercase;letter-spacing:.5px">${title}</div>
+      ${totalUps>0?`<span style="background:#fef2f2;color:#dc2626;border:1px solid #fca5a5;padding:2px 9px;border-radius:20px;font-size:.71rem;font-weight:700">↑ ${totalUps} up</span>`:''}
+      ${totalDns>0?`<span style="background:#f0fdf4;color:#16a34a;border:1px solid #86efac;padding:2px 9px;border-radius:20px;font-size:.71rem;font-weight:700">↓ ${totalDns} down</span>`:''}
+      ${totalChanges===0?`<span style="color:var(--muted);font-size:.75rem">No changes</span>`:''}
+    </div>
+    <div style="overflow-x:auto"><table style="border-collapse:collapse;font-size:.79rem;min-width:400px">
+    <thead>
+      <tr style="background:${color};color:#fff">
+        <th style="padding:7px 12px;text-align:center;font-weight:700;border-right:1px solid rgba(255,255,255,.2)">Zones</th>
+        ${showTier?`<th style="padding:7px 12px;text-align:center;font-weight:700;border-right:1px solid rgba(255,255,255,.2)">Tier</th>`:''}`;
+  sizes.forEach(sz=>{
+    h+=`<th colspan="3" style="padding:7px 12px;text-align:center;font-weight:700;border-right:1px solid rgba(255,255,255,.2);border-left:1px solid rgba(255,255,255,.2)">${sz}</th>`;
+  });
+  h+=`</tr>
+      <tr style="background:${color}cc;color:#fff;font-size:.72rem">
+        <th style="padding:4px 12px;border-right:1px solid rgba(255,255,255,.2)"></th>
+        ${showTier?`<th style="padding:4px 12px;border-right:1px solid rgba(255,255,255,.2)"></th>`:''}`;
+  sizes.forEach(()=>{
+    h+=`<th style="padding:4px 8px;text-align:right;opacity:.85">Current</th><th style="padding:4px 8px;text-align:right;opacity:.85">New</th><th style="padding:4px 10px;text-align:right;opacity:.85">Δ</th>`;
+  });
+  h+=`</tr></thead><tbody>`;
+
+  rowData.forEach(({g,cells},ri)=>{
+    const bg = ri%2===0 ? 'var(--bg)' : 'var(--card)';
+    h+=`<tr style="background:${bg};border-bottom:1px solid var(--border)">
+      <td style="padding:7px 12px;text-align:center;font-weight:700;border-right:1px solid var(--border)">${g.label}</td>
+      ${showTier?`<td style="padding:7px 12px;font-weight:700;color:${color};border-right:1px solid var(--border)">${g.tier}</td>`:''}`;
+    cells.forEach(({oldV,newV,delta})=>{
+      const up=delta>0,dn=delta<0;
+      const cellBg=up?'rgba(220,38,38,.09)':dn?'rgba(22,163,74,.09)':'transparent';
+      const dc=up?'#dc2626':dn?'#16a34a':'var(--muted)';
+      const dStr=delta===0?'—':(up?'↑ +':dn?'↓ ':'')+Math.abs(delta).toLocaleString('en-US',{minimumFractionDigits:0,maximumFractionDigits:3});
+      h+=`<td style="padding:7px 8px;text-align:right;font-variant-numeric:tabular-nums;background:${cellBg};border-left:2px solid var(--border)">${fm(oldV)}</td>
+          <td style="padding:7px 8px;text-align:right;font-variant-numeric:tabular-nums;font-weight:${up||dn?700:400};background:${cellBg}">${fm(newV)}</td>
+          <td style="padding:7px 10px;text-align:right;font-variant-numeric:tabular-nums;color:${dc};font-weight:700;background:${cellBg};border-right:1px solid var(--border)">${dStr}</td>`;
+    });
+    h+=`</tr>`;
+  });
+  h+=`</tbody></table></div></div>`;
+  return h;
+}
+
+function _ctGridDiff(oldP, newP, parser, key){
+  const co=CT_COMPANIES.find(c=>c.key===key);
+  let h='';
+  let anyChange=false;
+
+  if(parser==='raya'){
+    const sections=[
+      {title:'HA — Delivered',      oldT:oldP.ha?.delivery||{},         newT:newP.ha?.delivery||{},         color:'#0f766e', tier:true},
+      {title:'HA — Returns (75%)',  oldT:oldP.ha?.returns||{},          newT:newP.ha?.returns||{},           color:'#134e4a', tier:true},
+      {title:'Furniture — Delivered',oldT:oldP.furniture?.delivery||{}, newT:newP.furniture?.delivery||{},  color:'#0891b2', tier:true},
+      {title:'Furniture — Returns (100%)',oldT:oldP.furniture?.returns||{}, newT:newP.furniture?.returns||{}, color:'#075985', tier:true},
+    ];
+    sections.forEach(s=>{ h+=_ctGridSection(s.title,s.oldT,s.newT,s.color,s.tier); });
+    anyChange = sections.some(s=>Object.keys(s.newT).some(z=>Object.keys(s.newT[z]||{}).some(sz=>(s.oldT[z]||{})[sz]!==(s.newT[z]||{})[sz])));
+  } else if(parser==='bosta'){
+    const allTypes=[...new Set([...Object.keys(oldP.shipping||{}),...Object.keys(newP.shipping||{})])];
+    allTypes.forEach(type=>{
+      const oldT={},newT={};
+      const allZ=[...new Set([...Object.keys((oldP.shipping[type]||{})),...Object.keys((newP.shipping[type]||{}))])];
+      allZ.forEach(z=>{oldT[z]={Rate:(oldP.shipping[type]||{})[z]||0}; newT[z]={Rate:(newP.shipping[type]||{})[z]||0};});
+      h+=_ctGridSection(type,oldT,newT,co.color,false);
+    });
+    anyChange=true;
+  } else if(parser==='mashreq'){
+    ['lastmile','pickup'].forEach(type=>{
+      const oldTbl=oldP[type]||{},newTbl=newP[type]||{};
+      const zones=oldP.zones||newP.zones||[1,2,3,4];
+      const oldT={},newT={};
+      const allSizes=[...new Set([...Object.keys(oldTbl),...Object.keys(newTbl)])];
+      zones.forEach(z=>{
+        oldT[z]={}; newT[z]={};
+        allSizes.forEach(sz=>{ oldT[z][sz]=(oldTbl[sz]||{})[z]||0; newT[z][sz]=(newTbl[sz]||{})[z]||0; });
+      });
+      h+=_ctGridSection(type==='lastmile'?'Last Mile':'Pickup',oldT,newT,co.color,false);
+    });
+    anyChange=true;
+  }
+
+  if(!h) return '<div style="color:var(--muted);font-size:.83rem;padding:8px 0">No rate data to compare.</div>';
+  return h + (anyChange ? `<button onclick="ctAccept('${key}')" style="padding:8px 20px;background:#16a34a;color:#fff;border:none;border-radius:7px;font-weight:800;font-size:.82rem;cursor:pointer;margin-top:4px">✓ Accept New Rates as Current Contract</button>` : '');
+}
+
 function ctCompare(key){
   const co=CT_COMPANIES.find(c=>c.key===key);
   const st=_ctState[key];
   if(!st.current||!st.newC) return;
-  const rows=_ctDiff(st.current,st.newC,co.parser);
   const el=document.getElementById(`ct-${key}-diff`);
   if(!el) return;
-  // Accept button if changes exist
-  const hasChanges=rows.some(r=>r.delta!==0);
-  el.innerHTML=_ctDiffTable(rows)+(hasChanges?`<button onclick="ctAccept('${key}')" style="margin-top:10px;padding:7px 18px;background:#16a34a;color:#fff;border:none;border-radius:7px;font-weight:800;font-size:.82rem;cursor:pointer">✓ Accept & Set as Current Contract</button>`:'');
+  el.innerHTML = _ctGridDiff(st.current, st.newC, co.parser, key);
 }
 
 function ctAccept(key){
