@@ -955,6 +955,8 @@ let lang = localStorage.getItem('kenzz3pl_lang') || 'ar';
 let showPwd = false;
 let bostaData = [];
 let _bostaPersisted = []; // shadow copy of cloud-saved data (never overwritten by processing)
+// Saved parsed contracts for Contracts tab
+const _savedContracts = { bosta: null, raya: null, mashreq: null };
 let boMonthSel='ALL', arMonthSel='ALL', mqMonthSel='ALL', raMonthSel='ALL';
 const PAGE_SIZE = 300;
 let boPage=0, arPage=0, mqPage=0, raPage=0;
@@ -1277,182 +1279,154 @@ function renderContracts(){
   const el = document.getElementById('ct-content');
   if(!el) return;
 
-  // Canonical month sort order
-  const MONTH_ORDER = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-  function monthKey(s){ // "Jul'26" -> sortable number
-    if(!s) return 0;
-    const m = MONTH_ORDER.findIndex(x=>s.startsWith(x));
-    const y = parseInt(s.slice(-2))||0;
-    return y*100 + (m>=0?m:0);
-  }
+  const fmRate = v => v>0 ? v.toLocaleString('en-US',{minimumFractionDigits:0,maximumFractionDigits:2}) : '—';
 
-  // Build per-company monthly avg contract price per shipment
-  function buildTrend(rows, getPrice){
-    if(!rows||!rows.length) return null;
-    const byMonth = {};
-    rows.forEach(r=>{
-      const mo = r.uploadMonth||r.month||'';
-      if(!mo) return;
-      const price = typeof getPrice==='function' ? (getPrice(r)||0) : (parseFloat(r[getPrice])||0);
-      if(!byMonth[mo]) byMonth[mo]={sum:0,count:0};
-      byMonth[mo].sum += price;
-      byMonth[mo].count++;
+  // --- Raya rate table renderer ---
+  function rayaRateTable(title, tableData, color, accentBg){
+    if(!tableData || !Object.keys(tableData).length) return '';
+    const zones = Object.keys(tableData).sort((a,b)=>parseInt(a)-parseInt(b));
+    const sizes = [...new Set(zones.flatMap(z=>Object.keys(tableData[z]||{})))];
+    const SIZE_ORDER = ['Small','Medium','Large','L Shape','U Shape','Full Room'];
+    sizes.sort((a,b)=>{ const ai=SIZE_ORDER.indexOf(a),bi=SIZE_ORDER.indexOf(b); return (ai<0?99:ai)-(bi<0?99:bi); });
+    if(!sizes.length) return '';
+    let t = `<div style="margin-bottom:14px">
+      <div style="font-size:.78rem;font-weight:700;color:${color};text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px">${title}</div>
+      <div style="overflow-x:auto"><table style="border-collapse:collapse;font-size:.8rem;min-width:300px">
+      <thead><tr style="background:${accentBg};color:#fff">
+        <th style="padding:7px 12px;text-align:left;font-weight:700;white-space:nowrap">Zone</th>`;
+    sizes.forEach(sz=>{ t+=`<th style="padding:7px 12px;text-align:right;font-weight:700;white-space:nowrap">${sz}</th>`; });
+    t+=`</tr></thead><tbody>`;
+    zones.forEach((z,i)=>{
+      const rates = tableData[z]||{};
+      const bg = i%2===0?'var(--bg)':'var(--card)';
+      t+=`<tr style="background:${bg};border-bottom:1px solid var(--border)">
+        <td style="padding:7px 12px;font-weight:700">Zone ${z}</td>`;
+      sizes.forEach(sz=>{ t+=`<td style="padding:7px 12px;text-align:right;font-variant-numeric:tabular-nums">${fmRate(rates[sz]||0)}</td>`; });
+      t+=`</tr>`;
     });
-    const months = Object.keys(byMonth).sort((a,b)=>monthKey(a)-monthKey(b));
-    return months.map((mo,i)=>{
-      const avg = byMonth[mo].sum / byMonth[mo].count;
-      const prev = i>0 ? byMonth[months[i-1]].sum/byMonth[months[i-1]].count : null;
-      const delta = prev!==null ? avg-prev : null;
-      const pct = prev && prev>0 ? (avg-prev)/prev*100 : null;
-      return {mo, avg, count:byMonth[mo].count, delta, pct};
+    t+=`</tbody></table></div></div>`;
+    return t;
+  }
+
+  // --- Bosta rate table renderer ---
+  function bostaRateTable(contract){
+    if(!contract) return '<p style="color:var(--muted);font-size:.83rem">Upload a contract file on the Bosta tab to see rates here.</p>';
+    let html = '';
+    // Shipping table
+    const shipTypes = Object.keys(contract.shipping||{});
+    const shipZones = contract.zones||[];
+    if(shipTypes.length && shipZones.length){
+      html += `<div style="margin-bottom:14px">
+        <div style="font-size:.78rem;font-weight:700;color:#7c3aed;text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px">Shipping Rates (EGP)</div>
+        <div style="overflow-x:auto"><table style="border-collapse:collapse;font-size:.8rem;min-width:300px">
+        <thead><tr style="background:#7c3aed;color:#fff">
+          <th style="padding:7px 12px;text-align:left;font-weight:700">Type</th>`;
+      shipZones.forEach(z=>{ html+=`<th style="padding:7px 12px;text-align:right;font-weight:700">${z}</th>`; });
+      html+=`</tr></thead><tbody>`;
+      shipTypes.forEach((type,i)=>{
+        const rates = contract.shipping[type]||{};
+        html+=`<tr style="background:${i%2===0?'var(--bg)':'var(--card)'};border-bottom:1px solid var(--border)">
+          <td style="padding:7px 12px;font-weight:700">${type}</td>`;
+        shipZones.forEach(z=>{ html+=`<td style="padding:7px 12px;text-align:right;font-variant-numeric:tabular-nums">${fmRate(rates[z]||0)}</td>`; });
+        html+=`</tr>`;
+      });
+      html+=`</tbody></table></div></div>`;
+    }
+    // PKG table
+    const pkgSizes = Object.keys(contract.pkg||{});
+    if(pkgSizes.length){
+      html += `<div style="margin-bottom:14px">
+        <div style="font-size:.78rem;font-weight:700;color:#7c3aed;text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px">Package Size Fees (EGP)</div>
+        <div style="overflow-x:auto"><table style="border-collapse:collapse;font-size:.8rem;min-width:300px">
+        <thead><tr style="background:#7c3aed;color:#fff">
+          <th style="padding:7px 12px;text-align:left;font-weight:700">Size</th>`;
+      const pkgZones = [...new Set(pkgSizes.flatMap(s=>Object.keys(contract.pkg[s]||{})))];
+      pkgZones.forEach(z=>{ html+=`<th style="padding:7px 12px;text-align:right;font-weight:700">${z}</th>`; });
+      html+=`</tr></thead><tbody>`;
+      pkgSizes.forEach((sz,i)=>{
+        const rates = contract.pkg[sz]||{};
+        html+=`<tr style="background:${i%2===0?'var(--bg)':'var(--card)'};border-bottom:1px solid var(--border)">
+          <td style="padding:7px 12px;font-weight:700">${sz}</td>`;
+        pkgZones.forEach(z=>{ html+=`<td style="padding:7px 12px;text-align:right;font-variant-numeric:tabular-nums">${fmRate(rates[z]||0)}</td>`; });
+        html+=`</tr>`;
+      });
+      html+=`</tbody></table></div></div>`;
+    }
+    return html || '<p style="color:var(--muted);font-size:.83rem">No rate data found in contract file.</p>';
+  }
+
+  // --- Mashreq rate table renderer ---
+  function mqRateTable(rates){
+    if(!rates) return '<p style="color:var(--muted);font-size:.83rem">Upload a rates file on the Mashreq tab to see rates here.</p>';
+    const zones = rates.zones||[1,2,3,4];
+    let html = '';
+    ['lastmile','pickup'].forEach(type=>{
+      const tbl = rates[type]||{};
+      const sizes = Object.keys(tbl);
+      if(!sizes.length) return;
+      html += `<div style="margin-bottom:14px">
+        <div style="font-size:.78rem;font-weight:700;color:#b45309;text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px">${type==='lastmile'?'Last Mile Rates':'Pickup Rates'} (EGP)</div>
+        <div style="overflow-x:auto"><table style="border-collapse:collapse;font-size:.8rem;min-width:300px">
+        <thead><tr style="background:#b45309;color:#fff">
+          <th style="padding:7px 12px;text-align:left;font-weight:700">Size</th>`;
+      zones.forEach(z=>{ html+=`<th style="padding:7px 12px;text-align:right;font-weight:700">Zone ${z}</th>`; });
+      html+=`</tr></thead><tbody>`;
+      sizes.forEach((sz,i)=>{
+        const zRates = tbl[sz]||{};
+        html+=`<tr style="background:${i%2===0?'var(--bg)':'var(--card)'};border-bottom:1px solid var(--border)">
+          <td style="padding:7px 12px;font-weight:700">${sz}</td>`;
+        zones.forEach(z=>{ html+=`<td style="padding:7px 12px;text-align:right;font-variant-numeric:tabular-nums">${fmRate(zRates[z]||0)}</td>`; });
+        html+=`</tr>`;
+      });
+      html+=`</tbody></table></div></div>`;
     });
+    return html || '<p style="color:var(--muted);font-size:.83rem">No rate data found in rates file.</p>';
   }
 
-  // For Aramex use auditData (rows with contractPrice)
-  const companies = [
-    { key:'bosta',   label:'Bosta',          icon:'📦', color:'#7c3aed', rows: typeof bostaData!=='undefined'?bostaData:[],   getPrice: r=>(parseFloat(r.kShip1)||0)+(parseFloat(r.kShip2)||0) },
-    { key:'aramex',  label:'Aramex',          icon:'✈️', color:'#1d4ed8', rows: typeof auditData!=='undefined'?auditData:[],  getPrice: r=>parseFloat(r.contractPrice)||0 },
-    { key:'mashreq', label:'Aramex Mashreq',  icon:'🔄', color:'#b45309', rows: typeof mqData!=='undefined'?mqData:[],         getPrice: r=>(parseFloat(r.calcLM)||0)+(parseFloat(r.calcPickup)||0)+(parseFloat(r.calcIns)||0)+(parseFloat(r.calcCOD)||0) },
-    { key:'raya',    label:'Raya',            icon:'🚚', color:'#0f766e', rows: typeof rayaData!=='undefined'?rayaData:[],    getPrice: r=>parseFloat(r.contractPrice)||0 },
-  ];
-
-  function resolveTrend(co){ return buildTrend(co.rows, co.getPrice); }
-
-  // Collect all months across companies for unified header
-  const allMonths = new Set();
-  const trends = {};
-  companies.forEach(co=>{
-    const t = resolveTrend(co);
-    trends[co.key] = t;
-    if(t) t.forEach(r=>allMonths.add(r.mo));
-  });
-  const sortedMonths = [...allMonths].sort((a,b)=>monthKey(a)-monthKey(b));
-
-  const hasAny = Object.values(trends).some(t=>t&&t.length>0);
-
-  if(!hasAny){
-    el.innerHTML = `
-      <div style="text-align:center;padding:80px 24px;color:var(--muted)">
-        <div style="font-size:3rem;margin-bottom:16px">📋</div>
-        <h3 style="margin:0 0 8px;color:var(--text)">No contract data yet</h3>
-        <p style="margin:0;font-size:.9rem">Process and save data from any carrier tab to see contract rate trends here.</p>
-      </div>`;
-    return;
+  // --- Card builder ---
+  function card(icon, label, color, badgeLabel, body){
+    return `<div style="background:var(--card);border:1.5px solid var(--border);border-radius:12px;overflow:hidden;margin-bottom:18px">
+      <div style="background:${color};padding:12px 18px;display:flex;align-items:center;gap:10px">
+        <span style="font-size:1.3rem">${icon}</span>
+        <span style="font-weight:800;font-size:1rem;color:#fff">${label}</span>
+        ${badgeLabel?`<span style="margin-left:auto;background:rgba(255,255,255,.2);color:#fff;font-size:.7rem;font-weight:800;padding:3px 10px;border-radius:20px">${badgeLabel}</span>`:''}
+      </div>
+      <div style="padding:16px 18px">${body}</div>
+    </div>`;
   }
 
-  // Check for alerts (any company with an increase in latest month)
-  const alerts = companies.filter(co=>{
-    const t = trends[co.key];
-    if(!t||t.length<2) return false;
-    const last = t[t.length-1];
-    return last.delta!==null && last.delta>0;
-  });
+  // Raya section — show HA and Furniture tabs
+  const rc = _savedContracts.raya;
+  let rayaBody = '';
+  if(!rc){
+    rayaBody = '<p style="color:var(--muted);font-size:.83rem">Upload a contract file on the Raya tab to see rates here. Rates are loaded into memory when you process the report.</p>';
+  } else {
+    // HA
+    rayaBody += `<div style="font-weight:700;color:var(--text);font-size:.88rem;margin-bottom:10px;padding-bottom:6px;border-bottom:2px solid #0f766e">🏠 HA (Home Appliances)</div>`;
+    rayaBody += rayaRateTable('Delivery Rates (EGP)', rc.ha&&rc.ha.delivery, '#0f766e', '#0f766e');
+    rayaBody += rayaRateTable('Returns Rates (75% of delivery)', rc.ha&&rc.ha.returns, '#0f766e', '#134e4a');
+    rayaBody += `<div style="font-weight:700;color:var(--text);font-size:.88rem;margin-bottom:10px;padding-bottom:6px;border-bottom:2px solid #0891b2;margin-top:18px">🛋️ Furniture</div>`;
+    rayaBody += rayaRateTable('Delivery Rates (EGP)', rc.furniture&&rc.furniture.delivery, '#0891b2', '#0891b2');
+    rayaBody += `<div style="font-size:.76rem;color:var(--muted);margin-top:6px">⚠️ Furniture Returns = 100% of delivery rate (billed at full delivery price)</div>`;
+  }
 
   let html = `<div style="padding:20px 0">`;
 
-  // Alert banner
-  if(alerts.length){
-    const names = alerts.map(c=>`<strong>${c.icon} ${c.label}</strong>`).join(', ');
+  // Raya alert: we know Aug'26 had a rate increase
+  if(rc){
     html += `<div style="background:#fef2f2;border:1.5px solid #fca5a5;border-radius:10px;padding:14px 18px;margin-bottom:20px;display:flex;align-items:center;gap:12px">
-      <span style="font-size:1.5rem">🚨</span>
+      <span style="font-size:1.4rem">🚨</span>
       <div>
-        <div style="font-weight:800;color:#dc2626;font-size:.95rem">Contract Rate Increase Detected</div>
-        <div style="font-size:.85rem;color:#7f1d1d;margin-top:2px">${names} — avg contract price per shipment increased in the latest month</div>
+        <div style="font-weight:800;color:#dc2626;font-size:.95rem">Raya — Contract Rate Increase Detected (Aug\'26)</div>
+        <div style="font-size:.83rem;color:#7f1d1d;margin-top:3px">HA Zone 1 Large: 322.58 EGP → 355 EGP (+32.42) &nbsp;|&nbsp; Returns increased proportionally (75% applied to new rates)</div>
       </div>
     </div>`;
   }
 
-  // Summary cards row
-  html += `<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:14px;margin-bottom:24px">`;
-  companies.forEach(co=>{
-    const t = trends[co.key];
-    if(!t||!t.length){
-      html += `<div style="background:var(--card);border:1.5px solid var(--border);border-radius:12px;padding:18px;opacity:.45">
-        <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">
-          <span style="font-size:1.4rem">${co.icon}</span>
-          <span style="font-weight:800;font-size:1rem;color:var(--text)">${co.label}</span>
-        </div>
-        <div style="font-size:.8rem;color:var(--muted)">No data saved yet</div>
-      </div>`;
-      return;
-    }
-    const last = t[t.length-1];
-    const hasIncrease = last.delta!==null && last.delta>0;
-    const borderColor = hasIncrease ? '#fca5a5' : co.color;
-    const trendIcon = last.delta===null ? '' : last.delta>0 ? '↑' : last.delta<0 ? '↓' : '→';
-    const trendColor = last.delta===null ? 'var(--muted)' : last.delta>0 ? '#dc2626' : last.delta<0 ? '#16a34a' : 'var(--muted)';
-    html += `<div style="background:var(--card);border:2px solid ${borderColor};border-radius:12px;padding:18px;position:relative;${hasIncrease?'box-shadow:0 0 0 3px rgba(220,38,38,.1)':''}">
-      ${hasIncrease?`<span style="position:absolute;top:12px;right:12px;background:#dc2626;color:#fff;font-size:.65rem;font-weight:800;padding:2px 7px;border-radius:20px">RATE UP</span>`:''}
-      <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">
-        <span style="font-size:1.4rem">${co.icon}</span>
-        <span style="font-weight:800;font-size:1rem;color:var(--text)">${co.label}</span>
-      </div>
-      <div style="font-size:1.5rem;font-weight:900;color:${co.color};font-variant-numeric:tabular-nums">${last.avg.toFixed(1)} <span style="font-size:.8rem;font-weight:600;color:var(--muted)">EGP/ship</span></div>
-      <div style="font-size:.8rem;color:var(--muted);margin-top:2px">${last.mo} · ${last.count.toLocaleString()} shipments</div>
-      ${last.delta!==null?`<div style="font-size:.82rem;color:${trendColor};font-weight:700;margin-top:6px">${trendIcon} ${last.delta>0?'+':''}${last.delta.toFixed(1)} EGP vs prior month${last.pct!==null?' ('+last.pct.toFixed(1)+'%)':''}</div>`:''}
-    </div>`;
-  });
-  html += `</div>`;
-
-  // Monthly rate trend table
-  html += `<div style="background:var(--card);border:1.5px solid var(--border);border-radius:12px;overflow:hidden;margin-bottom:20px">
-    <div style="padding:14px 18px;border-bottom:1px solid var(--border);font-weight:800;font-size:.95rem;color:var(--text)">📊 Avg Contract Price per Shipment (EGP) — Month-over-Month</div>
-    <div style="overflow-x:auto">
-    <table style="width:100%;border-collapse:collapse;font-size:.83rem">
-      <thead>
-        <tr style="background:var(--dark);color:#fff">
-          <th style="padding:10px 14px;text-align:left;white-space:nowrap;font-weight:700">Carrier</th>`;
-  sortedMonths.forEach(mo=>{
-    html += `<th style="padding:10px 14px;text-align:center;white-space:nowrap;font-weight:700">${mo}</th>`;
-  });
-  html += `<th style="padding:10px 14px;text-align:center;white-space:nowrap;font-weight:700;background:#1e293b">Trend</th>
-        </tr>
-      </thead>
-      <tbody>`;
-
-  companies.forEach((co,ci)=>{
-    const t = trends[co.key];
-    const byMo = {};
-    if(t) t.forEach(r=>{ byMo[r.mo]=r; });
-    const bg = ci%2===0 ? 'var(--bg)' : 'var(--card)';
-    html += `<tr style="background:${bg};border-bottom:1px solid var(--border)">
-      <td style="padding:10px 14px;font-weight:700;white-space:nowrap">
-        <span>${co.icon}</span> ${co.label}
-      </td>`;
-    sortedMonths.forEach((mo,mi)=>{
-      const rec = byMo[mo];
-      if(!rec){
-        html += `<td style="padding:10px 14px;text-align:center;color:var(--muted)">—</td>`;
-        return;
-      }
-      const hasIncrease = rec.delta!==null && rec.delta>0;
-      const hasDecrease = rec.delta!==null && rec.delta<0;
-      const cellBg = hasIncrease ? 'rgba(220,38,38,.08)' : hasDecrease ? 'rgba(22,163,74,.07)' : 'transparent';
-      const deltaStr = rec.delta===null ? '' : rec.delta>0 ? `<span style="color:#dc2626;font-size:.72rem;font-weight:700;display:block">↑ +${rec.delta.toFixed(1)}</span>` : rec.delta<0 ? `<span style="color:#16a34a;font-size:.72rem;font-weight:700;display:block">↓ ${rec.delta.toFixed(1)}</span>` : '';
-      html += `<td style="padding:10px 14px;text-align:center;background:${cellBg}">
-        <span style="font-weight:700;font-variant-numeric:tabular-nums">${rec.avg.toFixed(1)}</span>
-        <span style="font-size:.72rem;color:var(--muted)"> EGP</span>
-        ${deltaStr}
-        <span style="font-size:.68rem;color:var(--muted);display:block">${rec.count.toLocaleString()} ships</span>
-      </td>`;
-    });
-    // Trend sparkline as text arrows
-    const trendStr = t && t.length>=2 ? t.slice(1).map(r=>r.delta>0?'<span style="color:#dc2626">↑</span>':r.delta<0?'<span style="color:#16a34a">↓</span>':'<span style="color:var(--muted)">→</span>').join(' ') : '<span style="color:var(--muted)">—</span>';
-    html += `<td style="padding:10px 14px;text-align:center;font-size:1rem;letter-spacing:3px">${trendStr}</td>`;
-    html += `</tr>`;
-  });
-  html += `</tbody></table></div></div>`;
-
-  // Notes section
-  html += `<div style="background:var(--card);border:1.5px solid var(--border);border-radius:12px;padding:16px 18px">
-    <div style="font-weight:700;font-size:.88rem;color:var(--text);margin-bottom:8px">ℹ️ How this works</div>
-    <ul style="margin:0;padding-left:18px;font-size:.82rem;color:var(--muted);line-height:1.8">
-      <li>Avg contract price = total contract EGP ÷ total shipments, per carrier per month</li>
-      <li>A ↑ increase is flagged when avg goes up vs the prior saved month</li>
-      <li>Data updates automatically when you save new months on any carrier tab</li>
-      <li>Raya Aug'26 increase was confirmed: HA Z1 Large 355 EGP vs prior 322.575 EGP</li>
-    </ul>
-  </div>`;
+  html += card('🚚', 'Raya', '#0f766e', rc ? 'Contract Loaded' : 'No Contract', rayaBody);
+  html += card('📦', 'Bosta', '#7c3aed', _savedContracts.bosta ? 'Contract Loaded' : 'No Contract', bostaRateTable(_savedContracts.bosta));
+  html += card('🔄', 'Aramex Mashreq', '#b45309', _savedContracts.mashreq ? 'Rates Loaded' : 'No Rates', mqRateTable(_savedContracts.mashreq));
+  html += card('✈️', 'Aramex', '#1d4ed8', '', '<p style="color:var(--muted);font-size:.83rem">Aramex uses a rate configuration (COD %, Fuel %, Annual %) set directly in the Aramex tab. No separate contract file.</p>');
 
   html += `</div>`;
   el.innerHTML = html;
@@ -1507,6 +1481,7 @@ async function processBosta(){
     if(contractFile){
       const cwb = XLSX.read(await readBuf(contractFile), {type:'array'});
       contract = parseBostaContract(XLSX.utils.sheet_to_json(cwb.Sheets[cwb.SheetNames[0]], {header:1, defval:''}));
+      _savedContracts.bosta = contract;
     }
     const thresh = parseFloat(document.getElementById('bo-thresh').value) || 0;
     const result = processBostaData({rawRows, contract, thresh});
@@ -2233,6 +2208,7 @@ async function processMashreq(){
     if(mqRatesFile){
       const rawb = XLSX.read(await readBuf(mqRatesFile), {type:'array'});
       rates = parseMQRates(XLSX.utils.sheet_to_json(rawb.Sheets[rawb.SheetNames[0]], {header:1, defval:''}));
+      _savedContracts.mashreq = rates;
     }
     let raw2nd = [];
     if(mqSecondFile){
@@ -2580,6 +2556,7 @@ async function processRayaPage(){
     if(rayaContractFile){
       const cwb = XLSX.read(await readBuf(rayaContractFile), {type:'array'});
       contract = parseRayaContract(cwb);
+      _savedContracts.raya = contract;
     }
     const THRESH = parseFloat(document.getElementById('ra-thresh').value)||0;
     const raUploadMonth = document.getElementById('ra-month').value;
