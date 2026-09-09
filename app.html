@@ -792,7 +792,7 @@ const I18N = {
     mq_monthLbl:'Ø´Ù‡Ø± Ø§Ù„Ø¨ÙŠØ§Ù†Ø§Øª:', ra_monthLbl:'Ø´Ù‡Ø± Ø§Ù„Ø¨ÙŠØ§Ù†Ø§Øª:',
     mq_file:'📋 ØªÙ‚Ø±ÙŠØ± Aramex Mashreq *', mq_fileDesc:'Ù…Ù„Ù Ø§Ù„ØªÙ‚Ø±ÙŠØ± Ø§Ù„Ø´Ù‡Ø±ÙŠ',
     mq_rates:'📝 Ù…Ù„Ù Ø§Ù„Ø£Ø³Ø¹Ø§Ø±', mq_ratesDesc:'Ø¬Ø¯ÙˆÙ„ Ø£Ø³Ø¹Ø§Ø± Last Mile & Pickup',
-    mq_second:'2ï¸âƒ£ Ù…Ù„Ù Ø§Ù„Ù…Ø­Ø§ÙˆÙ„Ø© Ø§Ù„Ø«Ø§Ù†ÙŠØ©', mq_secondDesc:'ØªÙ‚Ø±ÙŠØ± Ø§Ù„Ù…Ø­Ø§ÙˆÙ„Ø§Øª Ø§Ù„Ø«Ø§Ù†ÙŠØ© (Ø§Ø®ØªÙŠØ§Ø±ÙŠ)',
+    mq_second:'2ï¸⃣ Ù…Ù„Ù Ø§Ù„Ù…Ø­Ø§ÙˆÙ„Ø© Ø§Ù„Ø«Ø§Ù†ÙŠØ©', mq_secondDesc:'ØªÙ‚Ø±ÙŠØ± Ø§Ù„Ù…Ø­Ø§ÙˆÙ„Ø§Øª Ø§Ù„Ø«Ø§Ù†ÙŠØ© (Ø§Ø®ØªÙŠØ§Ø±ÙŠ)',
     mq_settings:'⚙️ Ø§Ù„Ø¥Ø¹Ø¯Ø§Ø¯Ø§Øª', mq_settingsDesc:'Ù†Ø³Ø¨ Ø§Ù„ØªØ£Ù…ÙŠÙ† ÙˆØ§Ù„Ù€ COD ÙˆØ­Ø¯ Ø§Ù„ÙØ§Ø±Ù‚',
     mq_insPct:'ØªØ£Ù…ÙŠÙ† %', mq_codPct:'COD %', mq_thresh:'Ø­Ø¯ Ø§Ù„ÙØ§Ø±Ù‚',
     mq_alertNoFile:'Ø§Ù„Ø±Ø¬Ø§Ø¡ Ø±ÙØ¹ Ù…Ù„Ù Ø§Ù„ØªÙ‚Ø±ÙŠØ±',
@@ -892,7 +892,7 @@ const I18N = {
     mq_monthLbl:'Data Month:', ra_monthLbl:'Data Month:',
     mq_file:'📋 Aramex Mashreq Report *', mq_fileDesc:'Monthly report file',
     mq_rates:'📝 Rates File', mq_ratesDesc:'Last Mile & Pickup rate table',
-    mq_second:'2ï¸âƒ£ Second Attempt File', mq_secondDesc:'Second attempt report (optional)',
+    mq_second:'2ï¸⃣ Second Attempt File', mq_secondDesc:'Second attempt report (optional)',
     mq_settings:'⚙️ Settings', mq_settingsDesc:'Insurance, COD rates and threshold',
     mq_insPct:'Insurance %', mq_codPct:'COD %', mq_thresh:'Diff. Threshold',
     mq_alertNoFile:'Please upload the report file',
@@ -961,9 +961,9 @@ function _paginate(filtered, page, totalAll, countElId, tbodyFn, tabPrefix){
   document.getElementById(countElId).innerHTML =
     `${start+1}–${end} / ${total} &nbsp;` +
     (pages>1 ? `<span style="display:inline-flex;gap:4px;vertical-align:middle">` +
-      `<button onclick="window['${tabPrefix}PageGo'](${page-1})" ${page===0?'disabled':''} style="border:1px solid var(--border);border-radius:4px;padding:1px 8px;cursor:pointer;background:var(--bg)">â€¹</button>` +
+      `<button onclick="window['${tabPrefix}PageGo'](${page-1})" ${page===0?'disabled':''} style="border:1px solid var(--border);border-radius:4px;padding:1px 8px;cursor:pointer;background:var(--bg)">‹</button>` +
       `<span style="font-size:.75rem;padding:0 4px">${page+1}/${pages}</span>` +
-      `<button onclick="window['${tabPrefix}PageGo'](${page+1})" ${page===pages-1?'disabled':''} style="border:1px solid var(--border);border-radius:4px;padding:1px 8px;cursor:pointer;background:var(--bg)">â€º</button>` +
+      `<button onclick="window['${tabPrefix}PageGo'](${page+1})" ${page===pages-1?'disabled':''} style="border:1px solid var(--border);border-radius:4px;padding:1px 8px;cursor:pointer;background:var(--bg)">›</button>` +
     `</span>` : '');
   tbodyFn(filtered.slice(start, end));
   return page;
@@ -1390,7 +1390,7 @@ function exportBosta(){
 async function saveBosta(){
   const btn = document.getElementById('bo-save-btn');
   const origText = btn.innerHTML;
-  btn.disabled = true; btn.innerHTML = 'â³ Saving...';
+  btn.disabled = true; btn.innerHTML = '⏳ Saving...';
   try{
     const months = new Set(bostaData.map(r=>r.uploadMonth).filter(Boolean));
     if(!months.size){ alert('Please set the Data Month before saving, then click Save Results again.'); btn.disabled=false; btn.innerHTML=origText; return; }
@@ -1803,7 +1803,7 @@ function exportAramex(){
 async function saveAramex(){
   const btn = document.getElementById('ar-save-btn');
   const origText = btn.innerHTML;
-  btn.disabled = true; btn.innerHTML = 'â³ Saving...';
+  btn.disabled = true; btn.innerHTML = '⏳ Saving...';
   try{
     const months = new Set(auditData.map(r=>r.uploadMonth).filter(Boolean));
     if(!months.size){ alert('Please set the Data Month before saving, then click Save Results again.'); btn.disabled=false; btn.innerHTML=origText; return; }
@@ -2132,7 +2132,7 @@ function exportMashreq(){
 async function saveMashreq(){
   const btn = document.getElementById('mq-save-btn');
   const origText = btn.innerHTML;
-  btn.disabled = true; btn.innerHTML = 'â³ Saving...';
+  btn.disabled = true; btn.innerHTML = '⏳ Saving...';
   try{
     const months = new Set(mqData.map(r=>r.uploadMonth).filter(Boolean));
     if(!months.size){ alert('Please set the Data Month before saving, then click Save Results again.'); btn.disabled=false; btn.innerHTML=origText; return; }
@@ -2464,7 +2464,7 @@ function exportRayaPage(){
 async function saveRayaPage(){
   const btn = document.getElementById('ra-save-btn');
   const origText = btn.innerHTML;
-  btn.disabled = true; btn.innerHTML = 'â³ Saving...';
+  btn.disabled = true; btn.innerHTML = '⏳ Saving...';
   try{
     const months = new Set(rayaData.map(r=>r.uploadMonth).filter(Boolean));
     if(!months.size){ alert('Please set the Data Month before saving, then click Save Results again.'); btn.disabled=false; btn.innerHTML=origText; return; }
@@ -3303,7 +3303,7 @@ function renderAnalytics(){
         <tbody>${zoneRowsHtml}${totRow}</tbody>
       </table></div>
       <div style="padding:8px 14px;background:#f8fafc;font-size:.72rem;color:#6b7280;font-style:italic">
-        Diff = Billed âˆ’ Contract &nbsp;|&nbsp; ▲ red = Raya charged above contract &nbsp;|&nbsp; ▼ green = Raya charged below contract
+        Diff = Billed − Contract &nbsp;|&nbsp; ▲ red = Raya charged above contract &nbsp;|&nbsp; ▼ green = Raya charged below contract
       </div>
     </div>`;
   }
@@ -3430,7 +3430,7 @@ function renderAnalytics(){
        m1: contractDisc ? avgArr(r1.map(contractDisc.getVal)) : null,
        m2: contractDisc ? avgArr(r2.map(contractDisc.getVal)) : null,
        desc: contractDisc
-         ? (()=>{ const a1=avgArr(r1.map(contractDisc.getVal)), a2=avgArr(r2.map(contractDisc.getVal)); return `Avg discrepancy (Billed âˆ’ Contract): ${a1.toFixed(2)} EGP → ${a2.toFixed(2)} EGP`; })()
+         ? (()=>{ const a1=avgArr(r1.map(contractDisc.getVal)), a2=avgArr(r2.map(contractDisc.getVal)); return `Avg discrepancy (Billed − Contract): ${a1.toFixed(2)} EGP → ${a2.toFixed(2)} EGP`; })()
          : (extraRows.length?`${Math.abs(pureRate).toFixed(2)} EGP — pure contract rate ${pureRate<0?'reduction':'increase'}`:`${Math.abs(residual).toFixed(2)} EGP unexplained`)},
       ...extraRows.map((f,i)=>({icon:f.icon,num:String.fromCharCode(9312+(hasZone&&getZone?3:2)+i),label:f.label,color:f.color,val:f.val,m1:f.avg1,m2:f.avg2,
        desc:`Avg ${f.label}: ${f.avg1.toFixed(2)} EGP → ${f.avg2.toFixed(2)} EGP`})),
@@ -3471,14 +3471,14 @@ function renderAnalytics(){
         cdDrillTable=`<div style="margin-top:10px;border-radius:10px;overflow:hidden;border:1px solid #fed7aa">
           <div style="background:#b45309;padding:8px 14px;display:flex;align-items:center;gap:8px">
             <span style="color:#fff;font-weight:700;font-size:.8rem">⚡ Contract Rate Discrepancy — by Zone & Size</span>
-            <span style="color:#fde68a;font-size:.72rem">avg (Billed âˆ’ Contract) per shipment</span>
+            <span style="color:#fde68a;font-size:.72rem">avg (Billed − Contract) per shipment</span>
           </div>
           <div style="overflow-x:auto"><table style="width:100%;border-collapse:collapse">
             <thead><tr>
               <th style="${thCD};text-align:left">Zone / Size</th>
               ${M1?`<th style="${thCD}">${M1}</th>`:''}
               <th style="${thCD}">${M2}</th>
-              <th style="${thCD}">Î” Change</th>
+              <th style="${thCD}">Δ Change</th>
             </tr></thead>
             <tbody>${drillRows}${totRow}</tbody>
           </table></div>
@@ -3510,7 +3510,7 @@ function renderAnalytics(){
         <span style="color:#fff;font-size:.72rem;font-weight:700">Driver</span>
         <span style="color:#fff;font-size:.72rem;font-weight:700;text-align:right">${M1}</span>
         <span style="color:#fff;font-size:.72rem;font-weight:700;text-align:right">${M2}</span>
-        <span style="color:#fff;font-size:.72rem;font-weight:700;text-align:center">Î” Change</span>
+        <span style="color:#fff;font-size:.72rem;font-weight:700;text-align:center">Δ Change</span>
         <span style="color:#fff;font-size:.72rem;font-weight:700">← Down | <span style="color:#fca5a5">Up</span> →</span>
       </div>
       <!-- Baseline row -->
@@ -3557,7 +3557,7 @@ function renderAnalytics(){
         const rows=[
           {label:'📋 Contract Rate (per contract file)', v1:avgContract1, v2:avgContract2, delta:contractDelta, color:'#0369a1', bg:'#eff6ff'},
           {label:'💸 Billed by Raya (actual DL charge)', v1:avgBilled1, v2:avgBilled2, delta:billedDelta, color:'#7c3aed', bg:'#faf5ff'},
-          {label:'⚠️ Gap (Billed âˆ’ Contract)', v1:gap1, v2:gap2, delta:gapDelta, color:Math.abs(gap2)>0.5?'#dc2626':'#16a34a', bg:Math.abs(gap2)>0.5?'#fff5f5':'#f0fdf4', bold:true},
+          {label:'⚠️ Gap (Billed − Contract)', v1:gap1, v2:gap2, delta:gapDelta, color:Math.abs(gap2)>0.5?'#dc2626':'#16a34a', bg:Math.abs(gap2)>0.5?'#fff5f5':'#f0fdf4', bold:true},
         ];
         return `<div style="margin-top:14px;border-radius:10px;overflow:hidden;border:1px solid #e2e8f0">
           <div style="background:#1e293b;padding:8px 14px;display:flex;align-items:center;gap:8px">
@@ -3844,8 +3844,8 @@ function renderValDash(cfg){
     </tr>`;
   }).join('');
 
-  const sHdr=`<tr style="background:${C}">${th('Size')}${M1?th(M1+' Qty',true):''}${th(M2+' Qty',true)}${th('Î” Qty',true)}${th('Share')}${M1?th(M1+' Value',true):''}${th(M2+' Value',true)}${th('Î” Value',true)}${M1?th(M1+' Avg/Ship',true):''}${th(M2+' Avg/Ship',true)}${M1?th('Î” Avg',true):''}</tr>`;
-  const zHdr=`<tr style="background:${ZC}">${th(selSz?'Zone ('+selSz+')':'Zone')}${M1?th(M1+' Qty',true):''}${th(M2+' Qty',true)}${th('Î” Qty',true)}${th('Share')}${M1?th(M1+' Value',true):''}${th(M2+' Value',true)}${th('Î” Value',true)}${M1?th(M1+' Avg/Ship',true):''}${th(M2+' Avg/Ship',true)}${M1?th('Î” Avg',true):''}</tr>`;
+  const sHdr=`<tr style="background:${C}">${th('Size')}${M1?th(M1+' Qty',true):''}${th(M2+' Qty',true)}${th('Δ Qty',true)}${th('Share')}${M1?th(M1+' Value',true):''}${th(M2+' Value',true)}${th('Δ Value',true)}${M1?th(M1+' Avg/Ship',true):''}${th(M2+' Avg/Ship',true)}${M1?th('Δ Avg',true):''}</tr>`;
+  const zHdr=`<tr style="background:${ZC}">${th(selSz?'Zone ('+selSz+')':'Zone')}${M1?th(M1+' Qty',true):''}${th(M2+' Qty',true)}${th('Δ Qty',true)}${th('Share')}${M1?th(M1+' Value',true):''}${th(M2+' Value',true)}${th('Δ Value',true)}${M1?th(M1+' Avg/Ship',true):''}${th(M2+' Avg/Ship',true)}${M1?th('Δ Avg',true):''}</tr>`;
 
   el.innerHTML=`
   <div style="border-radius:12px;overflow:hidden;box-shadow:0 2px 12px rgba(0,0,0,.1);border:1px solid #e5e7eb;margin-top:6px">
