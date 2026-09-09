@@ -271,6 +271,7 @@ html[dir=ltr] #login-eye{right:12px}
     <button class="tab-btn" data-tab="mashreq" onclick="switchTab('mashreq')"><span>🔄</span>Aramex Mashreq</button>
     <button class="tab-btn" data-tab="raya" onclick="switchTab('raya')"><span>🚚</span>Raya Review</button>
     <button class="tab-btn" data-tab="analytics" onclick="switchTab('analytics')"><span>📈</span>Analytics</button>
+    <button class="tab-btn" data-tab="contracts" onclick="switchTab('contracts')"><span>📋</span>Contracts</button>
     <button class="tab-btn" data-tab="breakdown" onclick="switchTab('breakdown')"><span>📊</span>Data Breakdown</button>
   </nav>
 
@@ -724,6 +725,10 @@ html[dir=ltr] #login-eye{right:12px}
       </div>
       <div id="bd-toast" class="toast"></div>
       <div id="bd-content"></div>
+    </div>
+
+    <div id="panel-contracts" style="display:none">
+      <div id="ct-content"></div>
     </div>
 
     <div id="panel-analytics" style="display:none">
@@ -1256,13 +1261,201 @@ function switchTab(name){
   document.getElementById('panel-mashreq').style.display = name==='mashreq' ? 'block' : 'none';
   document.getElementById('panel-raya').style.display = name==='raya' ? 'block' : 'none';
   document.getElementById('panel-breakdown').style.display = name==='breakdown' ? 'block' : 'none';
+  document.getElementById('panel-contracts').style.display = name==='contracts' ? 'block' : 'none';
   document.getElementById('panel-analytics').style.display = name==='analytics' ? 'block' : 'none';
   if(name==='bosta' && _tabDirty.bosta){ renderBosta(); _tabDirty.bosta=false; }
   if(name==='aramex' && _tabDirty.aramex){ renderAramex(); _tabDirty.aramex=false; }
   if(name==='mashreq' && _tabDirty.mashreq){ renderMashreq(); _tabDirty.mashreq=false; }
   if(name==='raya' && _tabDirty.raya){ renderRayaPage(); _tabDirty.raya=false; }
   if(name==='analytics' && _analyticsDirty){ renderAnalytics(); _analyticsDirty=false; }
+  if(name==='contracts') renderContracts();
   if(name==='breakdown') renderBreakdown();
+}
+
+/* ---------- Contracts tab ---------- */
+function renderContracts(){
+  const el = document.getElementById('ct-content');
+  if(!el) return;
+
+  // Canonical month sort order
+  const MONTH_ORDER = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  function monthKey(s){ // "Jul'26" -> sortable number
+    if(!s) return 0;
+    const m = MONTH_ORDER.findIndex(x=>s.startsWith(x));
+    const y = parseInt(s.slice(-2))||0;
+    return y*100 + (m>=0?m:0);
+  }
+
+  // Build per-company monthly avg contract price per shipment
+  function buildTrend(rows, getPrice){
+    if(!rows||!rows.length) return null;
+    const byMonth = {};
+    rows.forEach(r=>{
+      const mo = r.uploadMonth||r.month||'';
+      if(!mo) return;
+      const price = typeof getPrice==='function' ? (getPrice(r)||0) : (parseFloat(r[getPrice])||0);
+      if(!byMonth[mo]) byMonth[mo]={sum:0,count:0};
+      byMonth[mo].sum += price;
+      byMonth[mo].count++;
+    });
+    const months = Object.keys(byMonth).sort((a,b)=>monthKey(a)-monthKey(b));
+    return months.map((mo,i)=>{
+      const avg = byMonth[mo].sum / byMonth[mo].count;
+      const prev = i>0 ? byMonth[months[i-1]].sum/byMonth[months[i-1]].count : null;
+      const delta = prev!==null ? avg-prev : null;
+      const pct = prev && prev>0 ? (avg-prev)/prev*100 : null;
+      return {mo, avg, count:byMonth[mo].count, delta, pct};
+    });
+  }
+
+  // For Aramex use auditData (rows with contractPrice)
+  const companies = [
+    { key:'bosta',   label:'Bosta',          icon:'📦', color:'#7c3aed', rows: typeof bostaData!=='undefined'?bostaData:[],   getPrice: r=>(parseFloat(r.kShip1)||0)+(parseFloat(r.kShip2)||0) },
+    { key:'aramex',  label:'Aramex',          icon:'✈️', color:'#1d4ed8', rows: typeof auditData!=='undefined'?auditData:[],  getPrice: r=>parseFloat(r.contractPrice)||0 },
+    { key:'mashreq', label:'Aramex Mashreq',  icon:'🔄', color:'#b45309', rows: typeof mqData!=='undefined'?mqData:[],         getPrice: r=>(parseFloat(r.calcLM)||0)+(parseFloat(r.calcPickup)||0)+(parseFloat(r.calcIns)||0)+(parseFloat(r.calcCOD)||0) },
+    { key:'raya',    label:'Raya',            icon:'🚚', color:'#0f766e', rows: typeof rayaData!=='undefined'?rayaData:[],    getPrice: r=>parseFloat(r.contractPrice)||0 },
+  ];
+
+  function resolveTrend(co){ return buildTrend(co.rows, co.getPrice); }
+
+  // Collect all months across companies for unified header
+  const allMonths = new Set();
+  const trends = {};
+  companies.forEach(co=>{
+    const t = resolveTrend(co);
+    trends[co.key] = t;
+    if(t) t.forEach(r=>allMonths.add(r.mo));
+  });
+  const sortedMonths = [...allMonths].sort((a,b)=>monthKey(a)-monthKey(b));
+
+  const hasAny = Object.values(trends).some(t=>t&&t.length>0);
+
+  if(!hasAny){
+    el.innerHTML = `
+      <div style="text-align:center;padding:80px 24px;color:var(--muted)">
+        <div style="font-size:3rem;margin-bottom:16px">📋</div>
+        <h3 style="margin:0 0 8px;color:var(--text)">No contract data yet</h3>
+        <p style="margin:0;font-size:.9rem">Process and save data from any carrier tab to see contract rate trends here.</p>
+      </div>`;
+    return;
+  }
+
+  // Check for alerts (any company with an increase in latest month)
+  const alerts = companies.filter(co=>{
+    const t = trends[co.key];
+    if(!t||t.length<2) return false;
+    const last = t[t.length-1];
+    return last.delta!==null && last.delta>0;
+  });
+
+  let html = `<div style="padding:20px 0">`;
+
+  // Alert banner
+  if(alerts.length){
+    const names = alerts.map(c=>`<strong>${c.icon} ${c.label}</strong>`).join(', ');
+    html += `<div style="background:#fef2f2;border:1.5px solid #fca5a5;border-radius:10px;padding:14px 18px;margin-bottom:20px;display:flex;align-items:center;gap:12px">
+      <span style="font-size:1.5rem">🚨</span>
+      <div>
+        <div style="font-weight:800;color:#dc2626;font-size:.95rem">Contract Rate Increase Detected</div>
+        <div style="font-size:.85rem;color:#7f1d1d;margin-top:2px">${names} — avg contract price per shipment increased in the latest month</div>
+      </div>
+    </div>`;
+  }
+
+  // Summary cards row
+  html += `<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:14px;margin-bottom:24px">`;
+  companies.forEach(co=>{
+    const t = trends[co.key];
+    if(!t||!t.length){
+      html += `<div style="background:var(--card);border:1.5px solid var(--border);border-radius:12px;padding:18px;opacity:.45">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">
+          <span style="font-size:1.4rem">${co.icon}</span>
+          <span style="font-weight:800;font-size:1rem;color:var(--text)">${co.label}</span>
+        </div>
+        <div style="font-size:.8rem;color:var(--muted)">No data saved yet</div>
+      </div>`;
+      return;
+    }
+    const last = t[t.length-1];
+    const hasIncrease = last.delta!==null && last.delta>0;
+    const borderColor = hasIncrease ? '#fca5a5' : co.color;
+    const trendIcon = last.delta===null ? '' : last.delta>0 ? '↑' : last.delta<0 ? '↓' : '→';
+    const trendColor = last.delta===null ? 'var(--muted)' : last.delta>0 ? '#dc2626' : last.delta<0 ? '#16a34a' : 'var(--muted)';
+    html += `<div style="background:var(--card);border:2px solid ${borderColor};border-radius:12px;padding:18px;position:relative;${hasIncrease?'box-shadow:0 0 0 3px rgba(220,38,38,.1)':''}">
+      ${hasIncrease?`<span style="position:absolute;top:12px;right:12px;background:#dc2626;color:#fff;font-size:.65rem;font-weight:800;padding:2px 7px;border-radius:20px">RATE UP</span>`:''}
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">
+        <span style="font-size:1.4rem">${co.icon}</span>
+        <span style="font-weight:800;font-size:1rem;color:var(--text)">${co.label}</span>
+      </div>
+      <div style="font-size:1.5rem;font-weight:900;color:${co.color};font-variant-numeric:tabular-nums">${last.avg.toFixed(1)} <span style="font-size:.8rem;font-weight:600;color:var(--muted)">EGP/ship</span></div>
+      <div style="font-size:.8rem;color:var(--muted);margin-top:2px">${last.mo} · ${last.count.toLocaleString()} shipments</div>
+      ${last.delta!==null?`<div style="font-size:.82rem;color:${trendColor};font-weight:700;margin-top:6px">${trendIcon} ${last.delta>0?'+':''}${last.delta.toFixed(1)} EGP vs prior month${last.pct!==null?' ('+last.pct.toFixed(1)+'%)':''}</div>`:''}
+    </div>`;
+  });
+  html += `</div>`;
+
+  // Monthly rate trend table
+  html += `<div style="background:var(--card);border:1.5px solid var(--border);border-radius:12px;overflow:hidden;margin-bottom:20px">
+    <div style="padding:14px 18px;border-bottom:1px solid var(--border);font-weight:800;font-size:.95rem;color:var(--text)">📊 Avg Contract Price per Shipment (EGP) — Month-over-Month</div>
+    <div style="overflow-x:auto">
+    <table style="width:100%;border-collapse:collapse;font-size:.83rem">
+      <thead>
+        <tr style="background:var(--dark);color:#fff">
+          <th style="padding:10px 14px;text-align:left;white-space:nowrap;font-weight:700">Carrier</th>`;
+  sortedMonths.forEach(mo=>{
+    html += `<th style="padding:10px 14px;text-align:center;white-space:nowrap;font-weight:700">${mo}</th>`;
+  });
+  html += `<th style="padding:10px 14px;text-align:center;white-space:nowrap;font-weight:700;background:#1e293b">Trend</th>
+        </tr>
+      </thead>
+      <tbody>`;
+
+  companies.forEach((co,ci)=>{
+    const t = trends[co.key];
+    const byMo = {};
+    if(t) t.forEach(r=>{ byMo[r.mo]=r; });
+    const bg = ci%2===0 ? 'var(--bg)' : 'var(--card)';
+    html += `<tr style="background:${bg};border-bottom:1px solid var(--border)">
+      <td style="padding:10px 14px;font-weight:700;white-space:nowrap">
+        <span>${co.icon}</span> ${co.label}
+      </td>`;
+    sortedMonths.forEach((mo,mi)=>{
+      const rec = byMo[mo];
+      if(!rec){
+        html += `<td style="padding:10px 14px;text-align:center;color:var(--muted)">—</td>`;
+        return;
+      }
+      const hasIncrease = rec.delta!==null && rec.delta>0;
+      const hasDecrease = rec.delta!==null && rec.delta<0;
+      const cellBg = hasIncrease ? 'rgba(220,38,38,.08)' : hasDecrease ? 'rgba(22,163,74,.07)' : 'transparent';
+      const deltaStr = rec.delta===null ? '' : rec.delta>0 ? `<span style="color:#dc2626;font-size:.72rem;font-weight:700;display:block">↑ +${rec.delta.toFixed(1)}</span>` : rec.delta<0 ? `<span style="color:#16a34a;font-size:.72rem;font-weight:700;display:block">↓ ${rec.delta.toFixed(1)}</span>` : '';
+      html += `<td style="padding:10px 14px;text-align:center;background:${cellBg}">
+        <span style="font-weight:700;font-variant-numeric:tabular-nums">${rec.avg.toFixed(1)}</span>
+        <span style="font-size:.72rem;color:var(--muted)"> EGP</span>
+        ${deltaStr}
+        <span style="font-size:.68rem;color:var(--muted);display:block">${rec.count.toLocaleString()} ships</span>
+      </td>`;
+    });
+    // Trend sparkline as text arrows
+    const trendStr = t && t.length>=2 ? t.slice(1).map(r=>r.delta>0?'<span style="color:#dc2626">↑</span>':r.delta<0?'<span style="color:#16a34a">↓</span>':'<span style="color:var(--muted)">→</span>').join(' ') : '<span style="color:var(--muted)">—</span>';
+    html += `<td style="padding:10px 14px;text-align:center;font-size:1rem;letter-spacing:3px">${trendStr}</td>`;
+    html += `</tr>`;
+  });
+  html += `</tbody></table></div></div>`;
+
+  // Notes section
+  html += `<div style="background:var(--card);border:1.5px solid var(--border);border-radius:12px;padding:16px 18px">
+    <div style="font-weight:700;font-size:.88rem;color:var(--text);margin-bottom:8px">ℹ️ How this works</div>
+    <ul style="margin:0;padding-left:18px;font-size:.82rem;color:var(--muted);line-height:1.8">
+      <li>Avg contract price = total contract EGP ÷ total shipments, per carrier per month</li>
+      <li>A ↑ increase is flagged when avg goes up vs the prior saved month</li>
+      <li>Data updates automatically when you save new months on any carrier tab</li>
+      <li>Raya Aug'26 increase was confirmed: HA Z1 Large 355 EGP vs prior 322.575 EGP</li>
+    </ul>
+  </div>`;
+
+  html += `</div>`;
+  el.innerHTML = html;
 }
 
 /* ---------- Bosta page logic ---------- */
