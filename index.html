@@ -1424,12 +1424,13 @@ function renderContracts(){
     </div>`;
   }
 
-  const bostaC = _ctState.bosta?.current || _savedContracts.bosta;
-  const mqC    = _ctState.mashreq?.current || _savedContracts.mashreq;
-  html += card('🚚', 'Raya', '#0f766e', rc ? 'Contract Active' : 'No Contract', rayaBody);
-  html += card('📦', 'Bosta', '#7c3aed', bostaC ? 'Contract Active' : 'No Contract', bostaRateTable(bostaC));
-  html += card('🔄', 'Aramex Mashreq', '#b45309', mqC ? 'Rates Active' : 'No Rates', mqRateTable(mqC));
-  html += card('✈️', 'Aramex', '#1d4ed8', '', '<p style="color:var(--muted);font-size:.83rem">Aramex uses a rate configuration (COD %, Fuel %, Annual %) set directly in the Aramex tab. No separate contract file.</p>');
+  const bostaC  = _ctState.bosta?.current  || _savedContracts.bosta;
+  const aramexC = _ctState.aramex?.current;
+  const mqC     = _ctState.mashreq?.current || _savedContracts.mashreq;
+  html += card('🚚', 'Raya',           '#0f766e', rc      ? 'Contract Active' : 'No Contract', rayaBody);
+  html += card('📦', 'Bosta',          '#7c3aed', bostaC  ? 'Contract Active' : 'No Contract', bostaRateTable(bostaC));
+  html += card('✈️', 'Aramex',         '#1d4ed8', aramexC ? 'Contract Active' : 'No Contract', bostaRateTable(aramexC));
+  html += card('🔄', 'Aramex Mashreq', '#b45309', mqC     ? 'Rates Active'    : 'No Rates',    mqRateTable(mqC));
 
   html += `</div>`;
   el.innerHTML = html;
@@ -1440,6 +1441,7 @@ const CT_LS_KEY = 'kenzz3pl_contracts_v1';
 const CT_COMPANIES = [
   { key:'raya',    label:'Raya',           icon:'🚚', color:'#0f766e', parser:'raya' },
   { key:'bosta',   label:'Bosta',          icon:'📦', color:'#7c3aed', parser:'bosta' },
+  { key:'aramex',  label:'Aramex',         icon:'✈️', color:'#1d4ed8', parser:'bosta' },
   { key:'mashreq', label:'Aramex Mashreq', icon:'🔄', color:'#b45309', parser:'mashreq' },
 ];
 // In-memory parsed contracts: { raya:{current,new}, bosta:{current,new}, mashreq:{current,new} }
