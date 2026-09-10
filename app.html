@@ -1978,17 +1978,6 @@ function rayaSaveAll(btn){
   if(_rayaSlots.oldHA) { _ctState.raya.current=_rayaSlots.oldHA; }
   if(_rayaSlots.newHA) { _ctState.raya.newC=_rayaSlots.newHA; }
   _ctSaveLS();
-  // Debug: log state so we can verify parsing
-  const dbg = {
-    hasOldHA: !!_rayaSlots.oldHA,
-    hasNewHA: !!_rayaSlots.newHA,
-    oldHA_haZones: _rayaSlots.oldHA ? Object.keys(_rayaSlots.oldHA.ha?.delivery||{}).length : 0,
-    newHA_haZones: _rayaSlots.newHA ? Object.keys(_rayaSlots.newHA.ha?.delivery||{}).length : 0,
-    ctStateNewC: !!_ctState.raya.newC,
-    newC_haZones: _ctState.raya.newC ? Object.keys(_ctState.raya.newC.ha?.delivery||{}).length : 0,
-  };
-  console.log('[rayaSaveAll]', JSON.stringify(dbg));
-  alert('Debug — Save state:\n' + JSON.stringify(dbg, null, 2));
   renderContracts();
   if(btn){ const o=btn.innerHTML; btn.innerHTML='✓ Saved!'; btn.style.background='#16a34a'; setTimeout(()=>{ btn.innerHTML=o; btn.style.background='#0f766e'; },2000); }
 }
@@ -4757,7 +4746,7 @@ function renderValDash(cfg){
 /* ---------- Backup / Restore ---------- */
 function exportBackup(){
   const backup = {
-    version: 6,
+    version: 7,
     exportedAt: new Date().toISOString(),
     bosta:    localStorage.getItem(STORAGE_KEY),
     aramex:   localStorage.getItem('kenzz3pl_aramex_v1'),
