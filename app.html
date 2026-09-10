@@ -1396,16 +1396,31 @@ function renderContracts(){
     </div>`;
   }
 
+  // helper: render two tables side-by-side inside a shared horizontal scroll
+  function sideBySideTables(leftTitle, leftTbl, leftColor, rightTitle, rightTbl, rightColor){
+    const left  = rayaRateTable(leftTitle,  leftTbl,  leftColor,  leftColor);
+    const right = rayaRateTable(rightTitle, rightTbl, rightColor, rightColor);
+    if(!left && !right) return '';
+    if(!left)  return right;
+    if(!right) return left;
+    // Strip each table's outer overflow-x:auto wrapper so we can combine them
+    const strip = html => html.replace(/<div style="overflow-x:auto">/, '<div>');
+    return `<div style="overflow-x:auto;white-space:nowrap;margin-bottom:14px">
+      <div style="display:inline-block;vertical-align:top;margin-right:20px;white-space:normal">${strip(left)}</div>
+      <div style="display:inline-block;vertical-align:top;white-space:normal">${strip(right)}</div>
+    </div>`;
+  }
+
   // Raya section — prefer manager contract, fall back to session-loaded contract
   const rc = _ctState.raya?.current || _savedContracts.raya;
   let rayaBody = '';
   if(!rc){
     rayaBody = '<p style="color:var(--muted);font-size:.83rem">Upload a contract file on the Raya tab to see rates here. Rates are loaded into memory when you process the report.</p>';
   } else {
-    // HA
+    // HA: Delivery + Returns side by side
     rayaBody += `<div style="font-weight:700;color:var(--text);font-size:.88rem;margin-bottom:10px;padding-bottom:6px;border-bottom:2px solid #0f766e">🏠 HA (Home Appliances)</div>`;
-    rayaBody += rayaRateTable('Delivery Rates (EGP)', rc.ha&&rc.ha.delivery, '#0f766e', '#0f766e');
-    rayaBody += rayaRateTable('Returns Rates (75% of delivery)', rc.ha&&rc.ha.returns, '#0f766e', '#134e4a');
+    rayaBody += sideBySideTables('Delivery Rates (EGP)', rc.ha&&rc.ha.delivery, '#0f766e', 'Returns Rates (75% of delivery)', rc.ha&&rc.ha.returns, '#134e4a');
+    // Furniture: Delivery only (returns = 100% of delivery)
     rayaBody += `<div style="font-weight:700;color:var(--text);font-size:.88rem;margin-bottom:10px;padding-bottom:6px;border-bottom:2px solid #0891b2;margin-top:18px">🛋️ Furniture</div>`;
     rayaBody += rayaRateTable('Delivery Rates (EGP)', rc.furniture&&rc.furniture.delivery, '#0891b2', '#0891b2');
     rayaBody += `<div style="font-size:.76rem;color:var(--muted);margin-top:6px">⚠️ Furniture Returns = 100% of delivery rate (billed at full delivery price)</div>`;
