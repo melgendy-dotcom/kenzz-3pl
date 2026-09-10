@@ -1509,6 +1509,7 @@ function renderContracts(){
       t+=`</tbody></table></div>`;
       return t;
     }
+  }
 
   // Raya section — prefer manager contract, fall back to session-loaded contract
   const rc  = _ctState.raya?.current || _savedContracts.raya;
