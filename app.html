@@ -1852,10 +1852,16 @@ function _ctGridDiff(oldP, newP, parser, key){
   let h='';
 
   if(parser==='raya'){
-    h+=_ctSideBySide('HA — Delivered',           oldP.ha?.delivery||{},         newP.ha?.delivery||{},        '#0f766e', true);
-    h+=_ctSideBySide('HA — Returns (75%)',        oldP.ha?.returns||{},          newP.ha?.returns||{},         '#134e4a', true);
-    h+=_ctSideBySide('Furniture — Delivered',     oldP.furniture?.delivery||{},  newP.furniture?.delivery||{}, '#0891b2', true);
-    h+=_ctSideBySide('Furniture — Returns (100%)',oldP.furniture?.returns||{},   newP.furniture?.returns||{},  '#075985', true);
+    const sections=[
+      _ctSideBySide('HA — Delivered',           oldP.ha?.delivery||{},        newP.ha?.delivery||{},        '#0f766e', true),
+      _ctSideBySide('HA — Returns (75%)',        oldP.ha?.returns||{},         newP.ha?.returns||{},         '#134e4a', true),
+      _ctSideBySide('Furniture — Delivered',     oldP.furniture?.delivery||{}, newP.furniture?.delivery||{}, '#0891b2', true),
+      _ctSideBySide('Furniture — Returns (100%)',oldP.furniture?.returns||{},  newP.furniture?.returns||{},  '#075985', true),
+    ].filter(Boolean);
+    // Lay all sections horizontally in one scrollable row
+    h=`<div style="overflow-x:auto;white-space:nowrap;padding-bottom:8px">`+
+      sections.map(s=>`<div style="display:inline-block;vertical-align:top;white-space:normal;margin-right:28px;min-width:300px">${s}</div>`).join('')+
+      `</div>`;
   } else if(parser==='bosta'){
     const allTypes=[...new Set([...Object.keys(oldP.shipping||{}),...Object.keys(newP.shipping||{})])];
     allTypes.forEach(type=>{
