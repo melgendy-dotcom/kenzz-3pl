@@ -1578,6 +1578,9 @@ const CT_COMPANIES = [
 const _ctState = {};
 CT_COMPANIES.forEach(c=>{ _ctState[c.key]={current:null,newC:null,newFile:null,curFile:null}; });
 
+// Raya 3-slot state (separate from generic _ctState)
+const _rayaSlots = { oldHA:null, newHA:null, newFur:null, oldHAFile:'', newHAFile:'', newFurFile:'' };
+
 function _ctLoadLS(){
   try{
     const raw = localStorage.getItem(CT_LS_KEY);
@@ -1700,12 +1703,57 @@ function _ctDiffTable(rows){
   return h;
 }
 
+function _rayaDropZone(slotKey, title, subtitle, color, icon){
+  const s = _rayaSlots;
+  const val = s[slotKey];
+  const fname = s[slotKey+'File'];
+  const loaded = !!val;
+  return `<div style="flex:1;min-width:220px">
+    <div style="font-size:.72rem;font-weight:800;color:${color};text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px">${icon} ${title}</div>
+    <div style="font-size:.7rem;color:var(--muted);margin-bottom:8px">${subtitle}</div>
+    <button onclick="rayaPickSlot('${slotKey}')"
+      style="width:100%;padding:18px 12px;border:2px ${loaded?'solid '+color:'dashed var(--border)'};border-radius:10px;background:${loaded?color+'12':'var(--bg)'};color:${loaded?color:'var(--muted)'};font-size:.82rem;cursor:pointer;text-align:center;transition:all .2s">
+      ${loaded
+        ? `<div style="font-weight:800;margin-bottom:4px">✓ Loaded</div><div style="font-size:.7rem;font-weight:400;word-break:break-all">${fname}</div>`
+        : `<div style="font-size:1.4rem;margin-bottom:6px">📂</div><div style="font-weight:600">Click to upload</div><div style="font-size:.72rem;margin-top:3px">.xlsx / .xls</div>`}
+    </button>
+    <input type="file" id="raya-slot-${slotKey}" accept=".xlsx,.xls" style="display:none">
+  </div>`;
+}
+
 function renderContractMgr(){
   const el=document.getElementById('ct-mgr');
   if(!el) return;
-  let html=`<div style="margin-bottom:18px">
-    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:14px">`;
-  CT_COMPANIES.forEach(co=>{
+
+  const canCompare = _rayaSlots.oldHA && _rayaSlots.newHA;
+
+  // ── Raya 3-slot panel ──
+  let html=`<div style="background:var(--card);border:2px solid #0f766e;border-radius:14px;overflow:hidden;margin-bottom:18px">
+    <div style="background:#0f766e;padding:13px 20px;display:flex;align-items:center;gap:10px">
+      <span style="font-size:1.3rem">🚚</span>
+      <span style="font-weight:800;font-size:1rem;color:#fff;flex:1">Raya Logistics — Contract Rate Manager</span>
+      ${canCompare?`<span style="background:rgba(255,255,255,.25);color:#fff;font-size:.7rem;font-weight:700;padding:3px 10px;border-radius:20px">Ready to Compare</span>`:''}
+    </div>
+    <div style="padding:18px 20px">
+      <div style="display:flex;gap:14px;flex-wrap:wrap;margin-bottom:16px">
+        ${_rayaDropZone('oldHA',  'Previous Contract',       'HA — Home Appliances (before Aug\'26)', '#64748b', '📋')}
+        ${_rayaDropZone('newHA',  'New Contract — HA Rates', 'HA — Home Appliances (Aug\'26 onward)', '#0f766e', '🆕')}
+        ${_rayaDropZone('newFur', 'New Contract — Furniture','Furniture rates (new from Aug\'26)',     '#0891b2', '🛋️')}
+      </div>
+      ${canCompare
+        ? `<div id="raya-comparison-area">${renderRayaComparison()}</div>`
+        : `<div style="background:var(--bg);border:1px dashed var(--border);border-radius:8px;padding:14px;text-align:center;color:var(--muted);font-size:.82rem">
+            Upload <strong>Previous Contract</strong> and <strong>New HA Rates</strong> to generate the comparison table
+           </div>`}
+      <div style="margin-top:16px;display:flex;justify-content:flex-end">
+        <button onclick="rayaSaveAll(this)" style="padding:10px 28px;background:#0f766e;color:#fff;border:none;border-radius:8px;font-weight:800;font-size:.88rem;cursor:pointer">💾 Save Data</button>
+      </div>
+    </div>
+  </div>`;
+
+  // ── Other carriers (generic 2-slot) ──
+  html+=`<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:14px;margin-bottom:18px">`;
+  CT_COMPANIES.filter(co=>co.key!=='raya').forEach(co=>{
     const st=_ctState[co.key];
     const hasCur=_ctHasData(st.current,co.parser);
     const hasNew=_ctHasData(st.newC,co.parser);
@@ -1713,42 +1761,167 @@ function renderContractMgr(){
       <div style="background:${co.color};padding:11px 16px;display:flex;align-items:center;gap:9px">
         <span style="font-size:1.2rem">${co.icon}</span>
         <span style="font-weight:800;font-size:.95rem;color:#fff;flex:1">${co.label}</span>
-        ${hasCur?`<span style="background:rgba(255,255,255,.25);color:#fff;font-size:.68rem;font-weight:700;padding:2px 8px;border-radius:12px">✓ Contract Set</span>`:`<span style="background:rgba(255,255,255,.15);color:rgba(255,255,255,.7);font-size:.68rem;font-weight:700;padding:2px 8px;border-radius:12px">No Contract</span>`}
+        ${hasCur?`<span style="background:rgba(255,255,255,.25);color:#fff;font-size:.68rem;font-weight:700;padding:2px 8px;border-radius:12px">✓ Active</span>`:''}
       </div>
       <div style="padding:14px 16px">
         <div style="display:flex;gap:8px;margin-bottom:${hasNew?'12px':'0'}">
           <div style="flex:1">
-            <div style="font-size:.72rem;font-weight:700;color:var(--muted);margin-bottom:4px;text-transform:uppercase">Current Contract</div>
-            <button onclick="ctPickFile('${co.key}','cur')" id="ct-${co.key}-cur-btn"
-              style="width:100%;padding:7px 12px;border:1.5px ${hasCur?'solid '+co.color:'dashed var(--border)'};border-radius:7px;background:var(--bg);color:${hasCur?co.color:'var(--muted)'};font-size:.79rem;cursor:pointer;text-align:left;font-weight:${hasCur?700:400}">
-              ${hasCur?'✓ Contract loaded — click to replace':'📂 Set current contract…'}
+            <div style="font-size:.7rem;font-weight:700;color:var(--muted);margin-bottom:4px;text-transform:uppercase">Current Contract</div>
+            <button onclick="ctPickFile('${co.key}','cur')" style="width:100%;padding:7px 10px;border:1.5px ${hasCur?'solid '+co.color:'dashed var(--border)'};border-radius:7px;background:var(--bg);color:${hasCur?co.color:'var(--muted)'};font-size:.78rem;cursor:pointer;text-align:left">
+              ${hasCur?'✓ Loaded — click to replace':'📂 Set contract…'}
             </button>
             <input type="file" id="ct-${co.key}-cur-inp" accept=".xlsx,.xls" style="display:none">
           </div>
           <div style="flex:1">
-            <div style="font-size:.72rem;font-weight:700;color:var(--muted);margin-bottom:4px;text-transform:uppercase">Import New Rates</div>
-            <button onclick="ctPickFile('${co.key}','new')" id="ct-${co.key}-new-btn"
-              style="width:100%;padding:7px 12px;border:1.5px ${hasNew?'solid #f59e0b':'dashed var(--border)'};border-radius:7px;background:var(--bg);color:${hasNew?'#d97706':'var(--muted)'};font-size:.79rem;cursor:pointer;text-align:left;font-weight:${hasNew?700:400}">
-              ${hasNew?'⚠️ New rates loaded':'📂 Import new contract…'}
+            <div style="font-size:.7rem;font-weight:700;color:var(--muted);margin-bottom:4px;text-transform:uppercase">New Rates</div>
+            <button onclick="ctPickFile('${co.key}','new')" style="width:100%;padding:7px 10px;border:1.5px ${hasNew?'solid #f59e0b':'dashed var(--border)'};border-radius:7px;background:var(--bg);color:${hasNew?'#d97706':'var(--muted)'};font-size:.78rem;cursor:pointer;text-align:left">
+              ${hasNew?'⚠️ New rates loaded':'📂 Import…'}
             </button>
             <input type="file" id="ct-${co.key}-new-inp" accept=".xlsx,.xls" style="display:none">
           </div>
         </div>
-        ${hasNew&&hasCur?`<button onclick="ctCompare('${co.key}')" style="width:100%;padding:7px 0;background:linear-gradient(135deg,${co.color},${co.color}cc);color:#fff;border:none;border-radius:7px;font-weight:800;font-size:.82rem;cursor:pointer">Compare Rates ▶</button>`:''}
-        ${hasNew&&!hasCur?`<div style="font-size:.75rem;color:#d97706;margin-top:4px">⚠️ Set a current contract first to compare</div>`:''}
+        ${hasNew&&hasCur?`<button onclick="ctCompare('${co.key}')" style="width:100%;padding:7px 0;background:${co.color};color:#fff;border:none;border-radius:7px;font-weight:800;font-size:.8rem;cursor:pointer">Compare Rates ▶</button>`:''}
         <div id="ct-${co.key}-diff" style="margin-top:${hasNew&&hasCur?'12px':'0'}"></div>
       </div>
     </div>`;
   });
-  html+=`</div></div>`;
+  html+=`</div>`;
+
   el.innerHTML=html;
-  // Wire file inputs
-  CT_COMPANIES.forEach(co=>{
+
+  // Wire Raya slot inputs
+  ['oldHA','newHA','newFur'].forEach(slot=>{
+    const inp=document.getElementById(`raya-slot-${slot}`);
+    if(inp&&!inp._wired){ inp._wired=true; inp.addEventListener('change',e=>rayaSlotChosen(e,slot)); }
+  });
+  // Wire other carrier inputs
+  CT_COMPANIES.filter(co=>co.key!=='raya').forEach(co=>{
     ['cur','new'].forEach(slot=>{
       const inp=document.getElementById(`ct-${co.key}-${slot}-inp`);
       if(inp&&!inp._wired){ inp._wired=true; inp.addEventListener('change',e=>ctFileChosen(e,co.key,slot)); }
     });
   });
+}
+
+function rayaPickSlot(slot){ document.getElementById(`raya-slot-${slot}`)?.click(); }
+
+async function rayaSlotChosen(e, slot){
+  const f=e.target.files[0]; e.target.value='';
+  if(!f) return;
+  try{
+    const wb=XLSX.read(await readBuf(f),{type:'array'});
+    const parsed=parseRayaContract(wb);
+    _rayaSlots[slot]=parsed;
+    _rayaSlots[slot+'File']=f.name;
+    // Also keep _ctState.raya.current in sync with oldHA for the billing flow
+    if(slot==='oldHA'){ _ctState.raya.current=parsed; _ctSaveLS(); }
+    renderContractMgr();
+    renderContracts();
+  }catch(err){ alert('Error reading file: '+err.message); }
+}
+
+function renderRayaComparison(){
+  const old=_rayaSlots.oldHA, nw=_rayaSlots.newHA;
+  if(!old||!nw) return '';
+  const SIZE_ORDER=['Small','Medium','Large','L Shape','U Shape','Full Room'];
+  const fm=v=>v>0?v.toLocaleString('en-US',{minimumFractionDigits:0,maximumFractionDigits:3}):'—';
+  const fp=v=>v===null?'—':(v>0?'▲ +':'▼ ')+Math.abs(v).toFixed(1)+'%';
+  const fd=v=>v===0?'—':(v>0?'+':'')+v.toLocaleString('en-US',{minimumFractionDigits:0,maximumFractionDigits:3});
+
+  const GROUPS=[
+    {z:['1'],         label:'1',     tier:'Tier 1'},
+    {z:['2'],         label:'2',     tier:'Tier 2'},
+    {z:['3','4','5'], label:'3,4,5', tier:'Tier 3'},
+    {z:['6'],         label:'6',     tier:'Tier 4'},
+    {z:['7','8','9'], label:'7,8,9', tier:'Tier 5'},
+  ];
+
+  function getSizes(tbl){ return[...new Set(Object.values(tbl).flatMap(z=>Object.keys(z||{})))].sort((a,b)=>{ const ai=SIZE_ORDER.indexOf(a),bi=SIZE_ORDER.indexOf(b);return(ai<0?99:ai)-(bi<0?99:bi); }); }
+
+  const dlSizes=getSizes({...old.ha?.delivery||{},...nw.ha?.delivery||{}});
+  const rtSizes=getSizes({...old.ha?.returns||{},...nw.ha?.returns||{}});
+  const allSizes=[...new Set([...dlSizes,...rtSizes])].sort((a,b)=>{ const ai=SIZE_ORDER.indexOf(a),bi=SIZE_ORDER.indexOf(b);return(ai<0?99:ai)-(bi<0?99:bi); });
+
+  const COL='#0f766e', DL_BG='#0f766e', RT_BG='#134e4a';
+
+  // Count totals for summary
+  let totalUps=0,totalDns=0;
+  GROUPS.forEach(g=>allSizes.forEach(sz=>{
+    const od=g.z.reduce((a,z)=>a||((old.ha?.delivery||{})[z]||{})[sz]||0,0);
+    const nd=g.z.reduce((a,z)=>a||((nw.ha?.delivery||{})[z]||{})[sz]||0,0);
+    if(nd>od) totalUps++; else if(nd<od) totalDns++;
+  }));
+
+  let t=`<div style="margin-top:4px">
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">
+      <span style="font-size:.85rem;font-weight:800;color:#0f766e">HA — Rate Change Comparison</span>
+      ${totalUps?`<span style="background:#fef2f2;color:#dc2626;border:1px solid #fca5a5;padding:2px 9px;border-radius:20px;font-size:.71rem;font-weight:700">↑ ${totalUps} increases</span>`:''}
+      ${totalDns?`<span style="background:#f0fdf4;color:#16a34a;border:1px solid #86efac;padding:2px 9px;border-radius:20px;font-size:.71rem;font-weight:700">↓ ${totalDns} decreases</span>`:''}
+    </div>
+    <div style="overflow-x:auto">
+    <table style="border-collapse:collapse;font-size:.77rem;white-space:nowrap">
+    <thead>
+      <!-- Row 1: Delivered / Returns mega-headers -->
+      <tr>
+        <th rowspan="3" style="padding:8px 12px;background:#1e293b;color:#fff;text-align:center;border-right:2px solid #fff;border-bottom:2px solid #fff">Zone</th>
+        <th rowspan="3" style="padding:8px 12px;background:#1e293b;color:#fff;text-align:center;border-right:2px solid #0f766e;border-bottom:2px solid #fff">Tier</th>
+        <th colspan="${allSizes.length*4}" style="padding:7px 10px;background:${DL_BG};color:#fff;text-align:center;border-right:2px solid #fff">🏠 DELIVERED</th>
+        <th colspan="${allSizes.length*4}" style="padding:7px 10px;background:${RT_BG};color:#fff;text-align:center">🔄 RETURNS (75%)</th>
+      </tr>
+      <!-- Row 2: Size groups -->
+      <tr>`;
+  allSizes.forEach(sz=>{ t+=`<th colspan="4" style="padding:6px 10px;background:${DL_BG}cc;color:#fff;text-align:center;border-right:1px solid rgba(255,255,255,.3)">${sz}</th>`; });
+  allSizes.forEach((sz,i)=>{ t+=`<th colspan="4" style="padding:6px 10px;background:${RT_BG}cc;color:#fff;text-align:center;border-right:${i<allSizes.length-1?'1px solid rgba(255,255,255,.3)':'none'}">${sz}</th>`; });
+  t+=`</tr>
+      <!-- Row 3: Metric headers -->
+      <tr>`;
+  const metricHdr=(bg)=>`<th style="padding:5px 8px;background:${bg};color:rgba(255,255,255,.85);font-size:.68rem;font-weight:700;text-align:right;border-right:1px solid rgba(255,255,255,.15)">Prev</th><th style="padding:5px 8px;background:${bg};color:rgba(255,255,255,.85);font-size:.68rem;font-weight:700;text-align:right;border-right:1px solid rgba(255,255,255,.15)">New</th><th style="padding:5px 8px;background:${bg};color:rgba(255,255,255,.85);font-size:.68rem;font-weight:700;text-align:right;border-right:1px solid rgba(255,255,255,.15)">Δ EGP</th><th style="padding:5px 8px;background:${bg};color:rgba(255,255,255,.85);font-size:.68rem;font-weight:700;text-align:right;border-right:2px solid rgba(255,255,255,.3)">%</th>`;
+  allSizes.forEach(()=>{ t+=metricHdr(`${DL_BG}99`); });
+  allSizes.forEach(()=>{ t+=metricHdr(`${RT_BG}99`); });
+  t+=`</tr></thead><tbody>`;
+
+  GROUPS.forEach((g,ri)=>{
+    const bg=ri%2===0?'var(--bg)':'var(--card)';
+    t+=`<tr style="background:${bg};border-bottom:1px solid var(--border)">
+      <td style="padding:7px 12px;text-align:center;font-weight:800;border-right:2px solid var(--border)">${g.label}</td>
+      <td style="padding:7px 12px;font-weight:700;color:#0f766e;border-right:2px solid #0f766e">${g.tier}</td>`;
+    // Delivered cells
+    allSizes.forEach(sz=>{
+      const ov=g.z.reduce((a,z)=>a||((old.ha?.delivery||{})[z]||{})[sz]||0,0);
+      const nv=g.z.reduce((a,z)=>a||((nw.ha?.delivery||{})[z]||{})[sz]||0,0);
+      const diff=ov>0&&nv>0?nv-ov:0;
+      const pct=ov>0&&nv>0?((nv-ov)/ov*100):null;
+      const isUp=pct!==null&&pct>0,isDn=pct!==null&&pct<0;
+      const cb=isUp?'rgba(220,38,38,.09)':isDn?'rgba(22,163,74,.08)':'transparent';
+      t+=`<td style="padding:6px 10px;text-align:right;font-variant-numeric:tabular-nums;background:${cb};border-right:1px solid var(--border)">${fm(ov)}</td>
+          <td style="padding:6px 10px;text-align:right;font-variant-numeric:tabular-nums;font-weight:700;color:${isUp?'#dc2626':isDn?'#16a34a':'var(--text)'};background:${cb};border-right:1px solid var(--border)">${fm(nv)}</td>
+          <td style="padding:6px 10px;text-align:right;font-variant-numeric:tabular-nums;font-weight:700;color:${isUp?'#dc2626':isDn?'#16a34a':'var(--muted)'};background:${cb};border-right:1px solid var(--border)">${ov>0&&nv>0?fd(diff):'—'}</td>
+          <td style="padding:6px 10px;text-align:right;font-weight:800;color:${isUp?'#dc2626':isDn?'#16a34a':'var(--muted)'};background:${cb};border-right:2px solid var(--border)">${fp(pct)}</td>`;
+    });
+    // Returns cells
+    allSizes.forEach((sz,si)=>{
+      const ov=g.z.reduce((a,z)=>a||((old.ha?.returns||{})[z]||{})[sz]||0,0);
+      const nv=g.z.reduce((a,z)=>a||((nw.ha?.returns||{})[z]||{})[sz]||0,0);
+      const diff=ov>0&&nv>0?nv-ov:0;
+      const pct=ov>0&&nv>0?((nv-ov)/ov*100):null;
+      const isUp=pct!==null&&pct>0,isDn=pct!==null&&pct<0;
+      const cb=isUp?'rgba(220,38,38,.09)':isDn?'rgba(22,163,74,.08)':'transparent';
+      t+=`<td style="padding:6px 10px;text-align:right;font-variant-numeric:tabular-nums;background:${cb};border-right:1px solid var(--border)">${fm(ov)}</td>
+          <td style="padding:6px 10px;text-align:right;font-variant-numeric:tabular-nums;font-weight:700;color:${isUp?'#dc2626':isDn?'#16a34a':'var(--text)'};background:${cb};border-right:1px solid var(--border)">${fm(nv)}</td>
+          <td style="padding:6px 10px;text-align:right;font-variant-numeric:tabular-nums;font-weight:700;color:${isUp?'#dc2626':isDn?'#16a34a':'var(--muted)'};background:${cb};border-right:1px solid var(--border)">${ov>0&&nv>0?fd(diff):'—'}</td>
+          <td style="padding:6px 10px;text-align:right;font-weight:800;color:${isUp?'#dc2626':isDn?'#16a34a':'var(--muted)'};background:${cb};border-right:${si<allSizes.length-1?'2px solid var(--border)':'none'}">${fp(pct)}</td>`;
+    });
+    t+=`</tr>`;
+  });
+  t+=`</tbody></table></div></div>`;
+  return t;
+}
+
+function rayaSaveAll(btn){
+  if(_rayaSlots.oldHA) { _ctState.raya.current=_rayaSlots.oldHA; }
+  if(_rayaSlots.newHA) { _ctState.raya.newC=_rayaSlots.newHA; }
+  _ctSaveLS();
+  if(btn){ const o=btn.innerHTML; btn.innerHTML='✓ Saved!'; btn.style.background='#16a34a'; setTimeout(()=>{ btn.innerHTML=o; btn.style.background='#0f766e'; },2000); }
 }
 
 function ctPickFile(key,slot){ document.getElementById(`ct-${key}-${slot}-inp`)?.click(); }
