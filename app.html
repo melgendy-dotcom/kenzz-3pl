@@ -1518,35 +1518,68 @@ function renderContracts(){
   if(!rc){
     rayaBody = '<p style="color:var(--muted);font-size:.83rem">Upload a contract file on the Raya tab to see rates here. Rates are loaded into memory when you process the report.</p>';
   } else {
-    const strip = h => h.replace(/<div style="overflow-x:auto">/, '<div>');
-    const inline = h => h ? `<div style="display:inline-block;vertical-align:top;margin-right:20px;margin-bottom:14px;white-space:normal">${strip(h)}</div>` : '';
-    const section = (icon, label, color, ...parts) => {
-      const body = parts.join('');
+    // Build a horizontal comparison block: Previous | New | % Change side by side
+    const rateBlock = (title, color, prevTbl, newTbl) => {
+      if(!prevTbl && !newTbl) return '';
+      const SIZE_ORDER = ['Small','Medium','Large','L Shape','U Shape','Full Room'];
+      const fm  = v => v>0 ? v.toLocaleString('en-US',{minimumFractionDigits:0,maximumFractionDigits:3}) : '—';
+      const fmp = v => v===null ? '—' : (v>0?'▲ +':'▼ ')+Math.abs(v).toFixed(1)+'%';
+      // Collect all zones & sizes from both tables
+      const allZ = [...new Set([...Object.keys(prevTbl||{}),...Object.keys(newTbl||{})])].sort((a,b)=>parseInt(a)-parseInt(b));
+      const allS = [...new Set([...allZ.flatMap(z=>Object.keys((prevTbl||{})[z]||{})),...allZ.flatMap(z=>Object.keys((newTbl||{})[z]||{}))])];
+      allS.sort((a,b)=>{ const ai=SIZE_ORDER.indexOf(a),bi=SIZE_ORDER.indexOf(b);return(ai<0?99:ai)-(bi<0?99:bi); });
+      if(!allZ.length||!allS.length) return '';
+      const showNew = !!newTbl;
+      const showPct = !!(prevTbl && newTbl);
+      // Column groups: for each size: Previous | [New] | [%]
+      const colsPerSize = 1 + (showNew?1:0) + (showPct?1:0);
+      let t = `<div style="overflow-x:auto;margin-bottom:18px">
+        <div style="font-size:.79rem;font-weight:800;color:${color};text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px">${title}</div>
+        <table style="border-collapse:collapse;font-size:.79rem;white-space:nowrap;min-width:300px">
+        <thead>
+          <tr>
+            <th rowspan="2" style="padding:7px 12px;background:#1e293b;color:#fff;text-align:left;border-right:2px solid #fff;white-space:nowrap">Zone</th>`;
+      allS.forEach(sz=>{
+        t += `<th colspan="${colsPerSize}" style="padding:6px 12px;background:${color};color:#fff;text-align:center;border-right:2px solid rgba(255,255,255,.3)">${sz}</th>`;
+      });
+      t += `</tr><tr>`;
+      allS.forEach(()=>{
+        t += `<th style="padding:4px 10px;background:${color}cc;color:#fff;font-size:.69rem;font-weight:700;text-align:right;border-right:1px solid rgba(255,255,255,.2)">Previous</th>`;
+        if(showNew) t += `<th style="padding:4px 10px;background:#dc2626cc;color:#fff;font-size:.69rem;font-weight:700;text-align:right;border-right:1px solid rgba(255,255,255,.2)">New</th>`;
+        if(showPct) t += `<th style="padding:4px 10px;background:#1e293b;color:#94a3b8;font-size:.69rem;font-weight:700;text-align:right;border-right:2px solid rgba(255,255,255,.3)">% Chg</th>`;
+      });
+      t += `</tr></thead><tbody>`;
+      allZ.forEach((z,ri)=>{
+        const bg = ri%2===0?'var(--bg)':'var(--card)';
+        t += `<tr style="background:${bg};border-bottom:1px solid var(--border)">
+          <td style="padding:7px 12px;font-weight:700;border-right:2px solid var(--border)">Zone ${z}</td>`;
+        allS.forEach(sz=>{
+          const pv = (prevTbl?.[z]||{})[sz]||0;
+          const nv = (newTbl?.[z]||{})[sz]||0;
+          const pct = pv>0&&nv>0 ? ((nv-pv)/pv*100) : null;
+          const isUp=pct!==null&&pct>0, isDn=pct!==null&&pct<0;
+          const cb = isUp?'rgba(220,38,38,.08)':isDn?'rgba(22,163,74,.07)':'transparent';
+          t += `<td style="padding:7px 10px;text-align:right;font-variant-numeric:tabular-nums;border-right:1px solid var(--border)">${fm(pv)}</td>`;
+          if(showNew) t += `<td style="padding:7px 10px;text-align:right;font-variant-numeric:tabular-nums;font-weight:700;background:${cb};border-right:1px solid var(--border)">${nv>0?fm(nv):'—'}</td>`;
+          if(showPct) t += `<td style="padding:7px 10px;text-align:right;font-weight:800;color:${isUp?'#dc2626':isDn?'#16a34a':'var(--muted)'};background:${cb};border-right:2px solid var(--border)">${fmp(pct)}</td>`;
+        });
+        t += `</tr>`;
+      });
+      t += `</tbody></table></div>`;
+      return t;
+    };
+
+    const section = (icon, label, color, body) => {
       if(!body) return '';
-      return `<div style="margin-bottom:20px;padding-bottom:16px;border-bottom:1.5px dashed var(--border)">
+      return `<div style="margin-bottom:18px;padding-bottom:14px;border-bottom:1.5px dashed var(--border)">
         <div style="font-size:.8rem;font-weight:800;color:${color};text-transform:uppercase;letter-spacing:.6px;margin-bottom:10px;padding:5px 12px;background:${color}18;border-left:3px solid ${color};border-radius:0 4px 4px 0">${icon} ${label}</div>
-        <div style="overflow-x:auto;white-space:nowrap">${body}</div>
+        ${body}
       </div>`;
     };
 
-    // HA — Delivered
-    const dPrev = rayaRateTable('Previous Rates (EGP)', rc.ha?.delivery, '#0f766e', '#0f766e');
-    const dNew  = rcN ? rayaRateTable('New Rates (EGP)', rcN.ha?.delivery, '#dc2626', '#dc2626') : '';
-    const dPct  = (rc.ha?.delivery && rcN?.ha?.delivery) ? rayaZonePctTable('% Change', rc.ha.delivery, rcN.ha.delivery, '#0f766e') : '';
-    rayaBody += section('🏠', 'HA — DELIVERED', '#0f766e', inline(dPrev), inline(dNew), dPct);
-
-    // HA — Returns
-    const rPrev = rayaRateTable('Previous Rates (EGP)', rc.ha?.returns, '#134e4a', '#134e4a');
-    const rNew  = rcN ? rayaRateTable('New Rates (EGP)', rcN.ha?.returns, '#dc2626', '#dc2626') : '';
-    const rPct  = (rc.ha?.returns && rcN?.ha?.returns) ? rayaZonePctTable('% Change', rc.ha.returns, rcN.ha.returns, '#134e4a') : '';
-    rayaBody += section('🔄', 'HA — RETURNS (75%)', '#134e4a', inline(rPrev), inline(rNew), rPct);
-
-    // Furniture — Delivery
-    const fPrev = rayaRateTable('Previous Rates (EGP)', rc.furniture?.delivery, '#0891b2', '#0891b2');
-    const fNew  = rcN ? rayaRateTable('New Rates (EGP)', rcN.furniture?.delivery, '#dc2626', '#dc2626') : '';
-    const fPct  = (rc.furniture?.delivery && rcN?.furniture?.delivery) ? rayaZonePctTable('% Change', rc.furniture.delivery, rcN.furniture.delivery, '#0891b2') : '';
-    rayaBody += section('🛋️', 'FURNITURE — DELIVERY', '#0891b2', inline(fPrev), inline(fNew), fPct);
-
+    rayaBody += section('🏠', 'HA — DELIVERED', '#0f766e', rateBlock('HA Delivered — Previous vs New Rates (EGP)', '#0f766e', rc.ha?.delivery, rcN?.ha?.delivery||null));
+    rayaBody += section('🔄', 'HA — RETURNS (75%)', '#134e4a', rateBlock('HA Returns — Previous vs New Rates (EGP)', '#134e4a', rc.ha?.returns, rcN?.ha?.returns||null));
+    rayaBody += section('🛋️', 'FURNITURE — DELIVERY', '#0891b2', rateBlock('Furniture Delivery — Previous vs New Rates (EGP)', '#0891b2', rc.furniture?.delivery, rcN?.furniture?.delivery||null));
     rayaBody += `<div style="font-size:.76rem;color:var(--muted);margin-top:4px">⚠️ Furniture Returns = 100% of delivery rate (billed at full delivery price)</div>`;
   }
 
