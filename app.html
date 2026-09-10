@@ -1518,68 +1518,80 @@ function renderContracts(){
   if(!rc){
     rayaBody = '<p style="color:var(--muted);font-size:.83rem">Upload a contract file on the Raya tab to see rates here. Rates are loaded into memory when you process the report.</p>';
   } else {
-    // Build a horizontal comparison block: Previous | New | % Change side by side
-    const rateBlock = (title, color, prevTbl, newTbl) => {
-      if(!prevTbl && !newTbl) return '';
-      const SIZE_ORDER = ['Small','Medium','Large','L Shape','U Shape','Full Room'];
-      const fm  = v => v>0 ? v.toLocaleString('en-US',{minimumFractionDigits:0,maximumFractionDigits:3}) : '—';
-      const fmp = v => v===null ? '—' : (v>0?'▲ +':'▼ ')+Math.abs(v).toFixed(1)+'%';
-      // Collect all zones & sizes from both tables
-      const allZ = [...new Set([...Object.keys(prevTbl||{}),...Object.keys(newTbl||{})])].sort((a,b)=>parseInt(a)-parseInt(b));
-      const allS = [...new Set([...allZ.flatMap(z=>Object.keys((prevTbl||{})[z]||{})),...allZ.flatMap(z=>Object.keys((newTbl||{})[z]||{}))])];
-      allS.sort((a,b)=>{ const ai=SIZE_ORDER.indexOf(a),bi=SIZE_ORDER.indexOf(b);return(ai<0?99:ai)-(bi<0?99:bi); });
-      if(!allZ.length||!allS.length) return '';
-      const showNew = !!newTbl;
-      const showPct = !!(prevTbl && newTbl);
-      // Column groups: for each size: Previous | [New] | [%]
-      const colsPerSize = 1 + (showNew?1:0) + (showPct?1:0);
-      let t = `<div style="overflow-x:auto;margin-bottom:18px">
-        <div style="font-size:.79rem;font-weight:800;color:${color};text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px">${title}</div>
-        <table style="border-collapse:collapse;font-size:.79rem;white-space:nowrap;min-width:300px">
-        <thead>
-          <tr>
-            <th rowspan="2" style="padding:7px 12px;background:#1e293b;color:#fff;text-align:left;border-right:2px solid #fff;white-space:nowrap">Zone</th>`;
-      allS.forEach(sz=>{
-        t += `<th colspan="${colsPerSize}" style="padding:6px 12px;background:${color};color:#fff;text-align:center;border-right:2px solid rgba(255,255,255,.3)">${sz}</th>`;
+    // Build one simple rate table (Zone rows × Size cols)
+    const simpleTable = (title, accentColor, tbl) => {
+      if(!tbl||!Object.keys(tbl).length) return '';
+      const SIZE_ORDER=['Small','Medium','Large','L Shape','U Shape','Full Room'];
+      const fm=v=>v>0?v.toLocaleString('en-US',{minimumFractionDigits:0,maximumFractionDigits:3}):'—';
+      const zones=Object.keys(tbl).sort((a,b)=>parseInt(a)-parseInt(b));
+      const sizes=[...new Set(zones.flatMap(z=>Object.keys(tbl[z]||{})))];
+      sizes.sort((a,b)=>{const ai=SIZE_ORDER.indexOf(a),bi=SIZE_ORDER.indexOf(b);return(ai<0?99:ai)-(bi<0?99:bi);});
+      let t=`<div style="flex:0 0 auto">
+        <div style="font-size:.74rem;font-weight:800;color:${accentColor};text-transform:uppercase;letter-spacing:.5px;margin-bottom:5px">${title}</div>
+        <table style="border-collapse:collapse;font-size:.79rem;white-space:nowrap">
+        <thead><tr style="background:${accentColor};color:#fff">
+          <th style="padding:7px 12px;text-align:left;font-weight:700">Zone</th>`;
+      sizes.forEach(sz=>{t+=`<th style="padding:7px 12px;text-align:right;font-weight:700">${sz}</th>`;});
+      t+=`</tr></thead><tbody>`;
+      zones.forEach((z,i)=>{
+        const rates=tbl[z]||{};
+        t+=`<tr style="background:${i%2===0?'var(--bg)':'var(--card)'};border-bottom:1px solid var(--border)">
+          <td style="padding:7px 12px;font-weight:700">Zone ${z}</td>`;
+        sizes.forEach(sz=>{t+=`<td style="padding:7px 12px;text-align:right;font-variant-numeric:tabular-nums">${fm(rates[sz]||0)}</td>`;});
+        t+=`</tr>`;
       });
-      t += `</tr><tr>`;
-      allS.forEach(()=>{
-        t += `<th style="padding:4px 10px;background:${color}cc;color:#fff;font-size:.69rem;font-weight:700;text-align:right;border-right:1px solid rgba(255,255,255,.2)">Previous</th>`;
-        if(showNew) t += `<th style="padding:4px 10px;background:#dc2626cc;color:#fff;font-size:.69rem;font-weight:700;text-align:right;border-right:1px solid rgba(255,255,255,.2)">New</th>`;
-        if(showPct) t += `<th style="padding:4px 10px;background:#1e293b;color:#94a3b8;font-size:.69rem;font-weight:700;text-align:right;border-right:2px solid rgba(255,255,255,.3)">% Chg</th>`;
-      });
-      t += `</tr></thead><tbody>`;
-      allZ.forEach((z,ri)=>{
-        const bg = ri%2===0?'var(--bg)':'var(--card)';
-        t += `<tr style="background:${bg};border-bottom:1px solid var(--border)">
-          <td style="padding:7px 12px;font-weight:700;border-right:2px solid var(--border)">Zone ${z}</td>`;
-        allS.forEach(sz=>{
-          const pv = (prevTbl?.[z]||{})[sz]||0;
-          const nv = (newTbl?.[z]||{})[sz]||0;
-          const pct = pv>0&&nv>0 ? ((nv-pv)/pv*100) : null;
-          const isUp=pct!==null&&pct>0, isDn=pct!==null&&pct<0;
-          const cb = isUp?'rgba(220,38,38,.08)':isDn?'rgba(22,163,74,.07)':'transparent';
-          t += `<td style="padding:7px 10px;text-align:right;font-variant-numeric:tabular-nums;border-right:1px solid var(--border)">${fm(pv)}</td>`;
-          if(showNew) t += `<td style="padding:7px 10px;text-align:right;font-variant-numeric:tabular-nums;font-weight:700;background:${cb};border-right:1px solid var(--border)">${nv>0?fm(nv):'—'}</td>`;
-          if(showPct) t += `<td style="padding:7px 10px;text-align:right;font-weight:800;color:${isUp?'#dc2626':isDn?'#16a34a':'var(--muted)'};background:${cb};border-right:2px solid var(--border)">${fmp(pct)}</td>`;
-        });
-        t += `</tr>`;
-      });
-      t += `</tbody></table></div>`;
+      t+=`</tbody></table></div>`;
       return t;
     };
 
-    const section = (icon, label, color, body) => {
-      if(!body) return '';
-      return `<div style="margin-bottom:18px;padding-bottom:14px;border-bottom:1.5px dashed var(--border)">
-        <div style="font-size:.8rem;font-weight:800;color:${color};text-transform:uppercase;letter-spacing:.6px;margin-bottom:10px;padding:5px 12px;background:${color}18;border-left:3px solid ${color};border-radius:0 4px 4px 0">${icon} ${label}</div>
-        ${body}
+    // Build % change table (Zone rows × Size cols, shows old/new/%)
+    const pctTable = (title, color, oldTbl, newTbl) => {
+      if(!oldTbl||!newTbl) return '';
+      const SIZE_ORDER=['Small','Medium','Large','L Shape','U Shape','Full Room'];
+      const fmp=v=>v===null?'—':(v>0?'▲ +':'▼ ')+Math.abs(v).toFixed(1)+'%';
+      const zones=[...new Set([...Object.keys(oldTbl),...Object.keys(newTbl)])].sort((a,b)=>parseInt(a)-parseInt(b));
+      const sizes=[...new Set([...zones.flatMap(z=>Object.keys(oldTbl[z]||{})),...zones.flatMap(z=>Object.keys(newTbl[z]||{}))])];
+      sizes.sort((a,b)=>{const ai=SIZE_ORDER.indexOf(a),bi=SIZE_ORDER.indexOf(b);return(ai<0?99:ai)-(bi<0?99:bi);});
+      let t=`<div style="flex:0 0 auto">
+        <div style="font-size:.74rem;font-weight:800;color:${color};text-transform:uppercase;letter-spacing:.5px;margin-bottom:5px">${title}</div>
+        <table style="border-collapse:collapse;font-size:.79rem;white-space:nowrap">
+        <thead><tr style="background:#1e293b;color:#94a3b8">
+          <th style="padding:7px 12px;text-align:left;font-weight:700;color:#fff">Zone</th>`;
+      sizes.forEach(sz=>{t+=`<th style="padding:7px 12px;text-align:right;font-weight:700;color:#fff">${sz}</th>`;});
+      t+=`</tr></thead><tbody>`;
+      zones.forEach((z,i)=>{
+        t+=`<tr style="background:${i%2===0?'var(--bg)':'var(--card)'};border-bottom:1px solid var(--border)">
+          <td style="padding:7px 12px;font-weight:700">Zone ${z}</td>`;
+        sizes.forEach(sz=>{
+          const ov=(oldTbl[z]||{})[sz]||0, nv=(newTbl[z]||{})[sz]||0;
+          const pct=ov>0&&nv>0?((nv-ov)/ov*100):null;
+          const isUp=pct!==null&&pct>0, isDn=pct!==null&&pct<0;
+          const bg=isUp?'rgba(220,38,38,.09)':isDn?'rgba(22,163,74,.08)':'transparent';
+          t+=`<td style="padding:7px 12px;text-align:right;font-weight:800;color:${isUp?'#dc2626':isDn?'#16a34a':'var(--muted)'};background:${bg}">${fmp(pct)}</td>`;
+        });
+        t+=`</tr>`;
+      });
+      t+=`</tbody></table></div>`;
+      return t;
+    };
+
+    // Render one section: 3 tables side by side in a flex row
+    const section = (icon, label, color, prevTbl, newTbl) => {
+      const t1 = simpleTable('Previous Rates (EGP)', color, prevTbl);
+      const t2 = simpleTable('New Rates (EGP)', '#dc2626', newTbl);
+      const t3 = pctTable('% Change (New vs Previous)', color, prevTbl, newTbl);
+      if(!t1&&!t2) return '';
+      return `<div style="margin-bottom:22px;padding-bottom:16px;border-bottom:1.5px dashed var(--border)">
+        <div style="font-size:.8rem;font-weight:800;color:${color};text-transform:uppercase;letter-spacing:.6px;margin-bottom:12px;padding:5px 12px;background:${color}18;border-left:3px solid ${color};border-radius:0 4px 4px 0">${icon} ${label}</div>
+        <div style="display:flex;gap:24px;overflow-x:auto;align-items:flex-start;padding-bottom:4px">
+          ${t1}${t2}${t3}
+        </div>
       </div>`;
     };
 
-    rayaBody += section('🏠', 'HA — DELIVERED', '#0f766e', rateBlock('HA Delivered — Previous vs New Rates (EGP)', '#0f766e', rc.ha?.delivery, rcN?.ha?.delivery||null));
-    rayaBody += section('🔄', 'HA — RETURNS (75%)', '#134e4a', rateBlock('HA Returns — Previous vs New Rates (EGP)', '#134e4a', rc.ha?.returns, rcN?.ha?.returns||null));
-    rayaBody += section('🛋️', 'FURNITURE — DELIVERY', '#0891b2', rateBlock('Furniture Delivery — Previous vs New Rates (EGP)', '#0891b2', rc.furniture?.delivery, rcN?.furniture?.delivery||null));
+    rayaBody += section('🏠', 'HA — DELIVERED', '#0f766e', rc.ha?.delivery, rcN?.ha?.delivery);
+    rayaBody += section('🔄', 'HA — RETURNS (75%)', '#134e4a', rc.ha?.returns, rcN?.ha?.returns);
+    rayaBody += section('🛋️', 'FURNITURE — DELIVERY', '#0891b2', rc.furniture?.delivery, rcN?.furniture?.delivery);
     rayaBody += `<div style="font-size:.76rem;color:var(--muted);margin-top:4px">⚠️ Furniture Returns = 100% of delivery rate (billed at full delivery price)</div>`;
   }
 
@@ -4732,7 +4744,7 @@ function renderValDash(cfg){
 /* ---------- Backup / Restore ---------- */
 function exportBackup(){
   const backup = {
-    version: 3,
+    version: 4,
     exportedAt: new Date().toISOString(),
     bosta:    localStorage.getItem(STORAGE_KEY),
     aramex:   localStorage.getItem('kenzz3pl_aramex_v1'),
