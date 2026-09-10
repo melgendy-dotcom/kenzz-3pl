@@ -1396,23 +1396,33 @@ function renderContracts(){
     </div>`;
   }
 
+  // helper: render one row of 3 Raya tables side by side
+  function rayaThreeRow(contract, rowLabel, labelColor){
+    if(!contract) return '';
+    const strip = h => h.replace(/<div style="overflow-x:auto">/, '<div>');
+    const tD  = rayaRateTable('🏠 HA — Delivery (EGP)',        contract.ha&&contract.ha.delivery,              '#0f766e', '#0f766e');
+    const tR  = rayaRateTable('🏠 HA — Returns (75%)',          contract.ha&&contract.ha.returns,               '#134e4a', '#134e4a');
+    const tFD = rayaRateTable('🛋️ Furniture — Delivery (EGP)', contract.furniture&&contract.furniture.delivery, '#0891b2', '#0891b2');
+    return `<div style="margin-bottom:18px">
+      <div style="font-size:.78rem;font-weight:800;color:${labelColor};text-transform:uppercase;letter-spacing:.6px;margin-bottom:8px;padding:4px 10px;background:${labelColor}18;border-left:3px solid ${labelColor};border-radius:0 4px 4px 0">${rowLabel}</div>
+      <div style="overflow-x:auto;white-space:nowrap">
+        <div style="display:inline-block;vertical-align:top;margin-right:20px;white-space:normal">${strip(tD)}</div>
+        <div style="display:inline-block;vertical-align:top;margin-right:20px;white-space:normal">${strip(tR)}</div>
+        <div style="display:inline-block;vertical-align:top;white-space:normal">${strip(tFD)}</div>
+      </div>
+    </div>`;
+  }
+
   // Raya section — prefer manager contract, fall back to session-loaded contract
-  const rc = _ctState.raya?.current || _savedContracts.raya;
+  const rc  = _ctState.raya?.current || _savedContracts.raya;
+  const rcN = _ctState.raya?.newC;
   let rayaBody = '';
   if(!rc){
     rayaBody = '<p style="color:var(--muted);font-size:.83rem">Upload a contract file on the Raya tab to see rates here. Rates are loaded into memory when you process the report.</p>';
   } else {
-    // All three tables side by side: HA Delivery | HA Returns | Furniture Delivery
-    const strip = html => html.replace(/<div style="overflow-x:auto">/, '<div>');
-    const tHA_D  = rayaRateTable('🏠 HA — Delivery (EGP)',           rc.ha&&rc.ha.delivery,              '#0f766e', '#0f766e');
-    const tHA_R  = rayaRateTable('🏠 HA — Returns (75%)',             rc.ha&&rc.ha.returns,               '#134e4a', '#134e4a');
-    const tFur_D = rayaRateTable('🛋️ Furniture — Delivery (EGP)',     rc.furniture&&rc.furniture.delivery, '#0891b2', '#0891b2');
-    rayaBody += `<div style="overflow-x:auto;white-space:nowrap">
-      <div style="display:inline-block;vertical-align:top;margin-right:20px;white-space:normal">${strip(tHA_D)}</div>
-      <div style="display:inline-block;vertical-align:top;margin-right:20px;white-space:normal">${strip(tHA_R)}</div>
-      <div style="display:inline-block;vertical-align:top;white-space:normal">${strip(tFur_D)}</div>
-    </div>`;
-    rayaBody += `<div style="font-size:.76rem;color:var(--muted);margin-top:6px">⚠️ Furniture Returns = 100% of delivery rate (billed at full delivery price)</div>`;
+    rayaBody += rayaThreeRow(rc,  rcN ? 'Current Contract' : 'Contract Rates', '#0f766e');
+    if(rcN) rayaBody += rayaThreeRow(rcN, 'New Rates',        '#dc2626');
+    rayaBody += `<div style="font-size:.76rem;color:var(--muted);margin-top:4px">⚠️ Furniture Returns = 100% of delivery rate (billed at full delivery price)</div>`;
   }
 
   let html = `<div style="padding:20px 0">`;
