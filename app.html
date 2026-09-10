@@ -1653,16 +1653,16 @@ const RAYA_ZONE_GROUPS = [
 ];
 const SIZE_ORDER_FULL = ['Small','Medium','Large','L Shape','U Shape','Full Room'];
 
-// Renders ONE zone×size table (current OR new) with cells colored if changed vs other table
+// Renders ONE zone×size table (current OR new) — NO overflow wrapper, parent handles scroll
 function _ctOneTable(tbl, otherTbl, color, groups, sizes, showTier, label){
   const fm = v => v>0 ? v.toLocaleString('en-US',{minimumFractionDigits:0,maximumFractionDigits:3}) : '—';
-  let h=`<div style="flex:1;min-width:0">
-    <div style="background:${color};color:#fff;text-align:center;font-weight:800;font-size:.8rem;padding:7px 10px;border-radius:6px 6px 0 0">${label}</div>
-    <div style="overflow-x:auto"><table style="width:100%;border-collapse:collapse;font-size:.79rem">
+  let h=`<div style="display:inline-block;vertical-align:top;border:1px solid var(--border);border-radius:6px;overflow:hidden">
+    <div style="background:${color};color:#fff;text-align:center;font-weight:800;font-size:.8rem;padding:7px 10px">${label}</div>
+    <table style="border-collapse:collapse;font-size:.79rem;white-space:nowrap">
     <thead><tr style="background:${color}cc;color:#fff">
       <th style="padding:6px 10px;text-align:center;border-right:1px solid rgba(255,255,255,.2)">Zones</th>
       ${showTier?`<th style="padding:6px 10px;text-align:center;border-right:1px solid rgba(255,255,255,.2)">Tier</th>`:''}`;
-  sizes.forEach(sz=>{ h+=`<th style="padding:6px 10px;text-align:right;border-right:1px solid rgba(255,255,255,.2)">${sz}</th>`; });
+  sizes.forEach(sz=>{ h+=`<th style="padding:6px 12px;text-align:right;border-right:1px solid rgba(255,255,255,.2)">${sz}</th>`; });
   h+=`</tr></thead><tbody>`;
   groups.forEach((g,ri)=>{
     const bg=ri%2===0?'var(--bg)':'var(--card)';
@@ -1672,15 +1672,14 @@ function _ctOneTable(tbl, otherTbl, color, groups, sizes, showTier, label){
     sizes.forEach(sz=>{
       const v = g.zones.reduce((acc,z)=>acc||(tbl[z]||{})[sz]||0, 0);
       const ov= g.zones.reduce((acc,z)=>acc||(otherTbl[z]||{})[sz]||0, 0);
-      const delta = v - ov; // positive = this table is higher than the other
+      const delta = v - ov;
       const isUp = delta>0, isDn = delta<0;
-      const cellBg = isUp?'rgba(220,38,38,.12)':isDn?'rgba(22,163,74,.10)':'transparent';
-      const fw = (isUp||isDn)?700:400;
-      h+=`<td style="padding:6px 10px;text-align:right;font-variant-numeric:tabular-nums;font-weight:${fw};background:${cellBg};border-right:1px solid var(--border);color:${isUp?'#dc2626':isDn?'#16a34a':'var(--text)'}">${fm(v)}</td>`;
+      const cellBg = isUp?'rgba(220,38,38,.13)':isDn?'rgba(22,163,74,.11)':'transparent';
+      h+=`<td style="padding:6px 12px;text-align:right;font-variant-numeric:tabular-nums;font-weight:${(isUp||isDn)?700:400};background:${cellBg};border-right:1px solid var(--border);color:${isUp?'#dc2626':isDn?'#16a34a':'var(--text)'}">${fm(v)}</td>`;
     });
     h+=`</tr>`;
   });
-  h+=`</tbody></table></div></div>`;
+  h+=`</tbody></table></div>`;
   return h;
 }
 
@@ -1696,7 +1695,6 @@ function _ctSideBySide(title, oldTbl, newTbl, color, showTier){
     ? RAYA_ZONE_GROUPS.filter(g=>g.zones.some(z=>allZoneKeys.includes(z)))
     : [...new Set(allZoneKeys)].sort((a,b)=>parseInt(a)||a.localeCompare(b)).map(z=>({zones:[z],label:z,tier:null}));
 
-  // Count total increases in new vs old
   let ups=0,dns=0;
   groups.forEach(g=>allSizes.forEach(sz=>{
     const o=g.zones.reduce((a,z)=>a||(oldTbl[z]||{})[sz]||0,0);
@@ -1704,17 +1702,17 @@ function _ctSideBySide(title, oldTbl, newTbl, color, showTier){
     if(n>o) ups++; else if(n<o) dns++;
   }));
 
-  return `<div style="margin-bottom:22px">
+  return `<div style="margin-bottom:24px">
     <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
       <span style="font-size:.82rem;font-weight:800;color:${color};text-transform:uppercase;letter-spacing:.5px">${title}</span>
       ${ups?`<span style="background:#fef2f2;color:#dc2626;border:1px solid #fca5a5;padding:2px 9px;border-radius:20px;font-size:.71rem;font-weight:700">↑ ${ups} increases</span>`:''}
       ${dns?`<span style="background:#f0fdf4;color:#16a34a;border:1px solid #86efac;padding:2px 9px;border-radius:20px;font-size:.71rem;font-weight:700">↓ ${dns} decreases</span>`:''}
       ${!ups&&!dns?`<span style="color:var(--muted);font-size:.75rem">✓ No changes</span>`:''}
     </div>
-    <div style="display:flex;gap:12px;align-items:flex-start">
+    <div style="overflow-x:auto;white-space:nowrap">
       ${_ctOneTable(oldTbl, newTbl, '#64748b', groups, allSizes, showTier, 'Current Contract')}
-      <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;padding-top:36px;color:var(--muted);font-size:1.3rem;flex-shrink:0">→</div>
-      ${_ctOneTable(newTbl, oldTbl, color,    groups, allSizes, showTier, 'New Rates')}
+      <span style="display:inline-block;vertical-align:middle;padding:0 14px;color:var(--muted);font-size:1.4rem">→</span>
+      ${_ctOneTable(newTbl, oldTbl, color, groups, allSizes, showTier, 'New Rates')}
     </div>
   </div>`;
 }
