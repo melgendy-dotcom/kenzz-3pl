@@ -1446,10 +1446,10 @@ function renderContracts(){
         const nv=g.z.reduce((a,z)=>a||(newTbl[z]||{})[sz]||0,0);
         const pct=ov>0&&nv>0?((nv-ov)/ov*100):null;
         const isUp=pct!==null&&pct>0,isDn=pct!==null&&pct<0;
-        const cellBg=isUp?'rgba(220,38,38,.10)':isDn?'rgba(22,163,74,.09)':'transparent';
+        const cellBg=isUp?'rgba(22,163,74,.09)':isDn?'rgba(220,38,38,.10)':'transparent';
         t+=`<td style="padding:6px 10px;text-align:right;font-variant-numeric:tabular-nums;background:${cellBg};border-left:1px solid var(--border)">${fm(ov)}</td>
             <td style="padding:6px 10px;text-align:right;font-variant-numeric:tabular-nums;font-weight:700;background:${cellBg}">${fm(nv)}</td>
-            <td style="padding:6px 10px;text-align:right;font-weight:800;color:${isUp?'#dc2626':isDn?'#16a34a':'var(--muted)'};background:${cellBg};border-right:1px solid var(--border)">${fmp(pct)}</td>`;
+            <td style="padding:6px 10px;text-align:right;font-weight:800;color:${isUp?'#16a34a':isDn?'#dc2626':'var(--muted)'};background:${cellBg};border-right:1px solid var(--border)">${fmp(pct)}</td>`;
       });
       t+=`</tr>`;
     });
@@ -1499,10 +1499,10 @@ function renderContracts(){
           const nv = zGroup.reduce((a,k)=>a||(newTbl[k]||{})[sz]||0,0);
           const pct = ov>0&&nv>0 ? ((nv-ov)/ov*100) : null;
           const isUp=pct!==null&&pct>0, isDn=pct!==null&&pct<0;
-          const cellBg=isUp?'rgba(220,38,38,.10)':isDn?'rgba(22,163,74,.09)':'transparent';
+          const cellBg=isUp?'rgba(22,163,74,.09)':isDn?'rgba(220,38,38,.10)':'transparent';
           t+=`<td style="padding:6px 10px;text-align:right;font-variant-numeric:tabular-nums;background:${cellBg};border-left:1px solid var(--border)">${fm(ov)}</td>
               <td style="padding:6px 10px;text-align:right;font-variant-numeric:tabular-nums;font-weight:700;background:${cellBg}">${fm(nv)}</td>
-              <td style="padding:6px 10px;text-align:right;font-weight:800;color:${isUp?'#dc2626':isDn?'#16a34a':'var(--muted)'};background:${cellBg};border-right:1px solid var(--border)">${fmp(pct)}</td>`;
+              <td style="padding:6px 10px;text-align:right;font-weight:800;color:${isUp?'#16a34a':isDn?'#dc2626':'var(--muted)'};background:${cellBg};border-right:1px solid var(--border)">${fmp(pct)}</td>`;
         });
         t+=`</tr>`;
       });
@@ -1566,8 +1566,8 @@ function renderContracts(){
           const ov=(oldTbl[z]||{})[sz]||0, nv=(newTbl[z]||{})[sz]||0;
           const pct=ov>0&&nv>0?((nv-ov)/ov*100):null;
           const isUp=pct!==null&&pct>0, isDn=pct!==null&&pct<0;
-          const bg=isUp?'rgba(220,38,38,.09)':isDn?'rgba(22,163,74,.08)':'transparent';
-          t+=`<td style="padding:7px 12px;text-align:right;font-weight:800;color:${isUp?'#dc2626':isDn?'#16a34a':'var(--muted)'};background:${bg}">${fmp(pct)}</td>`;
+          const bg=isUp?'rgba(22,163,74,.08)':isDn?'rgba(220,38,38,.09)':'transparent';
+          t+=`<td style="padding:7px 12px;text-align:right;font-weight:800;color:${isUp?'#16a34a':isDn?'#dc2626':'var(--muted)'};background:${bg}">${fmp(pct)}</td>`;
         });
         t+=`</tr>`;
       });
@@ -4757,7 +4757,7 @@ function renderValDash(cfg){
 /* ---------- Backup / Restore ---------- */
 function exportBackup(){
   const backup = {
-    version: 11,
+    version: 12,
     exportedAt: new Date().toISOString(),
     bosta:    localStorage.getItem(STORAGE_KEY),
     aramex:   localStorage.getItem('kenzz3pl_aramex_v1'),
