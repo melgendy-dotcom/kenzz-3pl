@@ -1538,6 +1538,13 @@ function renderContracts(){
 
   let html = `<div style="padding:20px 0">`;
 
+  // Save button
+  html += `<div style="display:flex;justify-content:flex-end;margin-bottom:16px">
+    <button onclick="ctSaveAll(this)" style="display:flex;align-items:center;gap:8px;padding:9px 22px;background:#0f766e;color:#fff;border:none;border-radius:8px;font-weight:800;font-size:.85rem;cursor:pointer">
+      💾 Save Contract Data
+    </button>
+  </div>`;
+
   const bostaC  = _ctState.bosta?.current  || _savedContracts.bosta;
   const aramexC = _ctState.aramex?.current;
   const mqC     = _ctState.mashreq?.current || _savedContracts.mashreq;
@@ -1548,6 +1555,15 @@ function renderContracts(){
 
   html += `</div>`;
   el.innerHTML = html;
+}
+
+function ctSaveAll(btn){
+  // Merge session-loaded contracts into _ctState if not already there
+  if(!_ctState.raya.current && _savedContracts.raya)    _ctState.raya.current    = _savedContracts.raya;
+  if(!_ctState.bosta.current && _savedContracts.bosta)  _ctState.bosta.current   = _savedContracts.bosta;
+  if(!_ctState.mashreq.current && _savedContracts.mashreq) _ctState.mashreq.current = _savedContracts.mashreq;
+  _ctSaveLS();
+  if(btn){ const old=btn.innerHTML; btn.innerHTML='✓ Saved!'; btn.style.background='#16a34a'; setTimeout(()=>{ btn.innerHTML=old; btn.style.background='#0f766e'; },2000); }
 }
 
 /* ---------- Contract Manager ---------- */
