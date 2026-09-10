@@ -1861,19 +1861,16 @@ function renderRayaComparison(){
     <div style="overflow-x:auto">
     <table style="border-collapse:collapse;font-size:.77rem;white-space:nowrap">
     <thead>
-      <!-- Row 1: Delivered / Returns mega-headers -->
       <tr>
         <th rowspan="3" style="padding:8px 12px;background:#1e293b;color:#fff;text-align:center;border-right:2px solid #fff;border-bottom:2px solid #fff">Zone</th>
         <th rowspan="3" style="padding:8px 12px;background:#1e293b;color:#fff;text-align:center;border-right:2px solid #0f766e;border-bottom:2px solid #fff">Tier</th>
         <th colspan="${allSizes.length*4}" style="padding:7px 10px;background:${DL_BG};color:#fff;text-align:center;border-right:2px solid #fff">🏠 DELIVERED</th>
         <th colspan="${allSizes.length*4}" style="padding:7px 10px;background:${RT_BG};color:#fff;text-align:center">🔄 RETURNS (75%)</th>
       </tr>
-      <!-- Row 2: Size groups -->
       <tr>`;
   allSizes.forEach(sz=>{ t+=`<th colspan="4" style="padding:6px 10px;background:${DL_BG}cc;color:#fff;text-align:center;border-right:1px solid rgba(255,255,255,.3)">${sz}</th>`; });
   allSizes.forEach((sz,i)=>{ t+=`<th colspan="4" style="padding:6px 10px;background:${RT_BG}cc;color:#fff;text-align:center;border-right:${i<allSizes.length-1?'1px solid rgba(255,255,255,.3)':'none'}">${sz}</th>`; });
   t+=`</tr>
-      <!-- Row 3: Metric headers -->
       <tr>`;
   const metricHdr=(bg)=>`<th style="padding:5px 8px;background:${bg};color:rgba(255,255,255,.85);font-size:.68rem;font-weight:700;text-align:right;border-right:1px solid rgba(255,255,255,.15)">Prev</th><th style="padding:5px 8px;background:${bg};color:rgba(255,255,255,.85);font-size:.68rem;font-weight:700;text-align:right;border-right:1px solid rgba(255,255,255,.15)">New</th><th style="padding:5px 8px;background:${bg};color:rgba(255,255,255,.85);font-size:.68rem;font-weight:700;text-align:right;border-right:1px solid rgba(255,255,255,.15)">Δ EGP</th><th style="padding:5px 8px;background:${bg};color:rgba(255,255,255,.85);font-size:.68rem;font-weight:700;text-align:right;border-right:2px solid rgba(255,255,255,.3)">%</th>`;
   allSizes.forEach(()=>{ t+=metricHdr(`${DL_BG}99`); });
