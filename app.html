@@ -1592,23 +1592,15 @@ function renderContracts(){
     rayaBody += section('🏠', 'HA — DELIVERED', '#0f766e', rc.ha?.delivery, rcN?.ha?.delivery);
     rayaBody += section('🔄', 'HA — RETURNS (75%)', '#134e4a', rc.ha?.returns, rcN?.ha?.returns);
 
-    // Furniture section — 2 amount tables only (Delivery + Returns), no % change
-    const furDel  = simpleTable('Delivery Rates (EGP)',  '#0891b2', rc.furniture?.delivery);
-    const furRet  = simpleTable('Return Rates (EGP)',    '#075985', rc.furniture?.returns);
-    const furDelN = simpleTable('New Delivery Rates (EGP)', '#dc2626', rcN?.furniture?.delivery);
-    const furRetN = simpleTable('New Return Rates (EGP)',   '#dc2626', rcN?.furniture?.returns);
-    if(furDel||furRet||furDelN||furRetN){
+    // Furniture section — 2 amount tables only (Delivery + Returns), no comparison
+    const furSrc = rcN?.furniture || rc?.furniture;
+    const furDel = simpleTable('Delivery Rates (EGP)', '#0891b2', furSrc?.delivery);
+    const furRet = simpleTable('Return Rates (EGP)',   '#075985', furSrc?.returns);
+    if(furDel||furRet){
       rayaBody += `<div style="margin-bottom:22px;padding-bottom:16px;border-bottom:1.5px dashed var(--border)">
         <div style="font-size:.8rem;font-weight:800;color:#0891b2;text-transform:uppercase;letter-spacing:.6px;margin-bottom:12px;padding:5px 12px;background:#0891b218;border-left:3px solid #0891b2;border-radius:0 4px 4px 0">🛋️ FURNITURE — RATES</div>
-        <div style="display:flex;gap:32px;overflow-x:auto;align-items:flex-start;padding-bottom:4px;flex-wrap:wrap">
-          <div>
-            <div style="font-size:.72rem;font-weight:800;color:#0891b2;text-transform:uppercase;letter-spacing:.4px;margin-bottom:6px;padding:3px 8px;background:#0891b210;border-radius:4px">📦 DELIVERY</div>
-            <div style="display:flex;gap:16px;align-items:flex-start">${furDel}${furDelN}</div>
-          </div>
-          <div>
-            <div style="font-size:.72rem;font-weight:800;color:#075985;text-transform:uppercase;letter-spacing:.4px;margin-bottom:6px;padding:3px 8px;background:#07598510;border-radius:4px">↩️ RETURNS</div>
-            <div style="display:flex;gap:16px;align-items:flex-start">${furRet}${furRetN}</div>
-          </div>
+        <div style="display:flex;gap:24px;overflow-x:auto;align-items:flex-start;padding-bottom:4px">
+          ${furDel}${furRet}
         </div>
       </div>`;
     }
@@ -4765,7 +4757,7 @@ function renderValDash(cfg){
 /* ---------- Backup / Restore ---------- */
 function exportBackup(){
   const backup = {
-    version: 10,
+    version: 11,
     exportedAt: new Date().toISOString(),
     bosta:    localStorage.getItem(STORAGE_KEY),
     aramex:   localStorage.getItem('kenzz3pl_aramex_v1'),
