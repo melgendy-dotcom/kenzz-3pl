@@ -1591,8 +1591,6 @@ function renderContracts(){
 
     rayaBody += section('🏠', 'HA — DELIVERED', '#0f766e', rc.ha?.delivery, rcN?.ha?.delivery);
     rayaBody += section('🔄', 'HA — RETURNS (75%)', '#134e4a', rc.ha?.returns, rcN?.ha?.returns);
-    rayaBody += section('🛋️', 'FURNITURE — DELIVERY', '#0891b2', rc.furniture?.delivery, rcN?.furniture?.delivery);
-    rayaBody += `<div style="font-size:.76rem;color:var(--muted);margin-top:4px">⚠️ Furniture Returns = 100% of delivery rate (billed at full delivery price)</div>`;
   }
 
   let html = `<div style="padding:20px 0">`;
@@ -4746,7 +4744,7 @@ function renderValDash(cfg){
 /* ---------- Backup / Restore ---------- */
 function exportBackup(){
   const backup = {
-    version: 7,
+    version: 8,
     exportedAt: new Date().toISOString(),
     bosta:    localStorage.getItem(STORAGE_KEY),
     aramex:   localStorage.getItem('kenzz3pl_aramex_v1'),
