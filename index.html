@@ -1647,13 +1647,14 @@ function _ctLoadLS(){
     const saved = JSON.parse(raw);
     CT_COMPANIES.forEach(c=>{
       if(saved[c.key]?.current) _ctState[c.key].current = saved[c.key].current;
+      if(saved[c.key]?.newC)    _ctState[c.key].newC    = saved[c.key].newC;
     });
   }catch(e){}
 }
 function _ctSaveLS(){
   try{
     const obj={};
-    CT_COMPANIES.forEach(c=>{ obj[c.key]={current:_ctState[c.key].current}; });
+    CT_COMPANIES.forEach(c=>{ obj[c.key]={current:_ctState[c.key].current, newC:_ctState[c.key].newC}; });
     localStorage.setItem(CT_LS_KEY, JSON.stringify(obj));
   }catch(e){}
 }
@@ -1977,6 +1978,7 @@ function rayaSaveAll(btn){
   if(_rayaSlots.oldHA) { _ctState.raya.current=_rayaSlots.oldHA; }
   if(_rayaSlots.newHA) { _ctState.raya.newC=_rayaSlots.newHA; }
   _ctSaveLS();
+  renderContracts();
   if(btn){ const o=btn.innerHTML; btn.innerHTML='✓ Saved!'; btn.style.background='#16a34a'; setTimeout(()=>{ btn.innerHTML=o; btn.style.background='#0f766e'; },2000); }
 }
 
@@ -4744,7 +4746,7 @@ function renderValDash(cfg){
 /* ---------- Backup / Restore ---------- */
 function exportBackup(){
   const backup = {
-    version: 4,
+    version: 5,
     exportedAt: new Date().toISOString(),
     bosta:    localStorage.getItem(STORAGE_KEY),
     aramex:   localStorage.getItem('kenzz3pl_aramex_v1'),
