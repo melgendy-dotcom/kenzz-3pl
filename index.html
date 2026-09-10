@@ -1518,23 +1518,36 @@ function renderContracts(){
   if(!rc){
     rayaBody = '<p style="color:var(--muted);font-size:.83rem">Upload a contract file on the Raya tab to see rates here. Rates are loaded into memory when you process the report.</p>';
   } else {
-    // Current: HA Returns + Furniture only (no old HA Delivery)
-    rayaBody += rayaThreeRow(rc,  rcN ? 'Current Contract' : 'Contract Rates', '#0f766e', false);
-    if(rcN){
-      // New rates: show all 3 including HA Delivery
-      rayaBody += rayaThreeRow(rcN, 'New Rates', '#dc2626', true);
-      // % change analysis
-      const haD  = rayaZonePctTable('HA — Delivered % Change',  rc.ha?.delivery,        rcN.ha?.delivery,        '#0f766e');
-      const haR  = rayaZonePctTable('HA — Returns % Change',    rc.ha?.returns,         rcN.ha?.returns,         '#134e4a');
-      const furD = rayaZonePctTable('Furniture % Change',       rc.furniture?.delivery, rcN.furniture?.delivery, '#0891b2');
-      if(haD||haR||furD){
-        rayaBody += `<div style="margin-top:18px;padding-top:14px;border-top:2px dashed var(--border)">
-          <div style="font-size:.82rem;font-weight:800;color:var(--text);margin-bottom:10px">📊 Rate Change by Zone — % Increase</div>
-          <div style="overflow-x:auto;white-space:nowrap">${haD}${haR}${furD}</div>
-        </div>`;
-      }
-    }
-    rayaBody += `<div style="font-size:.76rem;color:var(--muted);margin-top:8px">⚠️ Furniture Returns = 100% of delivery rate (billed at full delivery price)</div>`;
+    const strip = h => h.replace(/<div style="overflow-x:auto">/, '<div>');
+    const inline = h => h ? `<div style="display:inline-block;vertical-align:top;margin-right:20px;margin-bottom:14px;white-space:normal">${strip(h)}</div>` : '';
+    const section = (icon, label, color, ...parts) => {
+      const body = parts.join('');
+      if(!body) return '';
+      return `<div style="margin-bottom:20px;padding-bottom:16px;border-bottom:1.5px dashed var(--border)">
+        <div style="font-size:.8rem;font-weight:800;color:${color};text-transform:uppercase;letter-spacing:.6px;margin-bottom:10px;padding:5px 12px;background:${color}18;border-left:3px solid ${color};border-radius:0 4px 4px 0">${icon} ${label}</div>
+        <div style="overflow-x:auto;white-space:nowrap">${body}</div>
+      </div>`;
+    };
+
+    // HA — Delivered
+    const dPrev = rayaRateTable('Previous Rates (EGP)', rc.ha?.delivery, '#0f766e', '#0f766e');
+    const dNew  = rcN ? rayaRateTable('New Rates (EGP)', rcN.ha?.delivery, '#dc2626', '#dc2626') : '';
+    const dPct  = (rc.ha?.delivery && rcN?.ha?.delivery) ? rayaZonePctTable('% Change', rc.ha.delivery, rcN.ha.delivery, '#0f766e') : '';
+    rayaBody += section('🏠', 'HA — DELIVERED', '#0f766e', inline(dPrev), inline(dNew), dPct);
+
+    // HA — Returns
+    const rPrev = rayaRateTable('Previous Rates (EGP)', rc.ha?.returns, '#134e4a', '#134e4a');
+    const rNew  = rcN ? rayaRateTable('New Rates (EGP)', rcN.ha?.returns, '#dc2626', '#dc2626') : '';
+    const rPct  = (rc.ha?.returns && rcN?.ha?.returns) ? rayaZonePctTable('% Change', rc.ha.returns, rcN.ha.returns, '#134e4a') : '';
+    rayaBody += section('🔄', 'HA — RETURNS (75%)', '#134e4a', inline(rPrev), inline(rNew), rPct);
+
+    // Furniture — Delivery
+    const fPrev = rayaRateTable('Previous Rates (EGP)', rc.furniture?.delivery, '#0891b2', '#0891b2');
+    const fNew  = rcN ? rayaRateTable('New Rates (EGP)', rcN.furniture?.delivery, '#dc2626', '#dc2626') : '';
+    const fPct  = (rc.furniture?.delivery && rcN?.furniture?.delivery) ? rayaZonePctTable('% Change', rc.furniture.delivery, rcN.furniture.delivery, '#0891b2') : '';
+    rayaBody += section('🛋️', 'FURNITURE — DELIVERY', '#0891b2', inline(fPrev), inline(fNew), fPct);
+
+    rayaBody += `<div style="font-size:.76rem;color:var(--muted);margin-top:4px">⚠️ Furniture Returns = 100% of delivery rate (billed at full delivery price)</div>`;
   }
 
   let html = `<div style="padding:20px 0">`;
